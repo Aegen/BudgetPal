@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array
+        name="navListItems">
+        <item>Homepage</item>
+        <item>Add Expense</item>
+        <item>View Expenses</item>
+        <item>Add Event</item>
+        <item>View Events</item>
+        <item>Change Budget</item>
+        <item>Logout</item>
+        <item>Settings</item>
+    </string-array>
+</resources>
