@@ -10,7 +10,10 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
+
+
 public class MainActivity extends AppCompatActivity {
+
 
     private DrawerLayout NavDrawer;
     private ListView NavDrawerList;
@@ -20,6 +23,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        boolean dbExists = checkForDatabase();
 
         NavDrawer      = (DrawerLayout)findViewById(R.id.navDrawer);
         NavDrawerList  = (ListView)findViewById(R.id.navDrawerList);
@@ -35,5 +40,9 @@ public class MainActivity extends AppCompatActivity {
                 NavDrawer.closeDrawer(Gravity.LEFT);
             }
         });
+    }
+
+    public boolean checkForDatabase(){
+        return true;
     }
 }
