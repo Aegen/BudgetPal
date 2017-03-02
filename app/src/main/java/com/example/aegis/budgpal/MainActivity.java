@@ -39,13 +39,16 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         boolean dbExists = checkForDatabase();
+
         db.execSQL("INSERT INTO User (Username, HashedPassword, LastModified, Deleted) VALUES ('harrison', 'password', '1996-01-01 12:00:00', 0);"); //Load item into db
-        Cursor curse = db.query("User", new String[]{"UserID", "Username", "HashedPassword", "LastModified", "Deleted"},null, null, null, null, null); //get Cursor for objects in db
+        Cursor curse = db.rawQuery("SELECT * FROM User WHERE Username = 'harrison'", null);
+        curse.moveToFirst();
 
         NavDrawer      = (DrawerLayout)findViewById(R.id.navDrawer);
         NavDrawerList  = (ListView)findViewById(R.id.navDrawerList);
         NavDrawerItems = getResources().getStringArray(R.array.navListItems);
-
+        //Toast.makeText(getApplicationContext(), Integer.toString(curse.getColumnCount()), Toast.LENGTH_LONG).show(); //print number of columns
+        //runToast.makeText(getApplicationContext(), curse.getString(1), Toast.LENGTH_LONG).show();
         NavDrawerList.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, NavDrawerItems));
 
         NavDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
