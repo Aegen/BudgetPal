@@ -9,6 +9,9 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
+import android.widget.Button;
+import android.widget.Toast;
 
 public class UserDatabaseHandler extends SQLiteOpenHelper {
 
@@ -62,6 +65,8 @@ public class UserDatabaseHandler extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
+        Log.i("woot", "db");
+
         String CREATE_USER_TABLE = "CREATE TABLE " + TABLE_USERS + "(" +
                 U_USER_ID + " INTEGER PRIMARY KEY," +
                 U_USERNAME + " STRING," +
@@ -106,6 +111,8 @@ public class UserDatabaseHandler extends SQLiteOpenHelper {
         db.execSQL(CREATE_BUDGET_TABLE);
         db.execSQL(CREATE_EXPENSE_TABLE);
         db.execSQL(CREATE_EVENT_TABLE);
+
+        db.execSQL("INSERT INTO User (Username, HashedPassword, LastModified, Deleted) VALUES ('harrison', 'password', '1996-01-01 12:00:00', 0);");
     }
 
     @Override
