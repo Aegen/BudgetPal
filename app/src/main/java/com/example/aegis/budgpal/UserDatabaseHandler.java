@@ -118,17 +118,19 @@ public class UserDatabaseHandler extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    /*public void addProduct(User user) {
+    public void addUser(User user) {
 
         ContentValues values = new ContentValues();
-        values.put(COLUMN_PRODUCTNAME, product.getProductName());
-        values.put(COLUMN_QUANTITY, product.getQuantity());
+        values.put(U_USER_ID, user.getUserID());
+        values.put(U_USERNAME, user.getUsername());
+        values.put(U_PASSWORD, user.getPassword());
+        values.put(U_LASTMODIFIED, user.getLastModified().toString());
+        values.put(U_DELETED, user.isDeleted());
 
         SQLiteDatabase db = this.getWritableDatabase();
 
-        db.insert(TABLE_PRODUCTS, null, values);
+        db.insert(TABLE_USERS, null, values);
         db.close();
 
     }
-    */
 }
