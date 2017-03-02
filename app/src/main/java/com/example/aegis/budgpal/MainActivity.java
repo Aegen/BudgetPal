@@ -25,26 +25,38 @@ public class MainActivity extends AppCompatActivity {
     private DrawerLayout NavDrawer;
     private ListView NavDrawerList;
     private String[] NavDrawerItems;
+    private SQLiteDatabase db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.i("first", "first");
-        UserDatabaseHandler a = new UserDatabaseHandler(getApplicationContext(), "database", null, 1);
-        SQLiteDatabase db = a.getWritableDatabase(); //Create Database object
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         boolean dbExists = checkForDatabase();
 
-        db.execSQL("INSERT INTO User (Username, HashedPassword, LastModified, Deleted) VALUES ('harrison', 'password', '1996-01-01 12:00:00', 0);"); //Load item into db
-        Cursor curse = db.rawQuery("SELECT * FROM User WHERE Username = 'harrison'", null);
-        curse.moveToFirst();
+
 
         NavDrawer      = (DrawerLayout)findViewById(R.id.navDrawer);
         NavDrawerList  = (ListView)findViewById(R.id.navDrawerList);
         NavDrawerItems = getResources().getStringArray(R.array.navListItems);
-        //Toast.makeText(getApplicationContext(), c, Toast.LENGTH_LONG).show(); //print number of columns
-        Toast.makeText(getApplicationContext(), curse.getString(1), Toast.LENGTH_LONG).show();
-        //curse.getColumnName(0);
+
+        /***********************************************/
+        //Database access zone
+
+        UserDatabaseHandler a = new UserDatabaseHandler(getApplicationContext(), "database", null, 1); //Create database accessor
+        db = a.getWritableDatabase(); //Create Database object, declared globally above
+
+        //db.execSQL("INSERT INTO User (Username, HashedPassword, LastModified, Deleted) VALUES ('harrison', 'password', '1996-01-01 12:00:00', 0);"); //Load item into db
+        Cursor curse = db.rawQuery("SELECT * FROM User WHERE Username = 'harrison'", null); //Self explanatory
+        curse.moveToFirst(); //Important, sets the cursor to the first result, exception gets thrown if you try to get the contents without running this first
+
+        //Toast.makeText(getApplicationContext(), c, Toast.LENGTH_LONG).show();
+        Toast.makeText(getApplicationContext(), curse.getString(1), Toast.LENGTH_LONG).show(); //Make username appear on screen
+
+        /***********************************************/
+
+
         NavDrawerList.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, NavDrawerItems));
 
         NavDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
