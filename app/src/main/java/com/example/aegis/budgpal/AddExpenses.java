@@ -21,7 +21,7 @@ public class AddExpenses extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add__expenses);
+        setContentView(R.layout.activity_add_expenses);
 
         NavDrawer      = (DrawerLayout)findViewById(R.id.navDrawer);
         NavDrawerList  = (ListView)findViewById(R.id.navDrawerList);
@@ -37,16 +37,16 @@ public class AddExpenses extends AppCompatActivity {
                 Intent tempIntent;
                 switch (parent.getItemAtPosition(position).toString()){
                     case "Change Budget":
-                        tempIntent = new Intent(AddExpenses.this, Set_Budget.class);
+                        tempIntent = new Intent(AddExpenses.this, SetBudget.class);
                         break;
                     case "Add Expense":
                         tempIntent = new Intent(AddExpenses.this, AddExpenses.class);
                         break;
                     case "Add Event":
-                        tempIntent = new Intent(AddExpenses.this, Add_Event.class);
+                        tempIntent = new Intent(AddExpenses.this, AddEvent.class);
                         break;
                     case "View Expenses":
-                        tempIntent = new Intent(AddExpenses.this, View_History.class);
+                        tempIntent = new Intent(AddExpenses.this, ViewHistory.class);
                         break;
                     default:
                         Toast.makeText(getApplicationContext(), "Not Implemented", Toast.LENGTH_SHORT).show();
