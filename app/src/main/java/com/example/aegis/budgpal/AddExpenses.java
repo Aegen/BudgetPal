@@ -4,15 +4,15 @@ import android.content.Intent;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
-import android.util.Log;
 
-public class MainActivity extends AppCompatActivity {
+public class AddExpenses extends AppCompatActivity {
 
     private DrawerLayout NavDrawer;
     private ListView NavDrawerList;
@@ -21,7 +21,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_add__expenses);
 
         NavDrawer      = (DrawerLayout)findViewById(R.id.navDrawer);
         NavDrawerList  = (ListView)findViewById(R.id.navDrawerList);
@@ -37,16 +37,16 @@ public class MainActivity extends AppCompatActivity {
                 Intent tempIntent;
                 switch (parent.getItemAtPosition(position).toString()){
                     case "Change Budget":
-                        tempIntent = new Intent(MainActivity.this, Set_Budget.class);
+                        tempIntent = new Intent(AddExpenses.this, Set_Budget.class);
                         break;
                     case "Add Expense":
-                        tempIntent = new Intent(MainActivity.this, AddExpenses.class);
+                        tempIntent = new Intent(AddExpenses.this, AddExpenses.class);
                         break;
                     case "Add Event":
-                        tempIntent = new Intent(MainActivity.this, Add_Event.class);
+                        tempIntent = new Intent(AddExpenses.this, Add_Event.class);
                         break;
                     case "View Expenses":
-                        tempIntent = new Intent(MainActivity.this, View_History.class);
+                        tempIntent = new Intent(AddExpenses.this, View_History.class);
                         break;
                     default:
                         Toast.makeText(getApplicationContext(), "Not Implemented", Toast.LENGTH_SHORT).show();
