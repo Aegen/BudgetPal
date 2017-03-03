@@ -37,16 +37,16 @@ public class MainActivity extends AppCompatActivity {
                 Intent tempIntent;
                 switch (parent.getItemAtPosition(position).toString()){
                     case "Change Budget":
-                        tempIntent = new Intent(MainActivity.this, Set_Budget.class);
+                        tempIntent = new Intent(MainActivity.this, SetBudget.class);
                         break;
                     case "Add Expense":
                         tempIntent = new Intent(MainActivity.this, AddExpenses.class);
                         break;
                     case "Add Event":
-                        tempIntent = new Intent(MainActivity.this, Add_Event.class);
+                        tempIntent = new Intent(MainActivity.this, AddEvent.class);
                         break;
                     case "View Expenses":
-                        tempIntent = new Intent(MainActivity.this, View_History.class);
+                        tempIntent = new Intent(MainActivity.this, ViewHistory.class);
                         break;
                     default:
                         Toast.makeText(getApplicationContext(), "Not Implemented", Toast.LENGTH_SHORT).show();
