@@ -28,27 +28,11 @@ public class AddEvent extends AppCompatActivity {
                 /*Toast.makeText(getApplicationContext(), parent.getItemAtPosition(position).toString(),
                         Toast.LENGTH_SHORT).show();*/
                 NavDrawer.closeDrawer(Gravity.LEFT);
-                Intent tempIntent;
-                switch (parent.getItemAtPosition(position).toString()){
-                    case "Change Budget":
-                        tempIntent = new Intent(AddEvent.this, SetBudget.class);
-                        break;
-                    case "Add Expense":
-                        tempIntent = new Intent(AddEvent.this, AddExpenses.class);
-                        break;
-                    case "Add Event":
-                        tempIntent = new Intent(AddEvent.this, AddEvent.class);
-                        break;
-                    case "View Expenses":
-                        tempIntent = new Intent(AddEvent.this, ViewHistory.class);
-                        break;
-                    default:
-                        Toast.makeText(getApplicationContext(), "Not Implemented", Toast.LENGTH_SHORT).show();
-                        Log.e("Invalid Selection", parent.getItemAtPosition(position).toString() + " failed to match with an activity.");
-                        return;
-                }
+                Intent tempIntent = SwitchManager.SwitchActiviy(AddEvent.this, parent.getItemAtPosition(position).toString());
 
-                startActivity(tempIntent);
+                if(tempIntent != null){
+                    startActivity(tempIntent);
+                }
             }
         });
     }
