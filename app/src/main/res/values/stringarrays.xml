@@ -11,4 +11,9 @@
         <item>Logout</item>
         <item>Settings</item>
     </string-array>
+
+    <string-array name="expenseCategories">
+        <item>first</item>
+        <item>second</item>
+    </string-array>
 </resources>
