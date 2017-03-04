@@ -34,27 +34,11 @@ public class AddExpenses extends AppCompatActivity {
                 /*Toast.makeText(getApplicationContext(), parent.getItemAtPosition(position).toString(),
                         Toast.LENGTH_SHORT).show();*/
                 NavDrawer.closeDrawer(Gravity.LEFT);
-                Intent tempIntent;
-                switch (parent.getItemAtPosition(position).toString()){
-                    case "Change Budget":
-                        tempIntent = new Intent(AddExpenses.this, SetBudget.class);
-                        break;
-                    case "Add Expense":
-                        tempIntent = new Intent(AddExpenses.this, AddExpenses.class);
-                        break;
-                    case "Add Event":
-                        tempIntent = new Intent(AddExpenses.this, AddEvent.class);
-                        break;
-                    case "View Expenses":
-                        tempIntent = new Intent(AddExpenses.this, ViewHistory.class);
-                        break;
-                    default:
-                        Toast.makeText(getApplicationContext(), "Not Implemented", Toast.LENGTH_SHORT).show();
-                        Log.e("Invalid Selection", parent.getItemAtPosition(position).toString() + " failed to match with an activity.");
-                        return;
-                }
+                Intent tempIntent = SwitchManager.SwitchActiviy(AddExpenses.this, parent.getItemAtPosition(position).toString());
 
-                startActivity(tempIntent);
+                if(tempIntent != null){
+                    startActivity(tempIntent);
+                }
             }
         });
     }
