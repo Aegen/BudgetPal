@@ -11,7 +11,7 @@ import java.text.SimpleDateFormat;
 public class User {
 
 
-    private int userID;
+    private long userID;
     private String username;
     private int password;
     private Date lastModified;
@@ -21,7 +21,7 @@ public class User {
 
     }
 
-    public User(int uID, String uName, int pw, Date lastMod, boolean dl){
+    public User(long uID, String uName, int pw, Date lastMod, boolean dl){
         this.userID = uID;
         this.username = uName;
         this.password = pw;
@@ -29,11 +29,11 @@ public class User {
         this.deleted = dl;
     }
 
-    public int getUserID() {
+    public long getUserID() {
         return userID;
     }
 
-    public void setUserID(int userID) {
+    public void setUserID(long userID) {
         this.userID = userID;
     }
 
