@@ -72,7 +72,7 @@ public class UserDatabaseHandler extends SQLiteOpenHelper {
                 U_USERNAME + " STRING," +
                 U_PASSWORD + " STRING," +
                 U_LASTMODIFIED + " DATETIME," +
-                U_DELETED + " BOOLEAN" + ")";
+                U_DELETED + " BIT" + ")";
 
         String CREATE_BUDGET_TABLE = "CREATE TABLE " + TABLE_BUDGETS + "(" +
                 B_BUDGET_ID + " INTEGER PRIMARY KEY," +
@@ -83,8 +83,8 @@ public class UserDatabaseHandler extends SQLiteOpenHelper {
                 B_START_DATE + " DATETIME," +
                 B_LAST_MODIFIED + " DATETIME," +
                 B_AMOUNT + " FLOAT," +
-                B_ACTIVE + " BOOLEAN," +
-                B_DELETED + " BOOLEAN" + ")";
+                B_ACTIVE + " BIT," +
+                B_DELETED + " BIT" + ")";
 
         String CREATE_EXPENSE_TABLE = "CREATE TABLE " + TABLE_EXPENSES + "(" +
                 EX_EXPENSE_ID + " INTEGER PRIMARY KEY," +
@@ -95,8 +95,8 @@ public class UserDatabaseHandler extends SQLiteOpenHelper {
                 EX_DATE_CREATED + " DATETIME," +
                 EX_CATEGORY + " INTEGER," +
                 EX_DESCRIPTION + " STRING," +
-                EX_EXEMPT + " BOOLEAN," +
-                EX_DELETED + " BOOLEAN" + ")";
+                EX_EXEMPT + " BIT," +
+                EX_DELETED + " BIT" + ")";
 
         String CREATE_EVENT_TABLE = "CREATE TABLE " + TABLE_EVENTS + "(" +
                 EV_EVENT_ID + " INTEGER PRIMARY KEY," +
@@ -105,7 +105,7 @@ public class UserDatabaseHandler extends SQLiteOpenHelper {
                 EV_START_DATE + " DATETIME," +
                 EV_END_DATE + " DATETIME," +
                 EV_DESCRIPTION + " STRING," +
-                EV_DELETED + " BOOLEAN" + ")";
+                EV_DELETED + " BIT" + ")";
 
         db.execSQL(CREATE_USER_TABLE);
         db.execSQL(CREATE_BUDGET_TABLE);
@@ -137,6 +137,43 @@ public class UserDatabaseHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
 
         db.insert(TABLE_USERS, null, values);
+        db.close();
+
+    }
+    
+    public void addExpense(Expense expense) {
+
+        ContentValues values = new ContentValues();
+        values.put(EX_USER_ID, expense.getUserID());
+        values.put(EX_BUDGET_ID, expense.getBudgetID());
+        values.put(EX_AMOUNT, expense.getAmount());
+        values.put(EX_LAST_MODIFIED, expense.getLastModified().toString());
+        values.put(EX_DATE_CREATED, expense.getDateCreated().toString());
+        values.put(EX_CATEGORY, expense.getCategory());
+        values.put(EX_DESCRIPTION, expense.getDescription());
+        values.put(EX_EXEMPT, expense.getExpenseID());
+        values.put(EX_DELETED, expense.isDeleted());
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        db.insert(TABLE_EXPENSES, null, values);
+        db.close();
+
+    }
+
+    public void addEvent(Event event) {
+
+        ContentValues values = new ContentValues();
+        values.put(EV_USER_ID, event.getEventID());
+        values.put(EV_LAST_MODIFIED, event.getLastModified().toString());
+        values.put(EV_START_DATE, event.getStartDate().toString());
+        values.put(EV_END_DATE, event.getEndDate().toString());
+        values.put(EV_DESCRIPTION, event.getDescription());
+        values.put(EV_DELETED, event.isDeleted());
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        db.insert(TABLE_EVENTS, null, values);
         db.close();
 
     }
