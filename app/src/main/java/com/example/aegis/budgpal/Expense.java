@@ -10,9 +10,9 @@ import java.text.SimpleDateFormat;
 public class Expense {
 
 
-    private int expenseID;
-    private int userID;
-    private int budgetID;
+    private long expenseID;
+    private long userID;
+    private long budgetID;
     private float amount;
     private Date lastModified;
     private Date dateCreated;
@@ -22,27 +22,27 @@ public class Expense {
     private boolean deleted;
 
 
-    public int getExpenseID() {
+    public long getExpenseID() {
         return expenseID;
     }
 
-    public void setExpenseID(int expenseID) {
+    public void setExpenseID(long expenseID) {
         this.expenseID = expenseID;
     }
 
-    public int getUserID() {
+    public long getUserID() {
         return userID;
     }
 
-    public void setUserID(int userID) {
+    public void setUserID(long userID) {
         this.userID = userID;
     }
 
-    public int getBudgetID() {
+    public long getBudgetID() {
         return budgetID;
     }
 
-    public void setBudgetID(int budgetID) {
+    public void setBudgetID(long budgetID) {
         this.budgetID = budgetID;
     }
 

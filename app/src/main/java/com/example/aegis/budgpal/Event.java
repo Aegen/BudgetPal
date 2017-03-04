@@ -10,8 +10,8 @@ import java.text.SimpleDateFormat;
 public class Event {
 
 
-    private int eventID;
-    private int userID;
+    private long eventID;
+    private long userID;
     private Date lastModified;
     private Date startDate;
     private Date endDate;
@@ -19,19 +19,19 @@ public class Event {
     private boolean deleted;
 
 
-    public int getEventID() {
+    public long getEventID() {
         return eventID;
     }
 
-    public void setEventID(int eventID) {
+    public void setEventID(long eventID) {
         this.eventID = eventID;
     }
 
-    public int getUserID() {
+    public long getUserID() {
         return userID;
     }
 
-    public void setUserID(int userID) {
+    public void setUserID(long userID) {
         this.userID = userID;
     }
 

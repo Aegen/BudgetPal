@@ -7,6 +7,7 @@ package com.example.aegis.budgpal;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
@@ -140,7 +141,7 @@ public class UserDatabaseHandler extends SQLiteOpenHelper {
         db.close();
 
     }
-    
+
     public void addExpense(Expense expense) {
 
         ContentValues values = new ContentValues();
@@ -176,5 +177,30 @@ public class UserDatabaseHandler extends SQLiteOpenHelper {
         db.insert(TABLE_EVENTS, null, values);
         db.close();
 
+    }
+
+    public void addBudget(Budget budget) {
+
+        ContentValues values = new ContentValues();
+        values.put(B_USER_ID, budget.getUserID());
+        values.put(B_TIME_PERIOD, budget.getTimePeriod());
+        values.put(B_RESET_CODE, budget.getResetCode());
+        values.put(B_ANCHOR_DATE, budget.getAnchorDate().toString());
+        values.put(B_START_DATE, budget.getStartDate().toString());
+        values.put(B_LAST_MODIFIED, budget.getLastModified().toString());
+        values.put(B_AMOUNT, budget.getAmount());
+        values.put(B_ACTIVE, true);
+        values.put(B_DELETED, budget.isDeleted());
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        db.insert(TABLE_BUDGETS, null, values);
+        Cursor idCursor = db.rawQuery("SELECT * FROM Budget WHERE UserID = " + budget.getUserID() +" AND Active = 1;",null);
+        idCursor.moveToFirst();
+
+        long id = idCursor.getLong(0);
+        budget.setBudgetID(id);
+
+        db.close();
     }
 }
