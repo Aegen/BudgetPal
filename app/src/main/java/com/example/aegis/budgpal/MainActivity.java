@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
         /***********************************************/
         //Database access zone
 
-        UserDatabaseHandler a = new UserDatabaseHandler(getApplicationContext(), "database", null, 1); //Create database accessor
+        DatabaseHandler a = new DatabaseHandler(getApplicationContext(), "database", null, 1); //Create database accessor
         db = a.getWritableDatabase(); //Create Database object, declared globally above
 
         //db.execSQL("INSERT INTO User (Username, HashedPassword, LastModified, Deleted) VALUES ('harrison', 'password', '1996-01-01 12:00:00', 0);"); //Load item into db
