@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 public class AddExpenses extends AppCompatActivity {
@@ -17,11 +18,16 @@ public class AddExpenses extends AppCompatActivity {
     private DrawerLayout NavDrawer;
     private ListView NavDrawerList;
     private String[] NavDrawerItems;
+    private String[] Categories;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_expenses);
+
+        Categories = getResources().getStringArray(R.array.expenseCategories);
+        Spinner categorySelector = (Spinner)findViewById(R.id.spinner);
+        categorySelector.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, Categories));
 
         NavDrawer      = (DrawerLayout)findViewById(R.id.navDrawer);
         NavDrawerList  = (ListView)findViewById(R.id.navDrawerList);
@@ -31,8 +37,7 @@ public class AddExpenses extends AppCompatActivity {
         NavDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                /*Toast.makeText(getApplicationContext(), parent.getItemAtPosition(position).toString(),
-                        Toast.LENGTH_SHORT).show();*/
+
                 NavDrawer.closeDrawer(Gravity.LEFT);
                 Intent tempIntent = SwitchManager.SwitchActiviy(AddExpenses.this, parent.getItemAtPosition(position).toString());
 

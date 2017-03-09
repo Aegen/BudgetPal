@@ -17,6 +17,9 @@ public class SwitchManager {
     public static Intent SwitchActiviy(Context context, String activity){
         Intent tempIntent;
         switch (activity){
+            case "Homepage":
+                tempIntent = new Intent(context, MainActivity.class);
+                break;
             case "Change Budget":
                 tempIntent = new Intent(context, SetBudget.class);
                 break;
