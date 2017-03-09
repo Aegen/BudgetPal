@@ -132,6 +132,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         values.put(U_USERNAME, user.getUsername());
         values.put(U_PASSWORD, user.getPassword());
         values.put(U_LAST_MODIFIED, user.getLastModified().toString());
+        Log.d("Dateer", user.getLastModified().toString());
         values.put(U_DELETED, user.isDeleted());
 
         SQLiteDatabase db = this.getWritableDatabase();

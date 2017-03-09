@@ -19,9 +19,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.view.MenuItem;
-
-
-
+import java.sql.Date;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -40,8 +38,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         boolean dbExists = checkForDatabase();
 
-
-
         NavDrawer      = (DrawerLayout)findViewById(R.id.navDrawer);
         NavDrawerList  = (ListView)findViewById(R.id.navDrawerList);
         NavDrawerItems = getResources().getStringArray(R.array.navListItems);
@@ -50,10 +46,12 @@ public class MainActivity extends AppCompatActivity {
 
         /***********************************************/
         //Database access zone
-
+        //Log.d("Date",new Date(1,1,1,).toString());
         DatabaseHandler a = new DatabaseHandler(getApplicationContext(), "database", null, 1); //Create database accessor
         db = a.getWritableDatabase(); //Create Database object, declared globally above
-
+        User horse = new User("dave", "asdlhfasd;l", new Date(2001, 2, 6), false, a);
+        //a.addUser(horse);
+        //horse.pushToDatabase();
         //db.execSQL("INSERT INTO User (Username, HashedPassword, LastModified, Deleted) VALUES ('harrison', 'password', '1996-01-01 12:00:00', 0);"); //Load item into db
         Cursor curse = db.rawQuery("SELECT * FROM User WHERE Username = 'harrison'", null); //Self explanatory
         curse.moveToFirst(); //Important, sets the cursor to the first result, exception gets thrown if you try to get the contents without running this first
