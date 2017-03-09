@@ -128,17 +128,17 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public void addUser(User user) {
 
         ContentValues values = new ContentValues();
-        values.put(U_USER_ID, user.getUserID());
+        //values.put(U_USER_ID, user.getUserID());
         values.put(U_USERNAME, user.getUsername());
         values.put(U_PASSWORD, user.getPassword());
-        values.put(U_LAST_MODIFIED, user.getLastModified().toString());
+        values.put(U_LAST_MODIFIED, user.getLastModified());
         Log.d("Dateer", user.getLastModified().toString());
         values.put(U_DELETED, user.isDeleted());
 
         SQLiteDatabase db = this.getWritableDatabase();
 
         db.insert(TABLE_USERS, null, values);
-        Cursor idCursor = db.rawQuery("SELECT * FROM User WHERE " + U_USERNAME + " = " + user.getUsername() +" ORDER BY " + U_LAST_MODIFIED + " DESC;",null);
+        Cursor idCursor = db.rawQuery("SELECT * FROM User WHERE " + U_USERNAME + " = '" + user.getUsername() +"' ORDER BY " + U_LAST_MODIFIED + " DESC;",null);
         idCursor.moveToFirst();
 
         long id = idCursor.getLong(0);

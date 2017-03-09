@@ -14,7 +14,7 @@ public class User {
     private long userID;
     private String username;
     private String password;
-    private Date lastModified;
+    private String lastModified;
     private boolean deleted;
     private DatabaseHandler aDBHandler;
 
@@ -22,7 +22,7 @@ public class User {
 
     }
 
-    public User(String uName, String pw, Date lastMod, boolean dl, DatabaseHandler adbH){
+    public User(String uName, String pw, String lastMod, boolean dl, DatabaseHandler adbH){
         this.username = uName;
         this.password = pw;
         this.lastModified = lastMod;
@@ -46,11 +46,11 @@ public class User {
         this.username = username;
     }
 
-    public Date getLastModified() {
+    public String getLastModified() {
         return lastModified;
     }
 
-    public void setLastModified(Date lastModified) {
+    public void setLastModified(String lastModified) {
         this.lastModified = lastModified;
     }
 
