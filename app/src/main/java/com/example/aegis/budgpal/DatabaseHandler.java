@@ -15,7 +15,6 @@ import android.widget.Button;
 import android.widget.Toast;
 
 public class DatabaseHandler extends SQLiteOpenHelper {
-
     private static final int DATABASE_VERSION = 1;
     private static final String DATABASE_NAME = "userDB.db";
 
@@ -27,7 +26,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public static final String U_USER_ID = "UserID";
     public static final String U_USERNAME = "Username";
     public static final String U_PASSWORD = "HashedPassword";
-    public static final String U_LASTMODIFIED = "LastModified";
+    public static final String U_LAST_MODIFIED = "LastModified";
     public static final String U_DELETED = "Deleted";
 
     public static final String B_BUDGET_ID = "BudgetID";
@@ -72,7 +71,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 U_USER_ID + " INTEGER PRIMARY KEY," +
                 U_USERNAME + " STRING," +
                 U_PASSWORD + " STRING," +
-                U_LASTMODIFIED + " DATETIME," +
+                U_LAST_MODIFIED + " DATETIME," +
                 U_DELETED + " BIT" + ")";
 
         String CREATE_BUDGET_TABLE = "CREATE TABLE " + TABLE_BUDGETS + "(" +
@@ -132,12 +131,17 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         values.put(U_USER_ID, user.getUserID());
         values.put(U_USERNAME, user.getUsername());
         values.put(U_PASSWORD, user.getPassword());
-        values.put(U_LASTMODIFIED, user.getLastModified().toString());
+        values.put(U_LAST_MODIFIED, user.getLastModified().toString());
         values.put(U_DELETED, user.isDeleted());
 
         SQLiteDatabase db = this.getWritableDatabase();
 
         db.insert(TABLE_USERS, null, values);
+        Cursor idCursor = db.rawQuery("SELECT * FROM User WHERE " + U_USERNAME + " = " + user.getUsername() +" ORDER BY " + U_LAST_MODIFIED + " DESC;",null);
+        idCursor.moveToFirst();
+
+        long id = idCursor.getLong(0);
+        user.setUserID(id);
         db.close();
 
     }
@@ -158,6 +162,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
 
         db.insert(TABLE_EXPENSES, null, values);
+        Cursor idCursor = db.rawQuery("SELECT * FROM Expense WHERE " + EX_USER_ID + " = " + expense.getUserID() +" ORDER BY " + EX_LAST_MODIFIED + " DESC;",null);
+        idCursor.moveToFirst();
+
+        long id = idCursor.getLong(0);
+        expense.setExpenseID(id);
         db.close();
 
     }
@@ -175,11 +184,20 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
 
         db.insert(TABLE_EVENTS, null, values);
+
+        Cursor idCursor = db.rawQuery("SELECT * FROM Event WHERE " + EV_USER_ID + " = " + event.getUserID() +" ORDER BY " + EV_LAST_MODIFIED + " DESC;",null);
+        idCursor.moveToFirst();
+
+        long id = idCursor.getLong(0);
+        event.setEventID(id);
+        
         db.close();
 
     }
 
     public void addBudget(Budget budget) {
+
+
 
         ContentValues values = new ContentValues();
         values.put(B_USER_ID, budget.getUserID());
@@ -189,13 +207,13 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         values.put(B_START_DATE, budget.getStartDate().toString());
         values.put(B_LAST_MODIFIED, budget.getLastModified().toString());
         values.put(B_AMOUNT, budget.getAmount());
-        values.put(B_ACTIVE, true);
+        values.put(B_ACTIVE, 1);
         values.put(B_DELETED, budget.isDeleted());
 
         SQLiteDatabase db = this.getWritableDatabase();
 
         db.insert(TABLE_BUDGETS, null, values);
-        Cursor idCursor = db.rawQuery("SELECT * FROM Budget WHERE UserID = " + budget.getUserID() +" AND Active = 1;",null);
+        Cursor idCursor = db.rawQuery("SELECT * FROM Budget WHERE " + B_USER_ID + " = " + budget.getUserID() +" ORDER BY " + B_LAST_MODIFIED + " DESC;",null);
         idCursor.moveToFirst();
 
         long id = idCursor.getLong(0);
