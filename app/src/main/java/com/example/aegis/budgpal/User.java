@@ -22,8 +22,7 @@ public class User {
 
     }
 
-    public User(long uID, String uName, String pw, Date lastMod, boolean dl, DatabaseHandler adbH){
-        this.userID = uID;
+    public User(String uName, String pw, Date lastMod, boolean dl, DatabaseHandler adbH){
         this.username = uName;
         this.password = pw;
         this.lastModified = lastMod;
