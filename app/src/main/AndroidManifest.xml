@@ -24,7 +24,8 @@
         <activity android:name=".SetBudget" />
         <activity android:name=".AddEvent" />
         <activity android:name=".ViewHistory" />
-        <activity android:name=".ViewEvents"></activity>
+        <activity android:name=".ViewEvents" />
+        <activity android:name=".LandingPage"></activity>
     </application>
 
 </manifest>
