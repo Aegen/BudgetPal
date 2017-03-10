@@ -1,9 +1,13 @@
 package com.example.aegis.budgpal;
 
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
 import java.sql.Date;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import android.app.Activity;
+import android.widget.Toast;
+
 /**
  * Created by Harrison on 2/25/2017.
  */
@@ -23,8 +27,15 @@ public class User {
     }
 
     public User(String uName, String pw, String lastMod, boolean dl, DatabaseHandler adbH){
+        byte[] hash = null;
+        try {
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            hash = digest.digest(pw.getBytes(StandardCharsets.UTF_8));
+        }catch (Exception e){
+
+        }
         this.username = uName;
-        this.password = pw;
+        this.password = new String(hash);
         this.lastModified = lastMod;
         this.deleted = dl;
         this.aDBHandler = adbH;

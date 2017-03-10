@@ -20,6 +20,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.view.MenuItem;
+
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
 import java.sql.Date;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -44,8 +47,7 @@ public class MainActivity extends AppCompatActivity {
         NavDrawer      = (DrawerLayout)findViewById(R.id.navDrawer);
         NavDrawerList  = (ListView)findViewById(R.id.navDrawerList);
         NavDrawerItems = getResources().getStringArray(R.array.navListItems);
-        //Toast.makeText(getApplicationContext(), Integer.toString(curse.getColumnCount()), Toast.LENGTH_LONG).show(); //print number of columns
-        //runToast.makeText(getApplicationContext(), curse.getString(1), Toast.LENGTH_LONG).show();
+
 
         /***********************************************/
         //Database access zone
@@ -55,17 +57,21 @@ public class MainActivity extends AppCompatActivity {
         String tempDate = new SimpleDateFormat("yyyy-MM-dd").format(new java.util.Date());
         DatabaseHandler a = new DatabaseHandler(getApplicationContext(), "database", null, 1); //Create database accessor
         db = a.getWritableDatabase(); //Create Database object, declared globally above
-        User horse = new User("dave", "asdlhfasd;l", tempDate, false, a);
+        //User horse = new User("dave", "asdlhfasd;l", tempDate, false, a);
         //a.addUser(horse);
-        horse.pushToDatabase();
+        //horse.pushToDatabase();
 
         db = a.getWritableDatabase(); //Create Database object, declared globally above
         //db.execSQL("INSERT INTO User (Username, HashedPassword, LastModified, Deleted) VALUES ('harrison', 'password', '1996-01-01 12:00:00', 0);"); //Load item into db
-        Cursor curse = db.rawQuery("SELECT * FROM User WHERE Username = 'harrison'", null); //Self explanatory
+        Cursor curse = db.rawQuery("SELECT * FROM User WHERE Username = 'dave'", null); //Self explanatory
         curse.moveToFirst(); //Important, sets the cursor to the first result, exception gets thrown if you try to get the contents without running this first
-
-        //Toast.makeText(getApplicationContext(), c, Toast.LENGTH_LONG).show();
-        Toast.makeText(getApplicationContext(), curse.getString(1), Toast.LENGTH_LONG).show(); //Make username appear on screen
+        String hash = curse.getString(curse.getColumnIndex("HashedPassword"));
+        Log.d("hash", hash);
+        String pw = "asdlhfasd;l";
+        String temp = StatUtils.GetHashedString(pw);
+        Boolean c = temp.equals(hash);
+        Toast.makeText(getApplicationContext(), c.toString(), Toast.LENGTH_LONG).show();
+        //Toast.makeText(getApplicationContext(), curse.getString(1), Toast.LENGTH_LONG).show(); //Make username appear on screen
 
         /***********************************************/
 
