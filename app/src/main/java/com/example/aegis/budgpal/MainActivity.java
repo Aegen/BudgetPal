@@ -94,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
                     if(comp.equals(hashedPassword)){
                         Toast.makeText(getApplicationContext(), "Success", Toast.LENGTH_SHORT).show();
 
-                        Intent goToLanding = new Intent(MainActivity.this, ViewHistory.class).putExtra("UserID", cursee.getLong(cursee.getColumnIndex("UserID")));
+                        Intent goToLanding = new Intent(MainActivity.this, LandingPage.class).putExtra("UserID", cursee.getLong(cursee.getColumnIndex("UserID")));
                         startActivity(goToLanding);
                     }else{
                         Toast.makeText(getApplicationContext(), "Failure", Toast.LENGTH_SHORT).show();
