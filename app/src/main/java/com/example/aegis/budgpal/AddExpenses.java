@@ -42,6 +42,7 @@ public class AddExpenses extends AppCompatActivity {
 
         if(BudgetID == -1){
             AddButton.setEnabled(false);
+            Toast.makeText(getApplicationContext(), "No budget set for this user", Toast.LENGTH_LONG).show();
         }
 
         Toast.makeText(getApplicationContext(), UserID.toString(), Toast.LENGTH_SHORT).show();

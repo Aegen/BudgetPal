@@ -1,5 +1,6 @@
 package com.example.aegis.budgpal;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -52,13 +53,53 @@ public class StatUtils {
     public static Long GetBudgetID(Context context, Long UserID){
         SQLiteDatabase db = GetDatabase(context);
 
-        Cursor curs = db.rawQuery("SELECT * FROM Budget WHERE UserID = " + UserID, null);
+        Cursor curs = db.rawQuery("SELECT * FROM Budget WHERE UserID = " + UserID + " AND Deleted = 0", null);
         curs.moveToFirst();
         if(curs.getCount() > 0){
             return curs.getLong(curs.getColumnIndex("BudgetID"));
         }else{
             return new Long(-1);
         }
+    }
+
+    public static Budget GetBudget(Context context, Long budgetID){
+        Budget tempBudg = new Budget(context);
+
+        SQLiteDatabase db = GetDatabase(context);
+
+        Cursor curs = db.rawQuery("SELECT * FROM Budget WHERE BudgetID = " + budgetID + " AND Deleted = 0 AND ", null);
+
+        if(curs.getCount() > 0){
+            //tempBudg.setActive();
+        }
+
+        return tempBudg;
+    }
+
+    public static int GetCategoryCode(String name){
+        int code;
+        switch (name){
+            case "Grocery":
+                code = 1;
+                break;
+            case "Payment":
+                code = 2;
+                break;
+            case "Personal Expense":
+                code = 3;
+                break;
+            case "Bills":
+                code = 4;
+                break;
+            case "Miscellaneous":
+                code = 5;
+                break;
+            default:
+                code = 6;
+                break;
+        }
+
+        return code;
     }
 
 }

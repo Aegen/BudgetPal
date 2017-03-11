@@ -41,13 +41,6 @@ public class SetBudget extends AppCompatActivity {
         String test = getResources().getString(R.string.app_name);
         Toast.makeText(getApplicationContext(), test, Toast.LENGTH_SHORT).show();
 
-        SaveButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AmountField.setText("12.00");
-            }
-        });
-
         UserID = getIntent().getLongExtra("UserID", -1);
         BudgetID = StatUtils.GetBudgetID(getApplicationContext(), UserID);
 
@@ -68,6 +61,13 @@ public class SetBudget extends AppCompatActivity {
                 if(tempIntent != null){
                     startActivity(tempIntent);
                 }
+            }
+        });
+
+        SaveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
             }
         });
     }

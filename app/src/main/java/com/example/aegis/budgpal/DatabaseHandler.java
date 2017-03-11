@@ -179,7 +179,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         long id = idCursor.getLong(0);
         expense.setExpenseID(id);
 
-
     }
 
     public void updateExpense(Expense expense){
@@ -242,5 +241,13 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     public void updateBudget(Budget budget){
         SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(B_DELETED, budget.isDeleted());
+        values.put(B_ACTIVE, budget.isActive());
+
+        db.update(TABLE_BUDGETS, values, "BudgetID = " + budget.getBudgetID(), null);
+
+
     }
 }
