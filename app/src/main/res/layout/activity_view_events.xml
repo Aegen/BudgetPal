@@ -24,6 +24,7 @@
         tools:layout_editor_absoluteY="30dp" />
 
     <ListView
+        android:id="@+id/viewEventsListView"
         android:layout_width="369dp"
         android:layout_height="434dp"
         tools:layout_editor_absoluteX="8dp"

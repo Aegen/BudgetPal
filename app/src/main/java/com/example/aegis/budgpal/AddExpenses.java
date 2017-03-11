@@ -4,14 +4,12 @@ import android.content.Intent;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Spinner;
-import android.widget.Toast;
 
 public class AddExpenses extends AppCompatActivity {
 
@@ -26,7 +24,7 @@ public class AddExpenses extends AppCompatActivity {
         setContentView(R.layout.activity_add_expenses);
 
         Categories = getResources().getStringArray(R.array.expenseCategories);
-        Spinner categorySelector = (Spinner)findViewById(R.id.spinner);
+        Spinner categorySelector = (Spinner)findViewById(R.id.expenseCategorySpinner);
         categorySelector.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, Categories));
 
         NavDrawer      = (DrawerLayout)findViewById(R.id.navDrawer);

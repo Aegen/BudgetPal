@@ -22,17 +22,17 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="76dp"
-        android:id="@+id/currentBudgetLabel"
+        android:id="@+id/landIngPageBudgetLabel"
         tools:text="Current Budget" />
 
     <TextView
-        android:text="$0.00"
+        android:id="@+id/landingPageBudgetText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/currentBudgetLabel"
+        android:layout_below="@+id/landIngPageBudgetLabel"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="51dp"
-        android:id="@+id/currentBudgetText"
+        android:text="$0.00"
         tools:text="$0.00" />
 </RelativeLayout>
 
