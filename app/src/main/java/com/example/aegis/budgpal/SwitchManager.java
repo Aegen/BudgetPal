@@ -32,6 +32,9 @@ public class SwitchManager {
             case "View Expenses":
                 tempIntent = new Intent(context, ViewHistory.class);
                 break;
+            case "View Events":
+                tempIntent = new Intent(context, ViewEvents.class);
+                break;
             case "Settings":
                 tempIntent = new Intent(context, LandingPage.class);
                 break;
