@@ -1,9 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_height="match_parent"
-    android:layout_width="match_parent"
-    android:id="@+id/navDrawer">
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_main"
@@ -13,19 +8,62 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.example.aegis.budgpal.MainActivity">lmcareers.helpdesk@lmco.com
+    tools:context="com.example.aegis.budgpal.MainActivity">
 
     <TextView
+        android:text="Username"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World this is Jon!"
-        android:id="@+id/house"/>
-</RelativeLayout>
+        android:id="@+id/textView2"
+        android:layout_marginTop="121dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignStart="@+id/loginPasswordField" />
 
-    <ListView
-        android:layout_width="200dp"
-        android:layout_height="match_parent"
-        android:id="@+id/navDrawerList"
-        android:layout_gravity="start|left"
-        android:background="#ffeeeeee"></ListView>
-</android.support.v4.widget.DrawerLayout>
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:id="@+id/loginUsernameField"
+        android:hint="Username"
+        android:layout_below="@+id/textView2"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="12dp" />
+
+    <TextView
+        android:text="Password"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView3"
+        android:layout_below="@+id/loginUsernameField"
+        android:layout_alignStart="@+id/loginUsernameField"
+        android:layout_marginTop="11dp" />
+
+    <EditText
+        android:id="@+id/loginPasswordField"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:ems="10"
+        android:inputType="textPassword"
+        android:layout_below="@+id/textView3"
+        android:layout_alignStart="@+id/loginUsernameField"
+        android:hint="********"/>
+
+    <Button
+        android:id="@+id/loginButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="25dp"
+        android:text="Login"
+        android:layout_below="@+id/loginPasswordField"
+        android:layout_centerHorizontal="true" />
+
+    <Button
+        android:id="@+id/newUserButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/loginButton"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="21dp"
+        android:text="New User" />
+</RelativeLayout>

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.aegis.budgpal.CreateUser">
+
+    <EditText
+        android:id="@+id/newUserUsernameField"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/newUserPasswordField"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="28dp"
+        android:ems="10"
+        android:hint="Username"
+        android:inputType="textPersonName" />
+
+    <EditText
+        android:id="@+id/newUserPasswordField"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/newUserUsernameField"
+        android:layout_centerVertical="true"
+        android:ems="10"
+        android:hint="****"
+        android:inputType="textPassword" />
+
+    <EditText
+        android:id="@+id/newUserConfirmPasswordField"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/newUserPasswordField"
+        android:layout_below="@+id/confirmPasswordField"
+        android:ems="10"
+        android:hint="****"
+        android:inputType="textPassword" />
+
+    <TextView
+        android:id="@+id/makeUsernameField"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/newUserUsernameField"
+        android:layout_alignStart="@+id/newUserUsernameField"
+        android:layout_marginBottom="45dp"
+        android:text="Username" />
+
+    <TextView
+        android:id="@+id/MakePasswordField"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/newUserPasswordField"
+        android:layout_alignStart="@+id/newUserPasswordField"
+        android:text="Password" />
+
+    <TextView
+        android:id="@+id/confirmPasswordField"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/newUserConfirmPasswordField"
+        android:layout_below="@+id/newUserPasswordField"
+        android:layout_marginTop="17dp"
+        android:text="Confirm Password" />
+
+    <Button
+        android:id="@+id/newUserNextButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/newUserConfirmPasswordField"
+        android:layout_marginTop="24dp"
+        android:layout_toEndOf="@+id/makeUsernameField"
+        android:text="Create" />
+</RelativeLayout>

@@ -1,7 +1,11 @@
 package com.example.aegis.budgpal;
 
+import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
+
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
+import java.text.SimpleDateFormat;
 
 /**
  * Created by Aegis on 3/10/17.
@@ -27,4 +31,21 @@ public class StatUtils {
 
         return new String(hash);
     }
+
+    /**
+     * Pass getApplicationContext() to be given an instance of the database
+     * @param cont
+     * @return Instance of the database
+     */
+    public static SQLiteDatabase GetDatabase(Context cont){
+        DatabaseHandler a = new DatabaseHandler(cont, "database", null, 1); //Create database accessor
+        return a.getWritableDatabase();
+    }
+
+    public static String GetCurrentDate(){
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String tempDate = new SimpleDateFormat("yyyy-MM-dd").format(new java.util.Date());
+        return  tempDate;
+    }
+
 }

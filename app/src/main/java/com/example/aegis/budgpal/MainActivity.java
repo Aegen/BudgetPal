@@ -16,6 +16,8 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -31,10 +33,13 @@ import java.text.SimpleDateFormat;
 public class MainActivity extends AppCompatActivity {
 
 //harrison
-    private DrawerLayout NavDrawer;
-    private ListView NavDrawerList;
-    private String[] NavDrawerItems;
+
     private SQLiteDatabase db;
+
+    private EditText UsernameField;
+    private EditText PasswordField;
+    private Button LoginButton;
+    private Button NewUserButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,9 +49,11 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         boolean dbExists = checkForDatabase();
 
-        NavDrawer      = (DrawerLayout)findViewById(R.id.navDrawer);
-        NavDrawerList  = (ListView)findViewById(R.id.navDrawerList);
-        NavDrawerItems = getResources().getStringArray(R.array.navListItems);
+        UsernameField = (EditText)findViewById(R.id.loginUsernameField);
+        PasswordField = (EditText)findViewById(R.id.loginPasswordField);
+
+        LoginButton = (Button)findViewById(R.id.loginButton);
+        NewUserButton = (Button)findViewById(R.id.newUserButton);
 
 
         /***********************************************/
@@ -55,13 +62,12 @@ public class MainActivity extends AppCompatActivity {
 
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String tempDate = new SimpleDateFormat("yyyy-MM-dd").format(new java.util.Date());
-        DatabaseHandler a = new DatabaseHandler(getApplicationContext(), "database", null, 1); //Create database accessor
-        db = a.getWritableDatabase(); //Create Database object, declared globally above
+         //Create Database object, declared globally above
         //User horse = new User("dave", "asdlhfasd;l", tempDate, false, a);
         //a.addUser(horse);
         //horse.pushToDatabase();
 
-        db = a.getWritableDatabase(); //Create Database object, declared globally above
+        db = StatUtils.GetDatabase(getApplicationContext()); //Create Database object, declared globally above
         //db.execSQL("INSERT INTO User (Username, HashedPassword, LastModified, Deleted) VALUES ('harrison', 'password', '1996-01-01 12:00:00', 0);"); //Load item into db
         Cursor curse = db.rawQuery("SELECT * FROM User WHERE Username = 'dave'", null); //Self explanatory
         curse.moveToFirst(); //Important, sets the cursor to the first result, exception gets thrown if you try to get the contents without running this first
@@ -75,22 +81,38 @@ public class MainActivity extends AppCompatActivity {
 
         /***********************************************/
 
-
-        NavDrawerList.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, NavDrawerItems));
-
-        NavDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        LoginButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                /*Toast.makeText(getApplicationContext(), parent.getItemAtPosition(position).toString(),
-                        Toast.LENGTH_SHORT).show();*/
-                NavDrawer.closeDrawer(Gravity.LEFT);
-                Intent tempIntent = SwitchManager.SwitchActiviy(MainActivity.this, parent.getItemAtPosition(position).toString());
+            public void onClick(View v) {
+                String username = UsernameField.getText().toString();
+                String password = PasswordField.getText().toString();
+                String hashedPassword = StatUtils.GetHashedString(password);
+                Cursor cursee = db.rawQuery("SELECT * FROM User WHERE Username = '" + username + "'", null);
+                if(cursee.getCount() != 0){
+                    cursee.moveToFirst();
+                    String comp = cursee.getString(cursee.getColumnIndex("HashedPassword"));
+                    if(comp.equals(hashedPassword)){
+                        Toast.makeText(getApplicationContext(), "Success", Toast.LENGTH_SHORT).show();
 
-                if(tempIntent != null){
-                    startActivity(tempIntent);
+                        Intent goToLanding = new Intent(MainActivity.this, ViewHistory.class).putExtra("UserID", cursee.getLong(cursee.getColumnIndex("UserID")));
+                        startActivity(goToLanding);
+                    }else{
+                        Toast.makeText(getApplicationContext(), "Failure", Toast.LENGTH_SHORT).show();
+                    }
+                }else{
+                    Toast.makeText(getApplicationContext(), "No user found by that name", Toast.LENGTH_SHORT).show();
                 }
             }
         });
+
+        NewUserButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent temp = new Intent(MainActivity.this, CreateUser.class);
+                startActivity(temp);
+            }
+        });
+
     }
 
     public boolean checkForDatabase(){
