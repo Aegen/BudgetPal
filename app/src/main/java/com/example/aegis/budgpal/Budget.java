@@ -10,8 +10,8 @@ import java.text.SimpleDateFormat;
 public class Budget {
 
 
-    private int budgetID;
-    private int userID;
+    private long budgetID;
+    private long userID;
     private int timePeriod;
     private int resetCode;
     private Date anchorDate;
@@ -22,19 +22,19 @@ public class Budget {
     private boolean deleted;
 
 
-    public int getBudgetID() {
+    public long getBudgetID() {
         return budgetID;
     }
 
-    public void setBudgetID(int budgetID) {
+    public void setBudgetID(long budgetID) {
         this.budgetID = budgetID;
     }
 
-    public int getUserID() {
+    public long getUserID() {
         return userID;
     }
 
-    public void setUserID(int userID) {
+    public void setUserID(long userID) {
         this.userID = userID;
     }
 
