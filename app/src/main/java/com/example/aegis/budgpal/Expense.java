@@ -1,6 +1,7 @@
 package com.example.aegis.budgpal;
 
 import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
 
 import java.sql.Date;
 import java.text.DateFormat;
@@ -23,6 +24,7 @@ public class Expense {
     private boolean exempt;
     private boolean deleted;
     private DatabaseHandler handler;
+    private SQLiteDatabase db;
 
     public Expense(){}
 
@@ -40,6 +42,7 @@ public class Expense {
         this.exempt = EX;
         this.deleted = false;
         this.handler = new DatabaseHandler(context, "database", null, 1);
+        this.db = StatUtils.GetDatabase(context);
     }
 
     public long getExpenseID() {
@@ -126,7 +129,7 @@ public class Expense {
         if(this.expenseID == -1){
             this.handler.addExpense(this);
         }else {
-
+            this.handler.updateExpense(this);//Not implemented yet
         }
     }
 }

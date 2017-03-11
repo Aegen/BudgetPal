@@ -1,5 +1,7 @@
 package com.example.aegis.budgpal;
 
+import android.content.Context;
+
 import java.sql.Date;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -17,16 +19,18 @@ public class Event {
     private String endDate;
     private String description;
     private boolean deleted;
+    private DatabaseHandler handler;
 
-    public Event(){}
+    public Event(Context context){this.handler = new DatabaseHandler(context, "database", null, 1);}
 
-    public Event(long UID, String start, String end, String Description){
+    public Event(long UID, String start, String end, String Description, Context context){
         this.userID = UID;
         this.lastModified = StatUtils.GetCurrentDate();
         this.startDate = start;
         this.endDate = end;
         this.description = Description;
         this.deleted = false;
+        this.handler = new DatabaseHandler(context, "database", null, 1);
     }
 
 
@@ -86,4 +90,7 @@ public class Event {
         this.deleted = deleted;
     }
 
+    public void pushToDatabase(){
+        this.handler.addEvent(this);
+    }
 }

@@ -1,5 +1,7 @@
 package com.example.aegis.budgpal;
 
+import android.content.Context;
+
 import java.sql.Date;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -20,6 +22,22 @@ public class Budget {
     private float amount;
     private boolean active;
     private boolean deleted;
+    private DatabaseHandler handler;
+
+    public Budget(Context context){
+        this.handler = new DatabaseHandler(context, "database", null, 1);
+    }
+
+    public Budget(Long UID, int TP, int RC, String AD, String SD, float AM, Context context){
+        this.userID = UID;
+        this.timePeriod = TP;
+        this.resetCode = RC;
+        this.anchorDate = AD;
+        this.startDate = SD;
+        this.lastModified = StatUtils.GetCurrentDate();
+        this.amount = AM;
+        handler = new DatabaseHandler(context, "database", null, 1);
+    }
 
 
     public long getBudgetID() {
@@ -100,6 +118,10 @@ public class Budget {
 
     public void setDeleted(boolean deleted) {
         this.deleted = deleted;
+    }
+
+    public void pushToDatabase(){
+        this.handler.addBudget(this);
     }
 
 }

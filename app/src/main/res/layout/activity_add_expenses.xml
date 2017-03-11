@@ -40,7 +40,7 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="59dp"
             android:id="@+id/expenseAmountText"
-            android:text="0.00" />
+            android:hint="0.00" />
 
         <TextView
             android:id="@+id/expenseAmountLabel"

@@ -28,15 +28,8 @@ public class User {
     }
 
     public User(String uName, String pw, boolean dl, Context context){
-        byte[] hash = null;
-        try {
-            MessageDigest digest = MessageDigest.getInstance("SHA-256");
-            hash = digest.digest(pw.getBytes(StandardCharsets.UTF_8));
-        }catch (Exception e){
-
-        }
         this.username = uName;
-        this.password = new String(hash);
+        this.password = StatUtils.GetHashedString(pw);
         this.lastModified = StatUtils.GetCurrentDate();
         this.deleted = dl;
         this.aDBHandler = new DatabaseHandler(context, "database", null, 1);
@@ -71,7 +64,7 @@ public class User {
     }
 
     public void setPassword(String password) {
-        this.password = password;
+        this.password = StatUtils.GetHashedString(password);
     }
 
     public boolean isDeleted() {

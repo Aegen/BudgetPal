@@ -143,8 +143,16 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         long id = idCursor.getLong(0);
         user.setUserID(id);
-        
+    }
 
+    public void updateUser(User user){
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+
+        values.put(U_PASSWORD, user.getPassword());
+        values.put(U_LAST_MODIFIED, StatUtils.GetCurrentDate());
+        values.put(U_DELETED, user.isDeleted());
     }
 
     public void addExpense(Expense expense) {
@@ -168,7 +176,12 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         long id = idCursor.getLong(0);
         expense.setExpenseID(id);
-        
+
+
+    }
+
+    public void updateExpense(Expense expense){
+        SQLiteDatabase db = this.getWritableDatabase();
 
     }
 
@@ -192,8 +205,12 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         long id = idCursor.getLong(0);
         event.setEventID(id);
         
-        
 
+
+    }
+
+    public void updateEvent(Event event){
+        SQLiteDatabase db = this.getWritableDatabase();
     }
 
     public void addBudget(Budget budget) {
@@ -219,7 +236,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         long id = idCursor.getLong(0);
         budget.setBudgetID(id);
+    }
 
-        
+    public void updateBudget(Budget budget){
+        SQLiteDatabase db = this.getWritableDatabase();
     }
 }
