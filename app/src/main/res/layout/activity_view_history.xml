@@ -31,16 +31,21 @@
             android:layout_centerHorizontal="true"
             android:id="@+id/spinner4" />
 
-        <EditText
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/textView13"
+            android:layout_alignParentStart="true" />
+
+        <TextView
+            android:id="@+id/textView13"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:inputType="textPersonName"
-            android:text="List of Expenses"
-            android:ems="10"
+            android:text="Expenses"
             android:layout_below="@+id/spinner4"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="37dp"
-            android:id="@+id/editText6" />
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="16dp" />
+
     </RelativeLayout>
 
     <ListView
