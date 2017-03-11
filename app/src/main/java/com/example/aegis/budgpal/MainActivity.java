@@ -43,11 +43,10 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.i("first", "first");
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        boolean dbExists = checkForDatabase();
+
+        db = StatUtils.GetDatabase(getApplicationContext());
 
         UsernameField = (EditText)findViewById(R.id.loginUsernameField);
         PasswordField = (EditText)findViewById(R.id.loginPasswordField);
@@ -60,14 +59,14 @@ public class MainActivity extends AppCompatActivity {
         //Database access zone
         //Log.d("Date",new Date(1,1,1,).toString());
 
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String tempDate = new SimpleDateFormat("yyyy-MM-dd").format(new java.util.Date());
+
+        String tempDate = StatUtils.GetCurrentDate();
          //Create Database object, declared globally above
         //User horse = new User("dave", "asdlhfasd;l", tempDate, false, a);
         //a.addUser(horse);
         //horse.pushToDatabase();
 
-        db = StatUtils.GetDatabase(getApplicationContext()); //Create Database object, declared globally above
+        //db = StatUtils.GetDatabase(getApplicationContext()); //Create Database object, declared globally above
         //db.execSQL("INSERT INTO User (Username, HashedPassword, LastModified, Deleted) VALUES ('harrison', 'password', '1996-01-01 12:00:00', 0);"); //Load item into db
         Cursor curse = db.rawQuery("SELECT * FROM User WHERE Username = 'dave'", null); //Self explanatory
         curse.moveToFirst(); //Important, sets the cursor to the first result, exception gets thrown if you try to get the contents without running this first
@@ -84,17 +83,25 @@ public class MainActivity extends AppCompatActivity {
         LoginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 String username = UsernameField.getText().toString();
                 String password = PasswordField.getText().toString();
+
                 String hashedPassword = StatUtils.GetHashedString(password);
+
                 Cursor cursee = db.rawQuery("SELECT * FROM User WHERE Username = '" + username + "'", null);
+
                 if(cursee.getCount() != 0){
+
                     cursee.moveToFirst();
+
                     String comp = cursee.getString(cursee.getColumnIndex("HashedPassword"));
+
                     if(comp.equals(hashedPassword)){
                         Toast.makeText(getApplicationContext(), "Success", Toast.LENGTH_SHORT).show();
 
-                        Intent goToLanding = new Intent(MainActivity.this, ViewHistory.class).putExtra("UserID", cursee.getLong(cursee.getColumnIndex("UserID")));
+
+                        Intent goToLanding = SwitchManager.SwitchActivity(getApplicationContext(), "Homepage", cursee.getLong(cursee.getColumnIndex("UserID")));//new Intent(MainActivity.this, LandingPage.class).putExtra("UserID", cursee.getLong(cursee.getColumnIndex("UserID")));
                         startActivity(goToLanding);
                     }else{
                         Toast.makeText(getApplicationContext(), "Failure", Toast.LENGTH_SHORT).show();
@@ -113,9 +120,5 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-    }
-
-    public boolean checkForDatabase(){
-        return true;
     }
 }

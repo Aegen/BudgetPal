@@ -1,6 +1,8 @@
 package com.example.aegis.budgpal;
 
-import java.util.Date;
+import android.content.Context;
+
+import java.sql.Date;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 /**
@@ -14,12 +16,28 @@ public class Budget {
     private long userID;
     private int timePeriod;
     private int resetCode;
-    private Date anchorDate;
-    private Date startDate;
-    private Date lastModified;
+    private String anchorDate;
+    private String startDate;
+    private String lastModified;
     private float amount;
     private boolean active;
     private boolean deleted;
+    private DatabaseHandler handler;
+
+    public Budget(Context context){
+        this.handler = new DatabaseHandler(context, "database", null, 1);
+    }
+
+    public Budget(Long UID, int TP, int RC, String AD, String SD, float AM, Context context){
+        this.userID = UID;
+        this.timePeriod = TP;
+        this.resetCode = RC;
+        this.anchorDate = AD;
+        this.startDate = SD;
+        this.lastModified = StatUtils.GetCurrentDate();
+        this.amount = AM;
+        handler = new DatabaseHandler(context, "database", null, 1);
+    }
 
 
     public long getBudgetID() {
@@ -54,27 +72,27 @@ public class Budget {
         this.resetCode = resetCode;
     }
 
-    public Date getAnchorDate() {
+    public String getAnchorDate() {
         return anchorDate;
     }
 
-    public void setAnchorDate(Date anchorDate) {
+    public void setAnchorDate(String anchorDate) {
         this.anchorDate = anchorDate;
     }
 
-    public Date getStartDate() {
+    public String getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(Date startDate) {
+    public void setStartDate(String startDate) {
         this.startDate = startDate;
     }
 
-    public Date getLastModified() {
+    public String getLastModified() {
         return lastModified;
     }
 
-    public void setLastModified(Date lastModified) {
+    public void setLastModified(String lastModified) {
         this.lastModified = lastModified;
     }
 
@@ -100,6 +118,10 @@ public class Budget {
 
     public void setDeleted(boolean deleted) {
         this.deleted = deleted;
+    }
+
+    public void pushToDatabase(){
+        this.handler.addBudget(this);
     }
 
 }

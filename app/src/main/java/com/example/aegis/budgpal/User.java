@@ -6,6 +6,7 @@ import java.sql.Date;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import android.app.Activity;
+import android.content.Context;
 import android.widget.Toast;
 
 /**
@@ -26,19 +27,12 @@ public class User {
 
     }
 
-    public User(String uName, String pw, String lastMod, boolean dl, DatabaseHandler adbH){
-        byte[] hash = null;
-        try {
-            MessageDigest digest = MessageDigest.getInstance("SHA-256");
-            hash = digest.digest(pw.getBytes(StandardCharsets.UTF_8));
-        }catch (Exception e){
-
-        }
+    public User(String uName, String pw, boolean dl, Context context){
         this.username = uName;
-        this.password = new String(hash);
-        this.lastModified = lastMod;
+        this.password = StatUtils.GetHashedString(pw);
+        this.lastModified = StatUtils.GetCurrentDate();
         this.deleted = dl;
-        this.aDBHandler = adbH;
+        this.aDBHandler = new DatabaseHandler(context, "database", null, 1);
     }
 
     public long getUserID() {
@@ -70,7 +64,7 @@ public class User {
     }
 
     public void setPassword(String password) {
-        this.password = password;
+        this.password = StatUtils.GetHashedString(password);
     }
 
     public boolean isDeleted() {

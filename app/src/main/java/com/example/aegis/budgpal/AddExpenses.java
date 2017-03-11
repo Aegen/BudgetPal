@@ -1,14 +1,15 @@
 package com.example.aegis.budgpal;
 
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -20,13 +21,34 @@ public class AddExpenses extends AppCompatActivity {
     private String[] NavDrawerItems;
     private String[] Categories;
 
+    private SQLiteDatabase db;
+
+    private Long UserID;
+    private Long BudgetID;
+
+    private Button AddButton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_expenses);
 
+        db = StatUtils.GetDatabase(getApplicationContext());
+
+        AddButton = (Button)findViewById(R.id.expenseAddButton);
+
+        UserID = getIntent().getLongExtra("UserID", -1);
+        BudgetID = StatUtils.GetBudgetID(getApplicationContext(), UserID);
+
+        if(BudgetID == -1){
+            AddButton.setEnabled(false);
+            Toast.makeText(getApplicationContext(), "No budget set for this user", Toast.LENGTH_LONG).show();
+        }
+
+        Toast.makeText(getApplicationContext(), UserID.toString(), Toast.LENGTH_SHORT).show();
+
         Categories = getResources().getStringArray(R.array.expenseCategories);
-        Spinner categorySelector = (Spinner)findViewById(R.id.spinner);
+        Spinner categorySelector = (Spinner)findViewById(R.id.expenseCategorySpinner);
         categorySelector.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, Categories));
 
         NavDrawer      = (DrawerLayout)findViewById(R.id.navDrawer);
@@ -39,12 +61,21 @@ public class AddExpenses extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
                 NavDrawer.closeDrawer(Gravity.LEFT);
-                Intent tempIntent = SwitchManager.SwitchActiviy(AddExpenses.this, parent.getItemAtPosition(position).toString());
+                Intent tempIntent = SwitchManager.SwitchActivity(AddExpenses.this, parent.getItemAtPosition(position).toString(), UserID);
 
                 if(tempIntent != null){
                     startActivity(tempIntent);
                 }
             }
         });
+
+        AddButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Expense tempExp = new Expense();
+                Toast.makeText(getApplicationContext(), "Clicked", Toast.LENGTH_SHORT).show();
+            }
+        });
+
     }
 }

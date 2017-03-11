@@ -1,7 +1,6 @@
 package com.example.aegis.budgpal;
 
 import android.content.Intent;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -10,40 +9,27 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
-public class SetBudget extends AppCompatActivity {
+public class LandingPage extends AppCompatActivity {
+
+    private SQLiteDatabase db;
 
     private DrawerLayout NavDrawer;
     private ListView NavDrawerList;
     private String[] NavDrawerItems;
 
-    private SQLiteDatabase db;
-
-    private EditText AmountField;
-    private Button SaveButton;
-
     private Long UserID;
-    private Long BudgetID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_set_budget);
+        setContentView(R.layout.activity_landing_page);
 
         db = StatUtils.GetDatabase(getApplicationContext());
 
-        AmountField = (EditText)findViewById(R.id.newBudgetText);
-        SaveButton  = (Button)findViewById(R.id.budgetSaveButton);
-        String test = getResources().getString(R.string.app_name);
-        Toast.makeText(getApplicationContext(), test, Toast.LENGTH_SHORT).show();
-
         UserID = getIntent().getLongExtra("UserID", -1);
-        BudgetID = StatUtils.GetBudgetID(getApplicationContext(), UserID);
-
         Toast.makeText(getApplicationContext(), UserID.toString(), Toast.LENGTH_SHORT).show();
 
         NavDrawer      = (DrawerLayout)findViewById(R.id.navDrawer);
@@ -56,18 +42,11 @@ public class SetBudget extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
                 NavDrawer.closeDrawer(Gravity.LEFT);
-                Intent tempIntent = SwitchManager.SwitchActivity(SetBudget.this, parent.getItemAtPosition(position).toString(), UserID);
+                Intent tempIntent = SwitchManager.SwitchActivity(LandingPage.this, parent.getItemAtPosition(position).toString(), UserID);
 
                 if(tempIntent != null){
                     startActivity(tempIntent);
                 }
-            }
-        });
-
-        SaveButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
             }
         });
     }

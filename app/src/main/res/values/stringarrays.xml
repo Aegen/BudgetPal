@@ -13,7 +13,10 @@
     </string-array>
 
     <string-array name="expenseCategories">
-        <item>first</item>
-        <item>second</item>
+        <item>Grocery</item>
+        <item>Payment</item>
+        <item>Personal Expense</item>
+        <item>Bills</item>
+        <item>Miscellaneous</item>
     </string-array>
 </resources>

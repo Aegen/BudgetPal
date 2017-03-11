@@ -19,57 +19,57 @@
             android:text="Category"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/textView2"
+            android:id="@+id/expenseCategoryLabel"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true" />
 
         <Spinner
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/textView2"
+            android:layout_below="@+id/expenseCategoryLabel"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="14dp"
-            android:id="@+id/spinner" />
+            android:id="@+id/expenseCategorySpinner" />
 
         <EditText
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:inputType="numberDecimal"
             android:ems="10"
-            android:layout_below="@+id/spinner"
+            android:layout_below="@+id/expenseCategorySpinner"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="59dp"
-            android:id="@+id/editText"
-            android:text="0.00" />
+            android:id="@+id/expenseAmountText"
+            android:hint="0.00" />
 
         <TextView
-            android:text="Amount"
+            android:id="@+id/expenseAmountLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/spinner"
+            android:layout_below="@+id/expenseCategorySpinner"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="31dp"
-            android:id="@+id/textView3" />
+            android:text="Amount" />
 
         <EditText
+            android:id="@+id/expenseDescriptionText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:inputType="textPersonName"
-            android:hint="Description..."
-            android:ems="10"
-            android:layout_below="@+id/editText"
-            android:layout_alignEnd="@+id/editText"
+            android:layout_alignEnd="@+id/expenseAmountText"
+            android:layout_below="@+id/expenseAmountText"
             android:layout_marginTop="25dp"
-            android:id="@+id/editText2" />
+            android:ems="10"
+            android:hint="Description..."
+            android:inputType="textPersonName" />
 
         <Button
-            android:text="ADD"
+            android:id="@+id/expenseAddButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="94dp"
-            android:id="@+id/button4" />
+            android:text="ADD" />
     </RelativeLayout>
     <ListView
         android:layout_width="200dp"

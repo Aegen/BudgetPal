@@ -1,10 +1,10 @@
 package com.example.aegis.budgpal;
 
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
@@ -17,11 +17,19 @@ public class AddEvent extends AppCompatActivity {
     private DrawerLayout NavDrawer;
     private ListView NavDrawerList;
     private String[] NavDrawerItems;
+    private Long UserID;
+
+    private SQLiteDatabase db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_event);
+
+        db = StatUtils.GetDatabase(getApplicationContext());
+
+        UserID = getIntent().getLongExtra("UserID", -1);
+        Toast.makeText(getApplicationContext(), UserID.toString(), Toast.LENGTH_SHORT).show();
 
         NavDrawer      = (DrawerLayout)findViewById(R.id.navDrawer);
         NavDrawerList  = (ListView)findViewById(R.id.navDrawerList);
@@ -33,7 +41,7 @@ public class AddEvent extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
                 NavDrawer.closeDrawer(Gravity.LEFT);
-                Intent tempIntent = SwitchManager.SwitchActiviy(AddEvent.this, parent.getItemAtPosition(position).toString());
+                Intent tempIntent = SwitchManager.SwitchActivity(AddEvent.this, parent.getItemAtPosition(position).toString(), UserID);
 
                 if(tempIntent != null){
                     startActivity(tempIntent);
