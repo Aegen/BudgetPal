@@ -18,7 +18,7 @@ public class SwitchManager {
         Intent tempIntent;
         switch (activity){
             case "Homepage":
-                tempIntent = new Intent(context, MainActivity.class);
+                tempIntent = new Intent(context, LandingPage.class);
                 break;
             case "Change Budget":
                 tempIntent = new Intent(context, SetBudget.class);
@@ -34,6 +34,9 @@ public class SwitchManager {
                 break;
             case "View Events":
                 tempIntent = new Intent(context, ViewEvents.class);
+                break;
+            case "Logout":
+                tempIntent = new Intent(context, MainActivity.class);
                 break;
             case "Settings":
                 tempIntent = new Intent(context, LandingPage.class);
