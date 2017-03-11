@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
@@ -18,10 +17,16 @@ public class ViewEvents extends AppCompatActivity {
     private ListView NavDrawerList;
     private String[] NavDrawerItems;
 
+    private Long UserID;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_events);
+
+        UserID = getIntent().getLongExtra("UserID", -1);
+
+        Toast.makeText(getApplicationContext(), UserID.toString(), Toast.LENGTH_SHORT).show();
 
         NavDrawer      = (DrawerLayout)findViewById(R.id.navDrawer);
         NavDrawerList  = (ListView)findViewById(R.id.navDrawerList);
@@ -33,7 +38,7 @@ public class ViewEvents extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
                 NavDrawer.closeDrawer(Gravity.LEFT);
-                Intent tempIntent = SwitchManager.SwitchActiviy(ViewEvents.this, parent.getItemAtPosition(position).toString());
+                Intent tempIntent = SwitchManager.SwitchActivity(ViewEvents.this, parent.getItemAtPosition(position).toString(), UserID);
 
                 if(tempIntent != null){
                     startActivity(tempIntent);

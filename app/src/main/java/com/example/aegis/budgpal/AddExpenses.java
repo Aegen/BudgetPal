@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
@@ -20,10 +19,15 @@ public class AddExpenses extends AppCompatActivity {
     private String[] NavDrawerItems;
     private String[] Categories;
 
+    private Long UserID;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_expenses);
+
+        UserID = getIntent().getLongExtra("UserID", -1);
+        Toast.makeText(getApplicationContext(), UserID.toString(), Toast.LENGTH_SHORT).show();
 
         Categories = getResources().getStringArray(R.array.expenseCategories);
         Spinner categorySelector = (Spinner)findViewById(R.id.spinner);
@@ -39,7 +43,7 @@ public class AddExpenses extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
                 NavDrawer.closeDrawer(Gravity.LEFT);
-                Intent tempIntent = SwitchManager.SwitchActiviy(AddExpenses.this, parent.getItemAtPosition(position).toString());
+                Intent tempIntent = SwitchManager.SwitchActivity(AddExpenses.this, parent.getItemAtPosition(position).toString(), UserID);
 
                 if(tempIntent != null){
                     startActivity(tempIntent);

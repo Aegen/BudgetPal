@@ -143,7 +143,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         long id = idCursor.getLong(0);
         user.setUserID(id);
-        db.close();
+        
 
     }
 
@@ -168,7 +168,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         long id = idCursor.getLong(0);
         expense.setExpenseID(id);
-        db.close();
+        
 
     }
 
@@ -192,7 +192,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         long id = idCursor.getLong(0);
         event.setEventID(id);
         
-        db.close();
+        
 
     }
 
@@ -220,6 +220,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         long id = idCursor.getLong(0);
         budget.setBudgetID(id);
 
-        db.close();
+        
     }
 }
