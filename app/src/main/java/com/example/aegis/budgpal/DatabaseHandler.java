@@ -153,6 +153,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         values.put(U_PASSWORD, user.getPassword());
         values.put(U_LAST_MODIFIED, StatUtils.GetCurrentDate());
         values.put(U_DELETED, user.isDeleted());
+
+        db.update(TABLE_USERS, values, "UserID = " + user.getUserID(), null);
     }
 
     public void addExpense(Expense expense) {

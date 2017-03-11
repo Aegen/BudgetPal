@@ -9,6 +9,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -23,6 +24,9 @@ public class AddExpenses extends AppCompatActivity {
     private SQLiteDatabase db;
 
     private Long UserID;
+    private Long BudgetID;
+
+    private Button AddButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,7 +35,15 @@ public class AddExpenses extends AppCompatActivity {
 
         db = StatUtils.GetDatabase(getApplicationContext());
 
+        AddButton = (Button)findViewById(R.id.expenseAddButton);
+
         UserID = getIntent().getLongExtra("UserID", -1);
+        BudgetID = StatUtils.GetBudgetID(getApplicationContext(), UserID);
+
+        if(BudgetID == -1){
+            AddButton.setEnabled(false);
+        }
+
         Toast.makeText(getApplicationContext(), UserID.toString(), Toast.LENGTH_SHORT).show();
 
         Categories = getResources().getStringArray(R.array.expenseCategories);
@@ -55,5 +67,14 @@ public class AddExpenses extends AppCompatActivity {
                 }
             }
         });
+
+        AddButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Expense tempExp = new Expense();
+                Toast.makeText(getApplicationContext(), "Clicked", Toast.LENGTH_SHORT).show();
+            }
+        });
+
     }
 }

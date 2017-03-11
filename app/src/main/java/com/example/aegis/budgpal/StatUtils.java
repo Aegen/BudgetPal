@@ -1,6 +1,7 @@
 package com.example.aegis.budgpal;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import java.nio.charset.StandardCharsets;
@@ -46,6 +47,18 @@ public class StatUtils {
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String tempDate = new SimpleDateFormat("yyyy-MM-dd").format(new java.util.Date());
         return  tempDate;
+    }
+
+    public static Long GetBudgetID(Context context, Long UserID){
+        SQLiteDatabase db = GetDatabase(context);
+
+        Cursor curs = db.rawQuery("SELECT * FROM Budget WHERE UserID = " + UserID, null);
+        curs.moveToFirst();
+        if(curs.getCount() > 0){
+            return curs.getLong(curs.getColumnIndex("BudgetID"));
+        }else{
+            return new Long(-1);
+        }
     }
 
 }

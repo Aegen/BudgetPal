@@ -50,17 +50,8 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="10dp"
             android:ems="10"
-            android:inputType="textPersonName"
-            android:text="0.00" />
-
-    <TextView
-        android:text="Why did you modify...?"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/newBudgetText"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="12dp"
-        android:id="@+id/whyModifyBudgetLabel" />
+            android:hint="0.00"
+            android:inputType="textPersonName" />
 
         <CheckBox
             android:id="@+id/budgetMonthlyCheckBox"
@@ -74,10 +65,10 @@
         android:text="SAVE"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="93dp"
         android:id="@+id/budgetSaveButton"
-        android:layout_below="@+id/whyModifyBudgetLabel"
-        android:layout_alignStart="@+id/currentBudgetLabel" />
+        android:layout_marginTop="30dp"
+        android:layout_below="@+id/newBudgetText"
+        android:layout_alignEnd="@+id/currentBudgetLabel" />
 
     <CheckBox
         android:text="Weekly"

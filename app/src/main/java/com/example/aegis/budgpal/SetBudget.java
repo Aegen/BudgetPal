@@ -27,6 +27,7 @@ public class SetBudget extends AppCompatActivity {
     private Button SaveButton;
 
     private Long UserID;
+    private Long BudgetID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +49,8 @@ public class SetBudget extends AppCompatActivity {
         });
 
         UserID = getIntent().getLongExtra("UserID", -1);
+        BudgetID = StatUtils.GetBudgetID(getApplicationContext(), UserID);
+
         Toast.makeText(getApplicationContext(), UserID.toString(), Toast.LENGTH_SHORT).show();
 
         NavDrawer      = (DrawerLayout)findViewById(R.id.navDrawer);
