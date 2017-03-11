@@ -1,6 +1,8 @@
 package com.example.aegis.budgpal;
 
-import java.util.Date;
+import android.content.Context;
+
+import java.sql.Date;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 /**
@@ -10,17 +12,35 @@ import java.text.SimpleDateFormat;
 public class Expense {
 
 
-    private long expenseID;
+    private long expenseID = -1;
     private long userID;
     private long budgetID;
     private float amount;
-    private Date lastModified;
-    private Date dateCreated;
+    private String lastModified;
+    private String dateCreated;
     private int category;
     private String description;
     private boolean exempt;
     private boolean deleted;
+    private DatabaseHandler handler;
 
+    public Expense(){}
+
+    public Expense(Long UID, Long BID, Float AM, String DC, int CAT, String DESC, Boolean EX, Context context){
+        if(DC.equals(null)){
+            DC = StatUtils.GetCurrentDate();
+        }
+        this.userID = UID;
+        this.budgetID = BID;
+        this.amount = AM;
+        this.lastModified = StatUtils.GetCurrentDate();
+        this.dateCreated = DC;
+        this.category = CAT;
+        this.description = DESC;
+        this.exempt = EX;
+        this.deleted = false;
+        this.handler = new DatabaseHandler(context, "database", null, 1);
+    }
 
     public long getExpenseID() {
         return expenseID;
@@ -54,19 +74,19 @@ public class Expense {
         this.amount = amount;
     }
 
-    public Date getLastModified() {
+    public String getLastModified() {
         return lastModified;
     }
 
-    public void setLastModified(Date lastModified) {
+    public void setLastModified(String lastModified) {
         this.lastModified = lastModified;
     }
 
-    public Date getDateCreated() {
+    public String getDateCreated() {
         return dateCreated;
     }
 
-    public void setDateCreated(Date dateCreated) {
+    public void setDateCreated(String dateCreated) {
         this.dateCreated = dateCreated;
     }
 
@@ -100,5 +120,13 @@ public class Expense {
 
     public void setDeleted(boolean deleted) {
         this.deleted = deleted;
+    }
+
+    public void pushToDatabase(){
+        if(this.expenseID == -1){
+            this.handler.addExpense(this);
+        }else {
+
+        }
     }
 }

@@ -34,7 +34,7 @@ public class StatUtils {
 
     /**
      * Pass getApplicationContext() to be given an instance of the database
-     * @param cont
+     * @param cont Should be given getApplicationContext()
      * @return Instance of the database
      */
     public static SQLiteDatabase GetDatabase(Context cont){

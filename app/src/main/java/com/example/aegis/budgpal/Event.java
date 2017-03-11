@@ -1,6 +1,6 @@
 package com.example.aegis.budgpal;
 
-import java.util.Date;
+import java.sql.Date;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 /**
@@ -12,11 +12,22 @@ public class Event {
 
     private long eventID;
     private long userID;
-    private Date lastModified;
-    private Date startDate;
-    private Date endDate;
+    private String lastModified;
+    private String startDate;
+    private String endDate;
     private String description;
     private boolean deleted;
+
+    public Event(){}
+
+    public Event(long UID, String start, String end, String Description){
+        this.userID = UID;
+        this.lastModified = StatUtils.GetCurrentDate();
+        this.startDate = start;
+        this.endDate = end;
+        this.description = Description;
+        this.deleted = false;
+    }
 
 
     public long getEventID() {
@@ -35,27 +46,27 @@ public class Event {
         this.userID = userID;
     }
 
-    public Date getLastModified() {
+    public String getLastModified() {
         return lastModified;
     }
 
-    public void setLastModified(Date lastModified) {
+    public void setLastModified(String lastModified) {
         this.lastModified = lastModified;
     }
 
-    public Date getStartDate() {
+    public String getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(Date startDate) {
+    public void setStartDate(String startDate) {
         this.startDate = startDate;
     }
 
-    public Date getEndDate() {
+    public String getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(Date endDate) {
+    public void setEndDate(String endDate) {
         this.endDate = endDate;
     }
 

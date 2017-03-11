@@ -50,7 +50,7 @@ public class CreateUser extends AppCompatActivity {
 
 
 
-                User newU = new User(username, password, StatUtils.GetCurrentDate(), false, new DatabaseHandler(getApplicationContext(), "database", null, 1) );
+                User newU = new User(username, password, false, getApplicationContext() );
                 newU.pushToDatabase();
 
                 Intent goToLanding = new Intent(CreateUser.this, ViewHistory.class).putExtra("UserID", newU.getUserID());

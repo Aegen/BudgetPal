@@ -42,16 +42,16 @@
         android:layout_marginTop="71dp"
         android:id="@+id/newBudgetLabel" />
 
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:inputType="textPersonName"
-        android:text="$0.00"
-        android:ems="10"
-        android:layout_marginTop="10dp"
-        android:id="@+id/newBudgetText"
-        android:layout_below="@+id/newBudgetLabel"
-        android:layout_centerHorizontal="true" />
+        <EditText
+            android:id="@+id/newBudgetText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/newBudgetLabel"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:text="0.00" />
 
     <TextView
         android:text="Why did you modify...?"

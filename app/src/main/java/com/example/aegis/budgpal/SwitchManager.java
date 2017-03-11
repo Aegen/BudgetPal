@@ -14,6 +14,14 @@ import android.widget.EditText;
  */
 
 public class SwitchManager {
+
+    /**
+     *
+     * @param context Should be given getApplicationContext()
+     * @param activity Should be given the name that will match with the intended activity
+     * @param UserID Should be provided a userID that will be maintained throughout the session
+     * @return An intent used to change activities
+     */
     public static Intent SwitchActivity(Context context, String activity, Long UserID){
         Intent tempIntent;
         switch (activity){

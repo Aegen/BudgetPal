@@ -1,6 +1,6 @@
 package com.example.aegis.budgpal;
 
-import java.util.Date;
+import java.sql.Date;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 /**
@@ -14,9 +14,9 @@ public class Budget {
     private long userID;
     private int timePeriod;
     private int resetCode;
-    private Date anchorDate;
-    private Date startDate;
-    private Date lastModified;
+    private String anchorDate;
+    private String startDate;
+    private String lastModified;
     private float amount;
     private boolean active;
     private boolean deleted;
@@ -54,27 +54,27 @@ public class Budget {
         this.resetCode = resetCode;
     }
 
-    public Date getAnchorDate() {
+    public String getAnchorDate() {
         return anchorDate;
     }
 
-    public void setAnchorDate(Date anchorDate) {
+    public void setAnchorDate(String anchorDate) {
         this.anchorDate = anchorDate;
     }
 
-    public Date getStartDate() {
+    public String getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(Date startDate) {
+    public void setStartDate(String startDate) {
         this.startDate = startDate;
     }
 
-    public Date getLastModified() {
+    public String getLastModified() {
         return lastModified;
     }
 
-    public void setLastModified(Date lastModified) {
+    public void setLastModified(String lastModified) {
         this.lastModified = lastModified;
     }
 

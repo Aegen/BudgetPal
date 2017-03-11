@@ -1,6 +1,7 @@
 package com.example.aegis.budgpal;
 
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -13,6 +14,8 @@ import android.widget.Toast;
 
 public class LandingPage extends AppCompatActivity {
 
+    private SQLiteDatabase db;
+
     private DrawerLayout NavDrawer;
     private ListView NavDrawerList;
     private String[] NavDrawerItems;
@@ -23,6 +26,8 @@ public class LandingPage extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_landing_page);
+
+        db = StatUtils.GetDatabase(getApplicationContext());
 
         UserID = getIntent().getLongExtra("UserID", -1);
         Toast.makeText(getApplicationContext(), UserID.toString(), Toast.LENGTH_SHORT).show();
