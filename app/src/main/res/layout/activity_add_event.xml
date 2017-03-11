@@ -16,102 +16,54 @@
     tools:context="com.example.aegis.budgpal.AddEvent">
 
     <TextView
-        android:text="Name"
+        android:id="@+id/addEventNameText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="22dp"
-        android:id="@+id/addEventNameLabel"
-        android:layout_alignParentTop="true"
         android:layout_alignParentStart="true"
-        android:layout_marginStart="38dp" />
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="53dp"
+        android:layout_marginTop="30dp"
+        android:text="Event Name" />
 
     <EditText
+        android:id="@+id/addEventNameTextEdit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:inputType="textPersonName"
-        android:text="..."
+        android:layout_alignStart="@+id/addEventNameText"
+        android:layout_below="@+id/addEventNameText"
+        android:layout_marginTop="10dp"
         android:ems="10"
-        android:layout_alignParentTop="true"
-        android:layout_toEndOf="@+id/addEventNameLabel"
-        android:layout_marginStart="11dp"
-        android:id="@+id/addEventNameText" />
+        android:hint="Event Name..."
+        android:inputType="textPersonName" />
 
     <TextView
-        android:text="Date"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="23dp"
-        android:id="@+id/addEventDateLabel"
-        android:layout_below="@+id/addEventNameText"
-        android:layout_alignStart="@+id/addEventNameLabel" />
-
-    <EditText
         android:id="@+id/addEventDateText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/addEventDateLabel"
-        android:layout_alignBottom="@+id/addEventDateLabel"
-        android:layout_alignStart="@+id/addEventNameText"
+        android:layout_alignStart="@+id/addEventNameTextEdit"
+        android:layout_below="@+id/addEventNameTextEdit"
+        android:layout_marginTop="51dp"
+        android:text="Date" />
+
+    <EditText
+        android:id="@+id/addEventDateTextEdit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/addEventDateText"
+        android:layout_below="@+id/addEventDateText"
+        android:layout_marginTop="14dp"
         android:ems="10"
-        android:inputType="textPersonName"
-        android:text="..." />
+        android:hint="mm/dd/yyyy"
+        android:inputType="textPersonName" />
 
-    <CheckBox
-        android:text="All Day"
+    <Button
+        android:id="@+id/addEventButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/addEventDateLabel"
-        android:layout_alignStart="@+id/addEventDateLabel"
-        android:id="@+id/allDatCheckBox" />
-
-    <TextView
-        android:text="Start Time: Repetition"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/allDatCheckBox"
-        android:layout_alignStart="@+id/allDatCheckBox"
-        android:layout_marginTop="40dp"
-        android:id="@+id/eventStartTimeLabel" />
-
-    <Spinner
-        android:id="@+id/eventStartTimeSpinner"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/eventStartTimeLabel"
-        android:layout_centerHorizontal="true" />
-
-    <CheckBox
-        android:text="Notification"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_alignStart="@+id/eventStartTimeLabel"
-        android:id="@+id/eventNotificationsCheckBox" />
-
-    <CheckBox
-        android:text="Email"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/eventNotificationsCheckBox"
-        android:layout_alignStart="@+id/eventNotificationsCheckBox"
-        android:id="@+id/eventEmailCheckBox" />
-
-    <Spinner
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/eventEmailCheckBox"
+        android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="45dp"
-        android:id="@+id/eventHowSoonSpinner" />
-
-    <TextView
-        android:id="@+id/eventHowSoonLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/eventHowSoonSpinner"
-        android:layout_alignStart="@+id/eventEmailCheckBox"
-        android:layout_marginBottom="21dp"
-        android:text="How Soon in Advance?" />
+        android:layout_marginBottom="100dp"
+        android:text="Add" />
 </RelativeLayout>
 
     <ListView
