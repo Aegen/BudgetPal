@@ -99,7 +99,7 @@ public class SetBudget extends AppCompatActivity {
                     RSC = StatUtils.GetWeeklyResetCode();
                 }else if(MonthlyBox.isChecked()){
                     TPC = 3;
-                    RSC = 1;
+                    RSC = StatUtils.GetMonthResetCode();
                 }
                 String am = AmountField.getText().toString();
                 float amo = new Float(am);
