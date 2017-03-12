@@ -41,6 +41,8 @@ public class MainActivity extends AppCompatActivity {
     private Button LoginButton;
     private Button NewUserButton;
 
+    private Boolean CameFromLogout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,6 +55,8 @@ public class MainActivity extends AppCompatActivity {
 
         LoginButton = (Button)findViewById(R.id.loginButton);
         NewUserButton = (Button)findViewById(R.id.newUserButton);
+
+        CameFromLogout = getIntent().getBooleanExtra("CameFromLogout", false);
 
         Integer a = StatUtils.GetMonthResetCode();
 
@@ -106,7 +110,9 @@ public class MainActivity extends AppCompatActivity {
 
 
                         Intent goToLanding = SwitchManager.SwitchActivity(getApplicationContext(), "Homepage", cursee.getLong(cursee.getColumnIndex("UserID")));//new Intent(MainActivity.this, LandingPage.class).putExtra("UserID", cursee.getLong(cursee.getColumnIndex("UserID")));
+                        goToLanding.putExtra("CameFromEntry", true);
                         startActivity(goToLanding);
+                        finish();
                     }else{
                         Toast.makeText(getApplicationContext(), "Failure", Toast.LENGTH_SHORT).show();
                     }
@@ -124,5 +130,14 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    @Override
+    public void onBackPressed(){
+        if(CameFromLogout){
+            return;
+        }else{
+            super.onBackPressed();
+        }
     }
 }

@@ -58,7 +58,7 @@ public class SetBudget extends AppCompatActivity {
 
         if(BudgetID != -1){
             Budget tempB = StatUtils.GetBudget(getApplicationContext(), BudgetID);
-            OldBudget.setText(new Float(tempB.getAmount()).toString());
+            OldBudget.setText(Float.toString(tempB.getAmount()));
         }
 
         Toast.makeText(getApplicationContext(), UserID.toString(), Toast.LENGTH_SHORT).show();

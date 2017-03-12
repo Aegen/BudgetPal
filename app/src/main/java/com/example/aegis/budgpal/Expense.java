@@ -131,7 +131,7 @@ public class Expense {
         if(this.expenseID == -1){
             this.handler.addExpense(this);
         }else {
-            this.handler.updateExpense(this);//Not implemented yet
+            //this.handler.updateExpense(this);//Not implemented yet
         }
     }
 }

@@ -49,12 +49,12 @@
         android:id="@+id/addEventDateTextEdit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignStart="@+id/addEventDateText"
-        android:layout_below="@+id/addEventDateText"
         android:layout_marginTop="14dp"
         android:ems="10"
-        android:hint="mm/dd/yyyy"
-        android:inputType="textPersonName" />
+        android:hint="yyyy-mm-dd"
+        android:inputType="textPersonName"
+        android:layout_below="@+id/addEventDateText"
+        android:layout_alignStart="@+id/addEventDateText" />
 
     <Button
         android:id="@+id/addEventButton"

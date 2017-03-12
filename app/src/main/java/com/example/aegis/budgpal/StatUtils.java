@@ -21,8 +21,9 @@ import java.util.Date;
 public class StatUtils {
 
     /**
-     * Takes the input of an unhashed password(string)
-     * and returns it after hashing it with SHA-256
+     * Returns the output of hashing the string with SHA-256
+     * @param rawSTR
+     * @return
      */
     public static String GetHashedString(String rawSTR){
 
@@ -47,12 +48,22 @@ public class StatUtils {
         return a.getWritableDatabase();
     }
 
+    /**
+     * Gets the date
+     * @return
+     */
     public static String GetCurrentDate(){
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String tempDate = new SimpleDateFormat("yyyy-MM-dd").format(new java.util.Date());
         return  tempDate;
     }
 
+    /**
+     * Gets the budget ID for the specified user
+     * @param context
+     * @param UserID
+     * @return
+     */
     public static Long GetBudgetID(Context context, Long UserID){
         SQLiteDatabase db = GetDatabase(context);
 
@@ -65,6 +76,12 @@ public class StatUtils {
         }
     }
 
+    /**
+     * Gets the specified budget
+     * @param context
+     * @param budgetID
+     * @return
+     */
     public static Budget GetBudget(Context context, Long budgetID){
         Budget tempBudg = new Budget(context);
 
@@ -97,6 +114,11 @@ public class StatUtils {
         return tempBudg;
     }
 
+    /**
+     * Returns the code for the input string
+     * @param name
+     * @return
+     */
     public static int GetCategoryCode(String name){
         int code;
         switch (name){
@@ -123,6 +145,11 @@ public class StatUtils {
         return code;
     }
 
+
+    /**
+     * Gets the code for the day of the month
+     * @return
+     */
     @TargetApi(24)
     public static int GetWeeklyResetCode(){
 
@@ -163,6 +190,91 @@ public class StatUtils {
         Calendar cal = Calendar.getInstance();
 
         return cal.get(Calendar.DAY_OF_MONTH);
+    }
+
+    /**
+     * Determines whether the input string is a valid date
+     * @param date
+     * @return
+     */
+    public static boolean IsValidDate(String date){
+        String[] blocks = date.split("-");
+
+        if(blocks.length != 3){
+            return false;
+        }
+
+        int year = 0;
+        int month = 0;
+        int day = 0;
+        try {
+            year = Integer.parseInt(blocks[0]);
+        }catch (NumberFormatException e){
+            return false;
+        }
+
+        try{
+            month = Integer.parseInt(blocks[1]);
+        }catch (NumberFormatException e){
+            return false;
+        }
+
+        if(month < 1 || month > 12){
+            return false;
+        }
+
+        try{
+            day = Integer.parseInt(blocks[2]);
+        }catch (NumberFormatException e){
+            return false;
+        }
+
+        int maxDay = 0;
+
+        switch (month){
+            case 1:
+                maxDay = 31;
+                break;
+            case 2:
+                maxDay = 28;
+                break;
+            case 3:
+                maxDay = 31;
+                break;
+            case 4:
+                maxDay = 30;
+                break;
+            case 5:
+                maxDay = 31;
+                break;
+            case 6:
+                maxDay = 30;
+                break;
+            case 7:
+                maxDay = 31;
+                break;
+            case 8:
+                maxDay = 30;
+                break;
+            case 9:
+                maxDay = 31;
+                break;
+            case 10:
+                maxDay = 31;
+                break;
+            case 11:
+                maxDay = 30;
+                break;
+            case 12:
+                maxDay = 31;
+                break;
+        }
+
+        if(day < 1 || day > maxDay){
+            return false;
+        }
+
+        return true;
     }
 
 }
