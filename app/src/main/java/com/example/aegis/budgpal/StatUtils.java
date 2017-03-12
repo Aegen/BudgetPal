@@ -1,13 +1,16 @@
 package com.example.aegis.budgpal;
 
+import android.annotation.TargetApi;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.icu.util.Calendar;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * Created by Aegis on 3/10/17.
@@ -67,10 +70,28 @@ public class StatUtils {
 
         SQLiteDatabase db = GetDatabase(context);
 
-        Cursor curs = db.rawQuery("SELECT * FROM Budget WHERE BudgetID = " + budgetID + " AND Deleted = 0 AND ", null);
+        Cursor curs = db.rawQuery("SELECT * FROM Budget WHERE BudgetID = " + budgetID + " AND Deleted = 0", null);
 
         if(curs.getCount() > 0){
-            //tempBudg.setActive();
+            curs.moveToFirst();
+
+            tempBudg.setBudgetID(curs.getLong(curs.getColumnIndex("BudgetID")));
+            tempBudg.setUserID(curs.getLong(curs.getColumnIndex("UserID")));
+            tempBudg.setTimePeriod(curs.getInt(curs.getColumnIndex("TimePeriod")));
+            tempBudg.setResetCode(curs.getInt(curs.getColumnIndex("ResetCode")));
+            tempBudg.setAnchorDate(curs.getString(curs.getColumnIndex("AnchorDate")));
+            tempBudg.setStartDate(curs.getString(curs.getColumnIndex("StartDate")));
+            tempBudg.setLastModified(curs.getString(curs.getColumnIndex("LastModified")));
+            tempBudg.setAmount(curs.getFloat(curs.getColumnIndex("Amount")));
+            tempBudg.setActive(false);
+            int del = curs.getInt(curs.getColumnIndex("Deleted"));
+            boolean tempBool;
+            if(del == 0){
+                tempBool = false;
+            }else{
+                tempBool = true;
+            }
+            tempBudg.setDeleted(tempBool);
         }
 
         return tempBudg;
@@ -100,6 +121,43 @@ public class StatUtils {
         }
 
         return code;
+    }
+
+    @TargetApi(24)
+    public static int GetWeeklyResetCode(){
+
+        Date a = new Date();
+
+        Calendar cal = Calendar.getInstance();
+        int day = cal.get(Calendar.DAY_OF_WEEK);
+
+        switch (day){
+            case Calendar.SUNDAY:
+                return 1;
+
+            case Calendar.MONDAY:
+                return 2;
+
+            case Calendar.TUESDAY:
+                return 3;
+
+            case Calendar.WEDNESDAY:
+                return 4;
+
+            case Calendar.THURSDAY:
+                return 5;
+
+            case Calendar.FRIDAY:
+                return 6;
+
+            case Calendar.SATURDAY:
+                return 7;
+
+            default:
+                return 0;
+
+        }
+
     }
 
 }
