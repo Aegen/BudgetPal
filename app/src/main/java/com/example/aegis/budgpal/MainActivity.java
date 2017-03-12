@@ -54,6 +54,10 @@ public class MainActivity extends AppCompatActivity {
         LoginButton = (Button)findViewById(R.id.loginButton);
         NewUserButton = (Button)findViewById(R.id.newUserButton);
 
+        Integer a = StatUtils.GetMonthResetCode();
+
+        Toast.makeText(getApplicationContext(), a.toString(), Toast.LENGTH_LONG).show();
+
 
         /***********************************************/
         //Database access zone

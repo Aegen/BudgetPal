@@ -126,8 +126,6 @@ public class StatUtils {
     @TargetApi(24)
     public static int GetWeeklyResetCode(){
 
-        Date a = new Date();
-
         Calendar cal = Calendar.getInstance();
         int day = cal.get(Calendar.DAY_OF_WEEK);
 
@@ -158,6 +156,13 @@ public class StatUtils {
 
         }
 
+    }
+
+    @TargetApi(24)
+    public static int GetMonthResetCode(){
+        Calendar cal = Calendar.getInstance();
+
+        return cal.get(Calendar.DAY_OF_MONTH);
     }
 
 }
