@@ -167,7 +167,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         values.put(EX_DATE_CREATED, expense.getDateCreated().toString());
         values.put(EX_CATEGORY, expense.getCategory());
         values.put(EX_DESCRIPTION, expense.getDescription());
-        values.put(EX_EXEMPT, expense.getExpenseID());
+        values.put(EX_EXEMPT, expense.isExempt());
         values.put(EX_DELETED, expense.isDeleted());
 
         SQLiteDatabase db = this.getWritableDatabase();

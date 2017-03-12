@@ -26,7 +26,9 @@ public class Expense {
     private DatabaseHandler handler;
     private SQLiteDatabase db;
 
-    public Expense(){}
+    public Expense(Context context){
+        this.handler = new DatabaseHandler(context, "database", null, 1);
+    }
 
     public Expense(Long UID, Long BID, Float AM, String DC, int CAT, String DESC, Boolean EX, Context context){
         if(DC.equals(null)){
