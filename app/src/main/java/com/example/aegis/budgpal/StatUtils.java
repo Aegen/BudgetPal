@@ -283,13 +283,27 @@ public class StatUtils {
         SQLiteDatabase db = GetDatabase(context);
         ArrayList<Event> output = new ArrayList<Event>();
 
-        Cursor curs = db.rawQuery("SELECT * FROM Events WHERE UserID = " + UserID + " ORDERBY DESC", null);
+        Cursor curs = db.rawQuery("SELECT * FROM Events WHERE UserID = " + UserID + " AND Deleted = 0 ORDERBY DESC", null);
+
         if(curs.getCount() > 0) {
             curs.moveToFirst();
-            for (int i = 0; i< curs.getCount(); i++){
+            while(!curs.isAfterLast()){
+                Event tempEv = new Event(context);
+                tempEv.setEventID(curs.getLong(curs.getColumnIndex("EventID")));
+                tempEv.setDeleted(false);
+                tempEv.setLastModified(curs.getString(curs.getColumnIndex("LastModified")));
+                tempEv.setDescription(curs.getString(curs.getColumnIndex("Description")));
+                tempEv.setUserID(UserID);
+                tempEv.setStartDate(curs.getString(curs.getColumnIndex("StartDate")));
+                tempEv.setEndDate(tempEv.getStartDate());
+                curs.moveToNext();
 
+                output.add(tempEv);
             }
         }
+
+        curs.close();
+
         return output;
     }
 
