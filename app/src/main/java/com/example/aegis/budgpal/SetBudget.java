@@ -17,6 +17,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.NumberFormat;
+import java.util.Locale;
+
 public class SetBudget extends AppCompatActivity {
 
     private DrawerLayout NavDrawer;
@@ -57,8 +60,26 @@ public class SetBudget extends AppCompatActivity {
         BudgetID = StatUtils.GetBudgetID(getApplicationContext(), UserID);
 
         if(BudgetID != -1){
+            String period;
             Budget tempB = StatUtils.GetBudget(getApplicationContext(), BudgetID);
-            OldBudget.setText(Float.toString(tempB.getAmount()));
+
+            switch (tempB.getTimePeriod()){
+                case 1:
+                    period = "day";
+                    break;
+                case 2:
+                    period = "week";
+                    break;
+                case 3:
+                    period = "month";
+                    break;
+                default:
+                    period = "cycle";
+                    break;
+            }
+
+            OldBudget.setText(NumberFormat.getCurrencyInstance(new Locale("en", "US"))
+                    .format(tempB.getAmount()).toString() + " per " + period);
         }
 
         Toast.makeText(getApplicationContext(), UserID.toString(), Toast.LENGTH_SHORT).show();

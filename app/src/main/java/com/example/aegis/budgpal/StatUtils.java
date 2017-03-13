@@ -10,7 +10,9 @@ import android.icu.util.Calendar;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by Aegis on 3/10/17.
@@ -275,6 +277,20 @@ public class StatUtils {
         }
 
         return true;
+    }
+
+    public static ArrayList<Event> GetAllEvents(Context context, Long UserID){
+        SQLiteDatabase db = GetDatabase(context);
+        ArrayList<Event> output = new ArrayList<Event>();
+
+        Cursor curs = db.rawQuery("SELECT * FROM Events WHERE UserID = " + UserID + " ORDERBY DESC", null);
+        if(curs.getCount() > 0) {
+            curs.moveToFirst();
+            for (int i = 0; i< curs.getCount(); i++){
+
+            }
+        }
+        return output;
     }
 
 }
