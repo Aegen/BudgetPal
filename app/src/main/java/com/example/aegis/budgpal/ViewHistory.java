@@ -16,6 +16,8 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
+import static com.example.aegis.budgpal.StatUtils.getExpenses;
+
 public class ViewHistory extends ListActivity {
 
     private DrawerLayout NavDrawer;
@@ -57,21 +59,11 @@ public class ViewHistory extends ListActivity {
             }
         });
 
-
-        Cursor curs = db.rawQuery("SELECT * FROM Expense WHERE UserID = " + UserID, null);
-
-        Toast.makeText(getApplicationContext(), "cursor length: " + curs.getCount(), Toast.LENGTH_SHORT).show();
-
-        if(curs.getCount() > 0){
-
-            curs.moveToFirst();
-
-            int columnIndex = curs.getColumnIndex("Description");
-
-            while(!curs.isAfterLast()) {
-                listItems.add(curs.getString(columnIndex));
-                curs.moveToNext();
-            }
+        ArrayList<Expense> allExpenses = getExpenses(getApplicationContext(), UserID);
+        Toast.makeText(getApplicationContext(), "Number of Expenses: " + allExpenses.size(), Toast.LENGTH_SHORT).show();
+        for(int i=0; i<allExpenses.size(); i++) {
+            String temp = allExpenses.get(i).getExpenseID() + " : " + allExpenses.get(i).getDescription() + " = " + allExpenses.get(i).getAmount();
+            listItems.add(temp);
         }
 
         adapter=new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, listItems);
