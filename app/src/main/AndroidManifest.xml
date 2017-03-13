@@ -25,8 +25,9 @@
         <activity android:name=".AddEvent" />
         <activity android:name=".ViewHistory" />
         <activity android:name=".ViewEvents" />
-        <activity android:name=".LandingPage"></activity>
-        <activity android:name=".CreateUser"></activity>
+        <activity android:name=".LandingPage" />
+        <activity android:name=".CreateUser" />
+        <activity android:name=".EventDetailsActivity"></activity>
     </application>
 
 </manifest>

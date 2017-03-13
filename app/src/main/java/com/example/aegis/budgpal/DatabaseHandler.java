@@ -138,11 +138,12 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
 
         db.insert(TABLE_USERS, null, values);
-        Cursor idCursor = db.rawQuery("SELECT * FROM User WHERE " + U_USERNAME + " = '" + user.getUsername() +"' ORDER BY " + U_LAST_MODIFIED + " DESC;",null);
+        Cursor idCursor = db.rawQuery("SELECT * FROM User WHERE " + U_USERNAME + " = '" + user.getUsername() +"' ORDER BY " + U_USER_ID + " DESC;",null);
         idCursor.moveToFirst();
 
         long id = idCursor.getLong(0);
         user.setUserID(id);
+        idCursor.close();
     }
 
     public void updateUser(User user){
@@ -167,29 +168,30 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         values.put(EX_DATE_CREATED, expense.getDateCreated().toString());
         values.put(EX_CATEGORY, expense.getCategory());
         values.put(EX_DESCRIPTION, expense.getDescription());
-        values.put(EX_EXEMPT, expense.getExpenseID());
+        values.put(EX_EXEMPT, expense.isExempt());
         values.put(EX_DELETED, expense.isDeleted());
 
         SQLiteDatabase db = this.getWritableDatabase();
 
         db.insert(TABLE_EXPENSES, null, values);
-        Cursor idCursor = db.rawQuery("SELECT * FROM Expense WHERE " + EX_USER_ID + " = " + expense.getUserID() +" ORDER BY " + EX_LAST_MODIFIED + " DESC;",null);
+        Cursor idCursor = db.rawQuery("SELECT * FROM Expense WHERE " + EX_USER_ID + " = " + expense.getUserID() +" ORDER BY " + EX_EXPENSE_ID + " DESC;",null);
         idCursor.moveToFirst();
 
         long id = idCursor.getLong(0);
         expense.setExpenseID(id);
+        idCursor.close();
 
     }
 
-    public void updateExpense(Expense expense){
+   /* public void updateExpense(Expense expense){
         SQLiteDatabase db = this.getWritableDatabase();
 
-    }
+    }*/
 
     public void addEvent(Event event) {
 
         ContentValues values = new ContentValues();
-        values.put(EV_USER_ID, event.getEventID());
+        values.put(EV_USER_ID, event.getUserID());
         values.put(EV_LAST_MODIFIED, event.getLastModified().toString());
         values.put(EV_START_DATE, event.getStartDate().toString());
         values.put(EV_END_DATE, event.getEndDate().toString());
@@ -200,19 +202,20 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         db.insert(TABLE_EVENTS, null, values);
 
-        Cursor idCursor = db.rawQuery("SELECT * FROM Event WHERE " + EV_USER_ID + " = " + event.getUserID() +" ORDER BY " + EV_LAST_MODIFIED + " DESC;",null);
+        Cursor idCursor = db.rawQuery("SELECT * FROM Event WHERE " + EV_USER_ID + " = " + event.getUserID() +" ORDER BY " + EV_EVENT_ID + " DESC;",null);
         idCursor.moveToFirst();
 
         long id = idCursor.getLong(0);
         event.setEventID(id);
+        idCursor.close();
         
 
 
     }
 
-    public void updateEvent(Event event){
+    /*public void updateEvent(Event event){
         SQLiteDatabase db = this.getWritableDatabase();
-    }
+    }*/
 
     public void addBudget(Budget budget) {
 
@@ -232,11 +235,12 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
 
         db.insert(TABLE_BUDGETS, null, values);
-        Cursor idCursor = db.rawQuery("SELECT * FROM Budget WHERE " + B_USER_ID + " = " + budget.getUserID() +" ORDER BY " + B_LAST_MODIFIED + " DESC;",null);
+        Cursor idCursor = db.rawQuery("SELECT * FROM Budget WHERE " + B_USER_ID + " = " + budget.getUserID() +" ORDER BY " + B_BUDGET_ID + " DESC;",null);
         idCursor.moveToFirst();
 
         long id = idCursor.getLong(0);
         budget.setBudgetID(id);
+        idCursor.close();
     }
 
     public void updateBudget(Budget budget){

@@ -54,7 +54,9 @@ public class CreateUser extends AppCompatActivity {
                 newU.pushToDatabase();
 
                 Intent goToLanding = new Intent(CreateUser.this, ViewHistory.class).putExtra("UserID", newU.getUserID());
+                goToLanding.putExtra("CameFromEntry", true);
                 startActivity(goToLanding);
+                finish();
             }
         });
     }

@@ -12,7 +12,7 @@ import java.text.SimpleDateFormat;
 public class Budget {
 
 
-    private long budgetID;
+    private long budgetID = -1;
     private long userID;
     private int timePeriod;
     private int resetCode;
@@ -121,7 +121,11 @@ public class Budget {
     }
 
     public void pushToDatabase(){
-        this.handler.addBudget(this);
+        if(budgetID == -1) {
+            this.handler.addBudget(this);
+        }else{
+            this.handler.updateBudget(this);
+        }
     }
 
 }

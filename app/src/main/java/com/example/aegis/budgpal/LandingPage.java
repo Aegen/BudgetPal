@@ -21,6 +21,7 @@ public class LandingPage extends AppCompatActivity {
     private String[] NavDrawerItems;
 
     private Long UserID;
+    private Boolean CameFromEntry;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +31,7 @@ public class LandingPage extends AppCompatActivity {
         db = StatUtils.GetDatabase(getApplicationContext());
 
         UserID = getIntent().getLongExtra("UserID", -1);
+        CameFromEntry = getIntent().getBooleanExtra("CameFromEntry", false);
         Toast.makeText(getApplicationContext(), UserID.toString(), Toast.LENGTH_SHORT).show();
 
         NavDrawer      = (DrawerLayout)findViewById(R.id.navDrawer);
@@ -49,5 +51,14 @@ public class LandingPage extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    @Override
+    public void onBackPressed(){
+        if(CameFromEntry){
+            return;
+        }else{
+            super.onBackPressed();
+        }
     }
 }

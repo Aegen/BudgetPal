@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -26,6 +27,10 @@ public class AddExpenses extends AppCompatActivity {
     private Long UserID;
     private Long BudgetID;
 
+
+    private Spinner CategorySpinner;
+    private EditText AmountField;
+    private EditText DescriptionField;
     private Button AddButton;
 
     @Override
@@ -34,6 +39,11 @@ public class AddExpenses extends AppCompatActivity {
         setContentView(R.layout.activity_add_expenses);
 
         db = StatUtils.GetDatabase(getApplicationContext());
+
+        CategorySpinner = (Spinner)findViewById(R.id.expenseCategorySpinner);
+
+        AmountField = (EditText)findViewById(R.id.expenseAmountText);
+        DescriptionField = (EditText)findViewById(R.id.expenseDescriptionText);
 
         AddButton = (Button)findViewById(R.id.expenseAddButton);
 
@@ -72,8 +82,12 @@ public class AddExpenses extends AppCompatActivity {
         AddButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Expense tempExp = new Expense();
-                Toast.makeText(getApplicationContext(), "Clicked", Toast.LENGTH_SHORT).show();
+                Float am = new Float(AmountField.getText().toString());
+                Expense tempExp = new Expense(UserID, BudgetID, am,StatUtils.GetCurrentDate(), StatUtils.GetCategoryCode(CategorySpinner.getSelectedItem().toString()), DescriptionField.getText().toString(), false, getApplicationContext());
+                tempExp.pushToDatabase();
+
+                startActivity(SwitchManager.SwitchActivity(getApplicationContext(), "Homepage", UserID));
+                finish();
             }
         });
 

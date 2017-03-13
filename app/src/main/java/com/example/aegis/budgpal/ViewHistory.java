@@ -1,6 +1,8 @@
 package com.example.aegis.budgpal;
 
+import android.app.ListActivity;
 import android.content.Intent;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -12,7 +14,11 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
-public class ViewHistory extends AppCompatActivity {
+import java.util.ArrayList;
+
+import static com.example.aegis.budgpal.StatUtils.getExpenses;
+
+public class ViewHistory extends ListActivity {
 
     private DrawerLayout NavDrawer;
     private ListView NavDrawerList;
@@ -21,6 +27,9 @@ public class ViewHistory extends AppCompatActivity {
     private SQLiteDatabase db;
 
     private Long UserID;
+
+    ArrayList<String> listItems=new ArrayList<String>();
+    ArrayAdapter<String> adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,5 +58,15 @@ public class ViewHistory extends AppCompatActivity {
                 }
             }
         });
+
+        ArrayList<Expense> allExpenses = getExpenses(getApplicationContext(), UserID);
+        Toast.makeText(getApplicationContext(), "Number of Expenses: " + allExpenses.size(), Toast.LENGTH_SHORT).show();
+        for(int i=0; i<allExpenses.size(); i++) {
+            String temp = allExpenses.get(i).getExpenseID() + " : " + allExpenses.get(i).getDescription() + " = " + allExpenses.get(i).getAmount();
+            listItems.add(temp);
+        }
+
+        adapter=new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, listItems);
+        setListAdapter(adapter);
     }
 }
