@@ -58,7 +58,7 @@ public class ViewHistory extends ListActivity {
         });
 
 
-        Cursor curs = db.rawQuery("SELECT * FROM Expense WHERE UserID = '" + UserID + "'", null);
+        Cursor curs = db.rawQuery("SELECT * FROM Expense WHERE UserID = " + UserID, null);
 
         Toast.makeText(getApplicationContext(), "cursor length: " + curs.getCount(), Toast.LENGTH_SHORT).show();
 
@@ -68,8 +68,9 @@ public class ViewHistory extends ListActivity {
 
             int columnIndex = curs.getColumnIndex("Description");
 
-            while(curs.moveToNext()) {
+            while(!curs.isAfterLast()) {
                 listItems.add(curs.getString(columnIndex));
+                curs.moveToNext();
             }
         }
 

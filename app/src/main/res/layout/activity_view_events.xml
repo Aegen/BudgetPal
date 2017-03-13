@@ -28,7 +28,8 @@
         android:layout_width="369dp"
         android:layout_height="434dp"
         tools:layout_editor_absoluteX="8dp"
-        tools:layout_editor_absoluteY="69dp" />
+        tools:layout_editor_absoluteY="69dp"
+        android:layout_below="@+id/textView" />
 
 </RelativeLayout>
 

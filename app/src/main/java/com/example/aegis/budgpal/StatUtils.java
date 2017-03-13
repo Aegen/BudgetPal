@@ -6,6 +6,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.icu.util.Calendar;
+import android.util.Log;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
@@ -294,7 +295,7 @@ public class StatUtils {
         SQLiteDatabase db = GetDatabase(context);
         ArrayList<Event> output = new ArrayList<Event>();
 
-        Cursor curs = db.rawQuery("SELECT * FROM Events WHERE UserID = " + UserID + " AND Deleted = 0 ORDERBY DESC", null);
+        Cursor curs = db.rawQuery("SELECT * FROM Event WHERE UserID = " + UserID + " AND Deleted = 0 ORDER BY StartDate DESC", null);
 
         if(curs.getCount() > 0) {
             curs.moveToFirst();
@@ -316,6 +317,25 @@ public class StatUtils {
         curs.close();
 
         return output;
+    }
+
+    public static Event GetEvent(Context context, long EventID){
+        SQLiteDatabase db = GetDatabase(context);
+
+        Cursor curs = db.rawQuery("SELECT * FROM Event WHERE EventID = " + EventID, null);
+        curs.moveToFirst();
+        Log.d("other id:", Long.toString(EventID));
+        Event tempEv = new Event(context);
+        tempEv.setEventID(EventID);
+        tempEv.setDeleted(false);
+        tempEv.setLastModified(curs.getString(curs.getColumnIndex("LastModified")));
+        tempEv.setDescription(curs.getString(curs.getColumnIndex("Description")));
+        tempEv.setUserID(curs.getLong(curs.getColumnIndex("UserID")));
+        tempEv.setStartDate(curs.getString(curs.getColumnIndex("StartDate")));
+        tempEv.setEndDate(tempEv.getStartDate());
+        Log.d("Description", tempEv.getDescription());
+        curs.close();
+        return tempEv;
     }
 
 }
