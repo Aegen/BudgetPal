@@ -75,6 +75,9 @@ public class AddEvent extends AppCompatActivity {
                 if(StatUtils.IsValidDate(date)){
                     Event tempEv = new Event(UserID, date, date, desc, getApplicationContext());
                     tempEv.pushToDatabase();
+
+                    startActivity(SwitchManager.SwitchActivity(getApplicationContext(), "Homepage", UserID));
+                    finish();
                 }else{
                     Toast.makeText(getApplicationContext(), "Invalid Date must be of the form yyyy-mm-dd", Toast.LENGTH_LONG).show();
                 }

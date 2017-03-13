@@ -85,6 +85,9 @@ public class AddExpenses extends AppCompatActivity {
                 Float am = new Float(AmountField.getText().toString());
                 Expense tempExp = new Expense(UserID, BudgetID, am,StatUtils.GetCurrentDate(), StatUtils.GetCategoryCode(CategorySpinner.getSelectedItem().toString()), DescriptionField.getText().toString(), false, getApplicationContext());
                 tempExp.pushToDatabase();
+
+                startActivity(SwitchManager.SwitchActivity(getApplicationContext(), "Homepage", UserID));
+                finish();
             }
         });
 

@@ -126,6 +126,9 @@ public class SetBudget extends AppCompatActivity {
                 float amo = new Float(am);
                 Budget newB = new Budget(UserID, TPC, RSC, StatUtils.GetCurrentDate(), StatUtils.GetCurrentDate(), amo, getApplicationContext());
                 newB.pushToDatabase();
+
+                startActivity(SwitchManager.SwitchActivity(getApplicationContext(), "Homepage", UserID));
+                finish();
             }
         });
     }
