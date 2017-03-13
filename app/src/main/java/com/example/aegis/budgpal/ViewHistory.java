@@ -1,6 +1,8 @@
 package com.example.aegis.budgpal;
 
+import android.app.ListActivity;
 import android.content.Intent;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -12,7 +14,9 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
-public class ViewHistory extends AppCompatActivity {
+import java.util.ArrayList;
+
+public class ViewHistory extends ListActivity {
 
     private DrawerLayout NavDrawer;
     private ListView NavDrawerList;
@@ -21,6 +25,9 @@ public class ViewHistory extends AppCompatActivity {
     private SQLiteDatabase db;
 
     private Long UserID;
+
+    ArrayList<String> listItems=new ArrayList<String>();
+    ArrayAdapter<String> adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,5 +56,24 @@ public class ViewHistory extends AppCompatActivity {
                 }
             }
         });
+
+
+        Cursor curs = db.rawQuery("SELECT * FROM Expense WHERE UserID = '" + UserID + "'", null);
+
+        Toast.makeText(getApplicationContext(), "cursor length: " + curs.getCount(), Toast.LENGTH_SHORT).show();
+
+        if(curs.getCount() > 0){
+
+            curs.moveToFirst();
+
+            int columnIndex = curs.getColumnIndex("Description");
+
+            while(curs.moveToNext()) {
+                listItems.add(curs.getString(columnIndex));
+            }
+        }
+
+        adapter=new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, listItems);
+        setListAdapter(adapter);
     }
 }

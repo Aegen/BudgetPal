@@ -117,6 +117,17 @@ public class StatUtils {
     }
 
     /**
+     * This method querys the database and then returns all expenses associated with the given UserID
+     * @param context
+     * @param budgetID
+     * @return
+     */
+    public static ArrayList<Expense> getExpenses(Context context, Long budgetID) {
+
+        return null;
+    }
+
+    /**
      * Returns the code for the input string
      * @param name
      * @return
