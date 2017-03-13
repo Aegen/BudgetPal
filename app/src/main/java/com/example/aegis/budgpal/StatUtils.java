@@ -10,6 +10,7 @@ import android.icu.util.Calendar;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 /**
@@ -112,6 +113,17 @@ public class StatUtils {
         }
 
         return tempBudg;
+    }
+
+    /**
+     * This method querys the database and then returns all expenses associated with the given UserID
+     * @param context
+     * @param budgetID
+     * @return
+     */
+    public static ArrayList<Expense> getExpenses(Context context, Long budgetID) {
+
+        return null;
     }
 
     /**

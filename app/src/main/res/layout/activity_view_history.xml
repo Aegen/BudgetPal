@@ -32,7 +32,7 @@
             android:id="@+id/viewExpensesPeriodSpinner" />
 
         <ListView
-            android:id="@+id/viewExpensesListView"
+            android:id="@android:id/list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_alignParentStart="true"
