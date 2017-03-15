@@ -31,9 +31,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/landIngPageBudgetLabel"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="51dp"
-        android:text="$0.00"
-        tools:text="$0.00" />
+        android:layout_marginTop="51dp" />
 </RelativeLayout>
 
     <ListView

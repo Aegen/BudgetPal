@@ -10,7 +10,14 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import java.text.NumberFormat;
+import java.util.Locale;
+
+import static com.example.aegis.budgpal.StatUtils.GetBudget;
+import static com.example.aegis.budgpal.StatUtils.GetBudgetID;
 
 public class LandingPage extends AppCompatActivity {
 
@@ -22,6 +29,8 @@ public class LandingPage extends AppCompatActivity {
 
     private Long UserID;
     private Boolean CameFromEntry;
+
+    private TextView budgetText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +60,13 @@ public class LandingPage extends AppCompatActivity {
                 }
             }
         });
+
+        Budget budget = GetBudget(getApplicationContext(), GetBudgetID(getApplicationContext(), UserID));
+        float amount = budget.getAmount();
+
+        budgetText = (TextView)findViewById(R.id.landingPageBudgetText);
+        budgetText.setText(NumberFormat.getCurrencyInstance(new Locale("en", "US"))
+                .format(budget.getAmount()).toString());
     }
 
     @Override
