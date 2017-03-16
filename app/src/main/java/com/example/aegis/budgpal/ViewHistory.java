@@ -14,7 +14,9 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Locale;
 
 import static com.example.aegis.budgpal.StatUtils.getExpenses;
 
@@ -62,8 +64,9 @@ public class ViewHistory extends ListActivity {
         ArrayList<Expense> allExpenses = getExpenses(getApplicationContext(), UserID);
         Toast.makeText(getApplicationContext(), "Number of Expenses: " + allExpenses.size(), Toast.LENGTH_SHORT).show();
         for(int i=0; i<allExpenses.size(); i++) {
-            String temp = allExpenses.get(i).getExpenseID() + " : " + allExpenses.get(i).getDescription() + " = " + allExpenses.get(i).getAmount();
-            listItems.add(temp);
+            String temp = allExpenses.get(i).getExpenseID() + " : " + allExpenses.get(i).getDescription() + " = ";
+            String temp2 = NumberFormat.getCurrencyInstance(new Locale("en", "US")).format(allExpenses.get(i).getAmount());
+            listItems.add(temp + temp2);
         }
 
         adapter=new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, listItems);

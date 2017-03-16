@@ -95,7 +95,7 @@
             android:layout_below="@+id/budgetWeeklyCheckBox"
             android:text="Biweekly" />
 
-    </RelativeLayout>
+</RelativeLayout>
 
     <ListView
     android:layout_width="200dp"
