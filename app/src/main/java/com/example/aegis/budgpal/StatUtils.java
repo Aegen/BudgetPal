@@ -427,7 +427,7 @@ public class StatUtils {
         return tempU;
     }
 
-    @TargetApi(9)
+//    @TargetApi(9)
     public static Long DaysSince(String DateToCompare){
 
         SimpleDateFormat form = new SimpleDateFormat("yyyy-MM-dd");
@@ -441,10 +441,32 @@ public class StatUtils {
         }
 
         Long diff = curr.getTime() - comp.getTime();
-        //Log.d("Diff", diff.toString());
-        //Log.d("Ceil", Double.toString(Math.ceil((double)diff/((1000 * 60 * 60 * 24)))));
+//        Log.d("Diff", diff.toString());
+//        Log.d("Ceil", Double.toString(Math.ceil((double)diff/((1000 * 60 * 60 * 24)))));
         return (long)Math.ceil((double)diff/((1000 * 60 * 60 * 24)));
     }
 
+    public static void ChangeBudget(Context context, Long UserID){
+        Long BudgetID = GetBudgetID(context, UserID);
+
+//      Long UID, int TP, int RC, String AD, String SD, float AM, Context context
+
+        if(BudgetID != -1) {
+            Budget original = StatUtils.GetBudget(context, StatUtils.GetBudgetID(context, UserID));
+            Budget replacement = new Budget(UserID,
+                    original.getTimePeriod(),
+                    original.getResetCode(),
+                    GetCurrentDate(),
+                    GetCurrentDate(),
+                    original.getAmount(),
+                    context);
+
+            original.setDeleted(true);
+
+            original.pushToDatabase();
+            replacement.pushToDatabase();
+        }
+
+    }
 
 }
