@@ -24,7 +24,7 @@ public class EventDetailsActivity extends AppCompatActivity {
 
         DescriptionField.setText(getIntent().getStringExtra("Description"));
         DateField.setText(getIntent().getStringExtra("Date"));
-        CreatedByField.setText(Long.toString(getIntent().getLongExtra("User", -1)));
+        CreatedByField.setText(StatUtils.GetUser(getApplicationContext(), getIntent().getLongExtra("User", -1)).getUsername());
         CreatedOnField.setText(getIntent().getStringExtra("LastModified"));
     }
 }

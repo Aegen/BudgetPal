@@ -32,15 +32,15 @@
             android:id="@+id/expenseCategorySpinner" />
 
         <EditText
+            android:id="@+id/expenseAmountText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:inputType="numberDecimal"
-            android:ems="10"
             android:layout_below="@+id/expenseCategorySpinner"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="59dp"
-            android:id="@+id/expenseAmountText"
-            android:hint="0.00" />
+            android:ems="10"
+            android:hint="0.00"
+            android:inputType="numberDecimal" />
 
         <TextView
             android:id="@+id/expenseAmountLabel"

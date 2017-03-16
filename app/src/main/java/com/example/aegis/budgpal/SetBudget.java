@@ -55,7 +55,6 @@ public class SetBudget extends AppCompatActivity {
         WeeklyBox = (CheckBox)findViewById(R.id.budgetWeeklyCheckBox);
         MonthlyBox = (CheckBox)findViewById(R.id.budgetMonthlyCheckBox);
 
-
         UserID = getIntent().getLongExtra("UserID", -1);
         BudgetID = StatUtils.GetBudgetID(getApplicationContext(), UserID);
 

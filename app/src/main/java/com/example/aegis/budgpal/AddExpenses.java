@@ -82,12 +82,17 @@ public class AddExpenses extends AppCompatActivity {
         AddButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Float am = new Float(AmountField.getText().toString());
-                Expense tempExp = new Expense(UserID, BudgetID, am,StatUtils.GetCurrentDate(), StatUtils.GetCategoryCode(CategorySpinner.getSelectedItem().toString()), DescriptionField.getText().toString(), false, getApplicationContext());
-                tempExp.pushToDatabase();
+                if(!AmountField.getText().toString().isEmpty()) {
+                    Float am = new Float(AmountField.getText().toString());
+                    Expense tempExp = new Expense(UserID, BudgetID, am, StatUtils.GetCurrentDate(), StatUtils.GetCategoryCode(CategorySpinner.getSelectedItem().toString()), DescriptionField.getText().toString(), false, getApplicationContext());
+                    tempExp.pushToDatabase();
 
-                startActivity(SwitchManager.SwitchActivity(getApplicationContext(), "Homepage", UserID));
-                finish();
+
+                    startActivity(SwitchManager.SwitchActivity(getApplicationContext(), "Homepage", UserID));
+                    finish();
+                }else{
+                    Toast.makeText(getApplicationContext(), "You must enter an amount", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
