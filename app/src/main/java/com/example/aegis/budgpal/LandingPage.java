@@ -18,6 +18,7 @@ import org.w3c.dom.Text;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Locale;
 
 import static com.example.aegis.budgpal.StatUtils.GetBudget;
@@ -38,6 +39,11 @@ public class LandingPage extends AppCompatActivity {
     private TextView currentBudgetText;
     private TextView remainingBudgetText;
 
+    private int DayCode;
+    private int WeekCode;
+    private int BiweekCode;
+    private int MonthCode;
+
     private ArrayList<Expense> expenses = null;
 
     @Override
@@ -46,6 +52,11 @@ public class LandingPage extends AppCompatActivity {
         setContentView(R.layout.activity_landing_page);
 
         db = StatUtils.GetDatabase(getApplicationContext());
+
+        DayCode = getResources().getInteger(R.integer.DAY_CODE);
+        WeekCode = getResources().getInteger(R.integer.WEEK_CODE);
+        BiweekCode = getResources().getInteger(R.integer.BIWEEK_CODE);
+        MonthCode = getResources().getInteger(R.integer.MONTH_CODE);
 
         UserID = getIntent().getLongExtra("UserID", -1);
         CameFromEntry = getIntent().getBooleanExtra("CameFromEntry", false);
@@ -125,11 +136,47 @@ public class LandingPage extends AppCompatActivity {
 
         expenses = getExpenses(getApplicationContext(), UserID);
         for(int i=0; i<expenses.size(); i++) {
-            amount -= expenses.get(i).getAmount();
+            if(budget.getBudgetID() == expenses.get(i).getBudgetID())
+                amount -= expenses.get(i).getAmount();
         }
 
+        String period = new String();
+
+/*        switch (budget.getTimePeriod()){
+            case 1:
+                period = "day";
+                break;
+            case 2:
+                period = "week";
+                break;
+            case 3:
+                period = "2 weeks";
+                break;
+            case 4:
+                period = "month";
+                break;
+            default:
+                Toast.makeText(getApplicationContext(), "Error: Invalid Time Period", Toast.LENGTH_SHORT).show();
+                period = "cycle";
+                break;
+        }
+*/
+        if(budget.getTimePeriod() == DayCode){
+            period = "day";
+        }else if(budget.getTimePeriod() == WeekCode){
+            period = "week";
+        }else if(budget.getTimePeriod() == BiweekCode){
+            period = "2 weeks";
+        }else if(budget.getTimePeriod() == MonthCode){
+            period = "month";
+        }else{
+            Toast.makeText(getApplicationContext(), "Error: Invalid Time Period", Toast.LENGTH_SHORT).show();
+            period = "cycle";
+        }
+
+
         currentBudgetText.setText(NumberFormat.getCurrencyInstance(new Locale("en", "US"))
-                .format(budget.getAmount()).toString());
+                .format(budget.getAmount()).toString() + " per " + period);
         remainingBudgetText.setText(NumberFormat.getCurrencyInstance(new Locale("en", "US"))
                 .format(amount));
     }

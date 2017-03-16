@@ -57,9 +57,9 @@
             android:id="@+id/budgetMonthlyCheckBox"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignStart="@+id/budgetWeeklyCheckBox"
-            android:layout_below="@+id/budgetWeeklyCheckBox"
-            android:text="Monthly" />
+            android:text="Monthly"
+            android:layout_below="@+id/budgetBiweeklyCheckBox"
+            android:layout_alignParentStart="true" />
 
     <Button
         android:text="SAVE"
@@ -85,9 +85,17 @@
         android:layout_height="wrap_content"
         android:id="@+id/budgetDailyCheckBox"
         android:layout_above="@+id/budgetWeeklyCheckBox"
-        android:layout_toEndOf="@+id/whyModifyBudgetLabel" />
+        />
 
-</RelativeLayout>
+        <CheckBox
+            android:id="@+id/budgetBiweeklyCheckBox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/budgetWeeklyCheckBox"
+            android:text="Biweekly" />
+
+    </RelativeLayout>
 
     <ListView
     android:layout_width="200dp"
