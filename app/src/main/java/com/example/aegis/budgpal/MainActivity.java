@@ -171,7 +171,7 @@ public class MainActivity extends AppCompatActivity {
         String date = StatUtils.GetCurrentDate();
         String[] dates = date.split("-");
 
-        int code = Integer.parseInt(dates[2]);
+        int code = Integer.parseInt(dates[1]);
         int year = Integer.parseInt(dates[0]);
 
         Long ret = new Long(0);

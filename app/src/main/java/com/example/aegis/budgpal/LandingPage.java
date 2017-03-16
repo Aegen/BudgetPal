@@ -62,6 +62,8 @@ public class LandingPage extends AppCompatActivity {
         CameFromEntry = getIntent().getBooleanExtra("CameFromEntry", false);
         Toast.makeText(getApplicationContext(), UserID.toString(), Toast.LENGTH_SHORT).show();
 
+        Log.d("Plus 4", StatUtils.AddDaysToDate(StatUtils.GetCurrentDate(), 4));
+
 //        Toast.makeText(getApplicationContext(), StatUtils.DaysSince("2017-03-11").toString(), Toast.LENGTH_SHORT).show();
 //        Toast.makeText(getApplicationContext(), StatUtils.GetCurrentDate(), Toast.LENGTH_SHORT).show();
 
@@ -160,15 +162,19 @@ public class LandingPage extends AppCompatActivity {
                 period = "cycle";
                 break;
         }
-*/
+*/      int daysToAdd = 0;
         if(budget.getTimePeriod() == DayCode){
             period = "day";
+            daysToAdd = 1;
         }else if(budget.getTimePeriod() == WeekCode){
             period = "week";
+            daysToAdd = 7;
         }else if(budget.getTimePeriod() == BiweekCode){
             period = "2 weeks";
+            daysToAdd = 14;
         }else if(budget.getTimePeriod() == MonthCode){
             period = "month";
+            daysToAdd = 1;
         }else{
             Toast.makeText(getApplicationContext(), "Error: Invalid Time Period", Toast.LENGTH_SHORT).show();
             period = "cycle";
@@ -178,7 +184,7 @@ public class LandingPage extends AppCompatActivity {
         currentBudgetText.setText(NumberFormat.getCurrencyInstance(new Locale("en", "US"))
                 .format(budget.getAmount()).toString() + " per " + period);
         remainingBudgetText.setText(NumberFormat.getCurrencyInstance(new Locale("en", "US"))
-                .format(amount));
+                .format(amount) + " until " + StatUtils.AddDaysToDate(budget.getStartDate(), daysToAdd));
     }
 
     @Override
@@ -188,5 +194,10 @@ public class LandingPage extends AppCompatActivity {
         }else{
             super.onBackPressed();
         }
+    }
+
+    private int GetMonthCode(String date){
+
+        return 1;
     }
 }
