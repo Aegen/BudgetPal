@@ -174,11 +174,29 @@ public class LandingPage extends AppCompatActivity {
             period = "cycle";
         }
 
+        int daysToAdd = 0;
+        if(budget.getTimePeriod() == DayCode){
+            period = "day";
+            daysToAdd = 1;
+        }else if(budget.getTimePeriod() == WeekCode){
+            period = "week";
+            daysToAdd = 7;
+        }else if(budget.getTimePeriod() == BiweekCode){
+            period = "2 weeks";
+            daysToAdd = 14;
+        }else if(budget.getTimePeriod() == MonthCode){
+            period = "month";
+            daysToAdd = GetMonthCode(budget.getStartDate());
+        }else{
+            Toast.makeText(getApplicationContext(), "Error: Invalid Time Period", Toast.LENGTH_SHORT).show();
+            period = "cycle";
+        }
+
 
         currentBudgetText.setText(NumberFormat.getCurrencyInstance(new Locale("en", "US"))
                 .format(budget.getAmount()).toString() + " per " + period);
         remainingBudgetText.setText(NumberFormat.getCurrencyInstance(new Locale("en", "US"))
-                .format(amount));
+                .format(amount) + " until " + StatUtils.AddDaysToDate(budget.getStartDate(), daysToAdd));
     }
 
 
@@ -189,5 +207,56 @@ public class LandingPage extends AppCompatActivity {
         }else{
             super.onBackPressed();
         }
+    }
+
+    public int GetMonthCode(String date){
+        String[] dates = date.split("-");
+
+        int code = Integer.parseInt(dates[1]);
+        int year = Integer.parseInt(dates[0]);
+
+        int ret = 0;
+
+        switch(code){
+            case 1:
+                ret = 31;
+                break;
+            case 2:
+                ret = 28;
+                break;
+            case 3:
+                ret = 31;
+                break;
+            case 4:
+                ret = 30;
+                break;
+            case 5:
+                ret = 31;
+                break;
+            case 6:
+                ret = 30;
+                break;
+            case 7:
+                ret = 31;
+                break;
+            case 8:
+                ret = 30;
+                break;
+            case 9:
+                ret = 31;
+                break;
+            case 10:
+                ret = 31;
+                break;
+            case 11:
+                ret = 30;
+                break;
+            case 12:
+                ret = 30;
+                break;
+
+        }
+
+        return ret;
     }
 }
