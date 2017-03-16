@@ -163,15 +163,7 @@ public class SetBudget extends AppCompatActivity {
             }
         });
 
-        SaveButton.setOnClickListener(new View.OnClickListener() {
 
-                    BiweeklyBox.setChecked(false);
-                }
-                else{
-                    timePeriodSet = false;
-                }
-            }
-        });
         BiweeklyBox.setOnClickListener(new View.OnClickListener() {
 
             @Override
