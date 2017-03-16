@@ -39,6 +39,9 @@ public class SetBudget extends AppCompatActivity {
     private Long UserID;
     private Long BudgetID;
 
+    private boolean timePeriodSet = false;
+    private boolean amountSet = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -109,30 +112,79 @@ public class SetBudget extends AppCompatActivity {
         DailyBox.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                timePeriodSet = true;
+
                 boolean dIsChecked = DailyBox.isChecked();
                 if (dIsChecked == true){
                     WeeklyBox.setChecked(false);
                     MonthlyBox.setChecked(false);
+
+                    BiweeklyBox.setChecked(false);
+                }
+                else{
+                    timePeriodSet = false;
+
                 }
             }
         });
         WeeklyBox.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+
+                timePeriodSet = true;
+
                 boolean dIsChecked = WeeklyBox.isChecked();
                 if (dIsChecked == true){
                     DailyBox.setChecked(false);
                     MonthlyBox.setChecked(false);
+
+                    BiweeklyBox.setChecked(false);
+                }
+                else{
+                    timePeriodSet = false;
+
                 }
             }
         });
         MonthlyBox.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                timePeriodSet = true;
+
                 boolean dIsChecked = MonthlyBox.isChecked();
                 if (dIsChecked == true){
                     WeeklyBox.setChecked(false);
                     DailyBox.setChecked(false);
+
+                }
+            }
+        });
+
+        SaveButton.setOnClickListener(new View.OnClickListener() {
+
+                    BiweeklyBox.setChecked(false);
+                }
+                else{
+                    timePeriodSet = false;
+                }
+            }
+        });
+        BiweeklyBox.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                timePeriodSet = true;
+                boolean dIsChecked = BiweeklyBox.isChecked();
+                if (dIsChecked == true){
+                    WeeklyBox.setChecked(false);
+                    DailyBox.setChecked(false);
+                    MonthlyBox.setChecked(false);
+                }
+                else{
+                    timePeriodSet = false;
                 }
             }
         });
@@ -140,33 +192,36 @@ public class SetBudget extends AppCompatActivity {
         SaveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(BudgetID != -1) {
-                    Budget tempB = StatUtils.GetBudget(getApplicationContext(), BudgetID);
-                    tempB.setDeleted(true);
-                    tempB.pushToDatabase();
-                }
-                int TPC = getResources().getInteger(R.integer.DAY_CODE);
-                int RSC = 1;
-                if(DailyBox.isChecked()){
-                    TPC = getResources().getInteger(R.integer.DAY_CODE);
-                    RSC = 1;
-                }else if(WeeklyBox.isChecked()){
-                    TPC = getResources().getInteger(R.integer.WEEK_CODE);
-                    RSC = StatUtils.GetWeeklyResetCode();
-                }else if(BiweeklyBox.isChecked()){
-                    TPC = getResources().getInteger(R.integer.BIWEEK_CODE);
-                    RSC = StatUtils.GetWeeklyResetCode();
-                }else if(MonthlyBox.isChecked()){
-                    TPC = getResources().getInteger(R.integer.MONTH_CODE);
-                    RSC = StatUtils.GetMonthResetCode();
-                }
-                String am = AmountField.getText().toString();
-                float amo = new Float(am);
-                Budget newB = new Budget(UserID, TPC, RSC, StatUtils.GetCurrentDate(), StatUtils.GetCurrentDate(), amo, getApplicationContext());
-                newB.pushToDatabase();
+                if (timePeriodSet == true && AmountField.getText().toString().equals("") == false) {
 
-                startActivity(SwitchManager.SwitchActivity(getApplicationContext(), "Homepage", UserID));
-                finish();
+                    if (BudgetID != -1) {
+                        Budget tempB = StatUtils.GetBudget(getApplicationContext(), BudgetID);
+                        tempB.setDeleted(true);
+                        tempB.pushToDatabase();
+                    }
+                    int TPC = getResources().getInteger(R.integer.DAY_CODE);
+                    int RSC = 1;
+                    if (DailyBox.isChecked()) {
+                        TPC = getResources().getInteger(R.integer.DAY_CODE);
+                        RSC = 1;
+                    } else if (WeeklyBox.isChecked()) {
+                        TPC = getResources().getInteger(R.integer.WEEK_CODE);
+                        RSC = StatUtils.GetWeeklyResetCode();
+                    } else if (BiweeklyBox.isChecked()) {
+                        TPC = getResources().getInteger(R.integer.BIWEEK_CODE);
+                        RSC = StatUtils.GetWeeklyResetCode();
+                    } else if (MonthlyBox.isChecked()) {
+                        TPC = getResources().getInteger(R.integer.MONTH_CODE);
+                        RSC = StatUtils.GetMonthResetCode();
+                    }
+                    String am = AmountField.getText().toString();
+                    float amo = new Float(am);
+                    Budget newB = new Budget(UserID, TPC, RSC, StatUtils.GetCurrentDate(), StatUtils.GetCurrentDate(), amo, getApplicationContext());
+                    newB.pushToDatabase();
+
+                    startActivity(SwitchManager.SwitchActivity(getApplicationContext(), "Homepage", UserID));
+                    finish();
+                }
             }
         });
     }
