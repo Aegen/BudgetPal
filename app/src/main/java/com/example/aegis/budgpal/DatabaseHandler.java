@@ -155,7 +155,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         values.put(U_LAST_MODIFIED, StatUtils.GetCurrentDate());
         values.put(U_DELETED, user.isDeleted());
 
-        db.update(TABLE_USERS, values, "UserID = " + user.getUserID(), null);
+        if(user.getUserID() != -1) {
+            db.update(TABLE_USERS, values, "UserID = " + user.getUserID(), null);
+        }
     }
 
     public void addExpense(Expense expense) {
@@ -183,10 +185,23 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     }
 
-   /* public void updateExpense(Expense expense){
+    public void updateExpense(Expense expense){
         SQLiteDatabase db = this.getWritableDatabase();
 
-    }*/
+        ContentValues values = new ContentValues();
+
+        values.put(EX_AMOUNT, expense.getAmount());
+        values.put(EX_DESCRIPTION, expense.getDescription());
+        values.put(EX_CATEGORY, expense.getCategory());
+        values.put(EX_DELETED, expense.isDeleted());
+        values.put(EX_EXEMPT, expense.isExempt());
+        values.put(EX_LAST_MODIFIED, StatUtils.GetCurrentDate());
+
+        if(expense.getExpenseID() != -1) {
+            db.update(TABLE_EXPENSES, values, "ExpenseID = " + expense.getExpenseID(), null);
+        }
+
+    }
 
     public void addEvent(Event event) {
 
@@ -213,9 +228,21 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     }
 
-    /*public void updateEvent(Event event){
+    public void updateEvent(Event event){
         SQLiteDatabase db = this.getWritableDatabase();
-    }*/
+
+        ContentValues values = new ContentValues();
+
+        values.put(EV_DESCRIPTION, event.getDescription());
+        values.put(EV_DELETED, event.isDeleted());
+        values.put(EV_LAST_MODIFIED, StatUtils.GetCurrentDate());
+        values.put(EV_START_DATE, event.getStartDate());
+        values.put(EV_END_DATE, event.getStartDate());
+
+        if(event.getEventID() != -1) {
+            db.update(TABLE_EVENTS, values, "EventID = " + event.getEventID(), null);
+        }
+    }
 
     public void addBudget(Budget budget) {
 
@@ -250,7 +277,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         values.put(B_DELETED, budget.isDeleted());
         values.put(B_ACTIVE, budget.isActive());
 
-        db.update(TABLE_BUDGETS, values, "BudgetID = " + budget.getBudgetID(), null);
+        if(budget.getBudgetID() != -1) {
+            db.update(TABLE_BUDGETS, values, "BudgetID = " + budget.getBudgetID(), null);
+        }
 
 
     }

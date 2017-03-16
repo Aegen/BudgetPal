@@ -26,6 +26,12 @@ public class ViewEvents extends AppCompatActivity {
     private Long UserID;
 
     @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data){
+        super.onActivityResult(requestCode, resultCode, data);
+        PopulateList();
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_events);
@@ -40,6 +46,8 @@ public class ViewEvents extends AppCompatActivity {
         NavDrawerList.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, NavDrawerItems));
         EventsList = (ListView)findViewById(R.id.viewEventsListView);
 
+        PopulateList();
+
         NavDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -53,13 +61,7 @@ public class ViewEvents extends AppCompatActivity {
             }
         });
 
-        ArrayAdapter<String> listAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1);
-        EventsList.setAdapter(listAdapter);
 
-        ArrayList<Event> eventsList = StatUtils.GetAllEvents(getApplicationContext(), UserID);
-        for(int i = 0; i < eventsList.size(); i++){
-            listAdapter.add(Long.toString(eventsList.get(i).getEventID()) + "- " + eventsList.get(i).getDescription() + "- Starts: " + eventsList.get(i).getStartDate());
-        }
 
         EventsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -72,13 +74,26 @@ public class ViewEvents extends AppCompatActivity {
                 Event ev = StatUtils.GetEvent(getApplicationContext(), EventID);
 
                 Intent goToEventDetails = new Intent(ViewEvents.this, EventDetailsActivity.class);
+                goToEventDetails.putExtra("EventID", ev.getEventID());
                 goToEventDetails.putExtra("Description", ev.getDescription());
                 goToEventDetails.putExtra("Date", ev.getStartDate());
                 goToEventDetails.putExtra("User", ev.getUserID());
                 goToEventDetails.putExtra("LastModified", ev.getLastModified());
 
-                startActivity(goToEventDetails);
+                startActivityForResult(goToEventDetails, 0);
             }
         });
     }
+
+    private void PopulateList(){
+        ArrayAdapter<String> listAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1);
+        EventsList.setAdapter(listAdapter);
+        listAdapter.clear();
+
+        ArrayList<Event> eventsList = StatUtils.GetAllEvents(getApplicationContext(), UserID);
+        for(int i = 0; i < eventsList.size(); i++){
+            listAdapter.add(Long.toString(eventsList.get(i).getEventID()) + "- " + eventsList.get(i).getDescription() + "- Starts: " + eventsList.get(i).getStartDate());
+        }
+    }
+
 }

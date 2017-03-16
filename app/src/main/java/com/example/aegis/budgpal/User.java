@@ -16,7 +16,7 @@ import android.widget.Toast;
 public class User {
 
 
-    private long userID;
+    private long userID = -1;
     private String username;
     private String password;
     private String lastModified;
@@ -76,7 +76,10 @@ public class User {
     }
 
     public void pushToDatabase(){
-        //DatabaseHandler a = new DatabaseHandler();
-        aDBHandler.addUser(this);
+        if(userID == -1) {
+            this.aDBHandler.addUser(this);
+        }else{
+            this.aDBHandler.updateUser(this);
+        }
     }
 }
