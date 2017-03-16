@@ -134,6 +134,7 @@ public class LandingPage extends AppCompatActivity {
                 .format(amount));
     }
 
+
     @Override
     public void onBackPressed(){
         if(CameFromEntry){

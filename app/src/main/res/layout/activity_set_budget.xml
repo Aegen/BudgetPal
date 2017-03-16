@@ -8,7 +8,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_set__budget"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="300dp"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
@@ -19,10 +19,9 @@
         android:text="Current Budget"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="16dp"
-        android:id="@+id/currentBudgetLabel" />
+        android:layout_marginTop="40dp"
+        android:id="@+id/currentBudgetLabel"
+        android:layout_alignStart="@+id/newBudgetLabel" />
 
     <TextView
         android:text="$0.00"
@@ -66,9 +65,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/budgetSaveButton"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="69dp"
         android:layout_below="@+id/newBudgetText"
-        android:layout_alignEnd="@+id/currentBudgetLabel" />
+        android:layout_alignEnd="@+id/newBudgetLabel" />
 
     <CheckBox
         android:text="Weekly"
@@ -77,17 +76,19 @@
         android:id="@+id/budgetWeeklyCheckBox"
         android:layout_alignBaseline="@+id/budgetSaveButton"
         android:layout_alignBottom="@+id/budgetSaveButton"
-        android:layout_alignStart="@+id/budgetDailyCheckBox" />
+        android:layout_alignStart="@+id/budgetDailyCheckBox"
+        android:layout_centerVertical="true"
+        android:layout_toStartOf="@+id/newBudgetText" />
 
     <CheckBox
         android:text="Daily"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/budgetDailyCheckBox"
-        android:layout_above="@+id/budgetWeeklyCheckBox"
-        android:layout_toEndOf="@+id/whyModifyBudgetLabel" />
+        android:layout_above="@+id/budgetWeeklyCheckBox"/>
+        <!--android:layout_toEndOf="@+id/whyModifyBudgetLabel" -->
 
-</RelativeLayout>
+    </RelativeLayout>
 
     <ListView
     android:layout_width="200dp"
