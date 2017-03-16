@@ -66,7 +66,7 @@ public class ViewHistory extends AppCompatActivity {
 
         ArrayList<Expense> expenses = getExpenses(getApplicationContext(), UserID);
         for(int i=0; i<expenses.size(); i++) {
-            adapter.add(expenses.get(i).getExpenseID() + " - " + expenses.get(i).getDescription());
+            adapter.add(expenses.get(i).getExpenseID() + "- " + expenses.get(i).getDescription());
         }
 
         expensesListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
