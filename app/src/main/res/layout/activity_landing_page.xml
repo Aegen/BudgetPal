@@ -21,37 +21,44 @@
             android:id="@+id/landingPageCurrentBudgetLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
             android:layout_marginTop="31dp"
             android:text="Current Budget"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true" />
+            android:textColor="@android:color/black"
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/landingPageCurrentBudgetText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="23dp"
-            android:text="TextView"
             android:layout_below="@+id/landingPageCurrentBudgetLabel"
-            android:layout_alignStart="@+id/landingPageRemainingBudgetText" />
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
+            android:text="                                          "
+            android:textAlignment="center" />
 
         <TextView
             android:id="@+id/textView12"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="96dp"
-            android:text="Remaining Budget"
             android:layout_below="@+id/landingPageCurrentBudgetText"
-            android:layout_centerHorizontal="true" />
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="27dp"
+            android:text="Remaining Budget"
+            android:textColor="@android:color/black"
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/landingPageRemainingBudgetText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="22dp"
-            android:text="TextView"
             android:layout_below="@+id/textView12"
-            android:layout_centerHorizontal="true" />
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="22dp"
+            android:text="                                            "
+            android:textAlignment="center" />
+
     </RelativeLayout>
 
     <ListView

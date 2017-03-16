@@ -123,11 +123,16 @@ public class MainActivity extends AppCompatActivity {
                                     }
                                     break;
                                 case 3:
+                                    if(StatUtils.DaysSince(tempB.getStartDate()) > 13){
+                                        StatUtils.ChangeBudget(getApplicationContext(), UserID);
+                                    }
+                                case 4:
 
                                     if(StatUtils.DaysSince(tempB.getStartDate()) > GetMonthLength()){
                                         StatUtils.ChangeBudget(getApplicationContext(), UserID);
                                     }
                                     break;
+
                             }
                         }
                         Intent goToLanding = SwitchManager.SwitchActivity(getApplicationContext(), "Homepage", cursee.getLong(cursee.getColumnIndex("UserID")));//new Intent(MainActivity.this, LandingPage.class).putExtra("UserID", cursee.getLong(cursee.getColumnIndex("UserID")));

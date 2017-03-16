@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer name="DAY_CODE">1</integer>
+    <integer name="WEEK_CODE">2</integer>
+    <integer name="BIWEEK_CODE">3</integer>
+    <integer name="MONTH_CODE">4</integer>
+</resources>

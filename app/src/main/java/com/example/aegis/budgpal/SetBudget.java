@@ -33,6 +33,7 @@ public class SetBudget extends AppCompatActivity {
     private Button SaveButton;
     private CheckBox DailyBox;
     private CheckBox WeeklyBox;
+    private CheckBox BiweeklyBox;
     private CheckBox MonthlyBox;
 
     private Long UserID;
@@ -53,6 +54,7 @@ public class SetBudget extends AppCompatActivity {
 
         DailyBox = (CheckBox)findViewById(R.id.budgetDailyCheckBox);
         WeeklyBox = (CheckBox)findViewById(R.id.budgetWeeklyCheckBox);
+        BiweeklyBox = (CheckBox)findViewById(R.id.budgetBiweeklyCheckBox);
         MonthlyBox = (CheckBox)findViewById(R.id.budgetMonthlyCheckBox);
 
         UserID = getIntent().getLongExtra("UserID", -1);
@@ -70,6 +72,9 @@ public class SetBudget extends AppCompatActivity {
                     period = "week";
                     break;
                 case 3:
+                    period = "2 weeks";
+                    break;
+                case 4:
                     period = "month";
                     break;
                 default:
@@ -109,16 +114,19 @@ public class SetBudget extends AppCompatActivity {
                     tempB.setDeleted(true);
                     tempB.pushToDatabase();
                 }
-                int TPC = 1;
+                int TPC = getResources().getInteger(R.integer.DAY_CODE);
                 int RSC = 1;
                 if(DailyBox.isChecked()){
-                    TPC = 1;
+                    TPC = getResources().getInteger(R.integer.DAY_CODE);
                     RSC = 1;
                 }else if(WeeklyBox.isChecked()){
-                    TPC = 2;
+                    TPC = getResources().getInteger(R.integer.WEEK_CODE);
+                    RSC = StatUtils.GetWeeklyResetCode();
+                }else if(BiweeklyBox.isChecked()){
+                    TPC = getResources().getInteger(R.integer.BIWEEK_CODE);
                     RSC = StatUtils.GetWeeklyResetCode();
                 }else if(MonthlyBox.isChecked()){
-                    TPC = 3;
+                    TPC = getResources().getInteger(R.integer.MONTH_CODE);
                     RSC = StatUtils.GetMonthResetCode();
                 }
                 String am = AmountField.getText().toString();
