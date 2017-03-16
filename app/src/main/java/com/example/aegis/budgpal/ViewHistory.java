@@ -69,7 +69,7 @@ public class ViewHistory extends ListActivity {
 
         for(int i=0; i<allExpenses.size(); i++) {
             if(allExpenses.get(i).getBudgetID() == myBudgetID) {
-                String temp = allExpenses.get(i).getExpenseID() + " : " + allExpenses.get(i).getDescription() + " = ";
+                String temp = allExpenses.get(i).getExpenseID() + ": " + allExpenses.get(i).getDescription() + " = ";
                 String temp2 = NumberFormat.getCurrencyInstance(new Locale("en", "US")).format(allExpenses.get(i).getAmount());
                 listItems.add(temp + temp2);
             }
