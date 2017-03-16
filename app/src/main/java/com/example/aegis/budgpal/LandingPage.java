@@ -63,8 +63,6 @@ public class LandingPage extends AppCompatActivity {
         CameFromEntry = getIntent().getBooleanExtra("CameFromEntry", false);
         Toast.makeText(getApplicationContext(), UserID.toString(), Toast.LENGTH_SHORT).show();
 
-        Log.d("Plus 4", StatUtils.AddDaysToDate(StatUtils.GetCurrentDate(), 4));
-
 //        Toast.makeText(getApplicationContext(), StatUtils.DaysSince("2017-03-11").toString(), Toast.LENGTH_SHORT).show();
 //        Toast.makeText(getApplicationContext(), StatUtils.GetCurrentDate(), Toast.LENGTH_SHORT).show();
 
