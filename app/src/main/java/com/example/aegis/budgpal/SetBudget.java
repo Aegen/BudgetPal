@@ -119,7 +119,6 @@ public class SetBudget extends AppCompatActivity {
                 if (dIsChecked == true){
                     WeeklyBox.setChecked(false);
                     MonthlyBox.setChecked(false);
-
                     BiweeklyBox.setChecked(false);
                 }
                 else{
@@ -139,7 +138,6 @@ public class SetBudget extends AppCompatActivity {
                 if (dIsChecked == true){
                     DailyBox.setChecked(false);
                     MonthlyBox.setChecked(false);
-
                     BiweeklyBox.setChecked(false);
                 }
                 else{
@@ -158,6 +156,7 @@ public class SetBudget extends AppCompatActivity {
                 if (dIsChecked == true){
                     WeeklyBox.setChecked(false);
                     DailyBox.setChecked(false);
+                    BiweeklyBox.setChecked(false);
 
                 }
             }
