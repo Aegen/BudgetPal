@@ -123,7 +123,8 @@ public class MainActivity extends AppCompatActivity {
                                     }
                                     break;
                                 case 3:
-                                    if(StatUtils.DaysSince(tempB.getStartDate()) > 29){
+
+                                    if(StatUtils.DaysSince(tempB.getStartDate()) > GetMonthLength()){
                                         StatUtils.ChangeBudget(getApplicationContext(), UserID);
                                     }
                                     break;
@@ -159,5 +160,61 @@ public class MainActivity extends AppCompatActivity {
         }else{
             super.onBackPressed();
         }
+    }
+
+    private Long GetMonthLength() {
+        String date = StatUtils.GetCurrentDate();
+        String[] dates = date.split("-");
+
+        int code = Integer.parseInt(dates[2]);
+        int year = Integer.parseInt(dates[0]);
+
+        Long ret = new Long(0);
+
+        switch (code){
+            case 1:
+                ret = new Long(30);
+                break;
+            case 2:
+                ret = new Long(30);
+                break;
+            case 3:
+                if(year % 4 == 0 && year % 100 != 0 || year % 400 == 0){
+                    ret = new Long(28);
+                }else{
+                    ret = new Long(27);
+                }
+                break;
+            case 4:
+                ret = new Long(30);
+                break;
+            case 5:
+                ret = new Long(29);
+                break;
+            case 6:
+                ret = new Long(30);
+                break;
+            case 7:
+                ret = new Long(29);
+                break;
+            case 8:
+                ret = new Long(30);
+                break;
+            case 9:
+                ret = new Long(29);
+                break;
+            case 10:
+                ret = new Long(30);
+                break;
+            case 11:
+                ret = new Long(30);
+                break;
+            case 12:
+                ret = new Long(29);
+                break;
+
+        }
+
+        return ret;
     }
 }

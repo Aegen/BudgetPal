@@ -12,7 +12,7 @@ import java.text.SimpleDateFormat;
 public class Event {
 
 
-    private long eventID;
+    private long eventID = -1;
     private long userID;
     private String lastModified;
     private String startDate;
@@ -91,6 +91,10 @@ public class Event {
     }
 
     public void pushToDatabase(){
-        this.handler.addEvent(this);
+        if(eventID == -1) {
+            this.handler.addEvent(this);
+        }else{
+            this.handler.updateEvent(this);
+        }
     }
 }
