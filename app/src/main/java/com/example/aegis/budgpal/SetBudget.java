@@ -112,41 +112,59 @@ public class SetBudget extends AppCompatActivity {
         DailyBox.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 timePeriodSet = true;
+
                 boolean dIsChecked = DailyBox.isChecked();
                 if (dIsChecked == true){
                     WeeklyBox.setChecked(false);
                     MonthlyBox.setChecked(false);
+
                     BiweeklyBox.setChecked(false);
                 }
                 else{
                     timePeriodSet = false;
+
                 }
             }
         });
         WeeklyBox.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+
                 timePeriodSet = true;
+
                 boolean dIsChecked = WeeklyBox.isChecked();
                 if (dIsChecked == true){
                     DailyBox.setChecked(false);
                     MonthlyBox.setChecked(false);
+
                     BiweeklyBox.setChecked(false);
                 }
                 else{
                     timePeriodSet = false;
+
                 }
             }
         });
         MonthlyBox.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 timePeriodSet = true;
+
                 boolean dIsChecked = MonthlyBox.isChecked();
                 if (dIsChecked == true){
                     WeeklyBox.setChecked(false);
                     DailyBox.setChecked(false);
+
+                }
+            }
+        });
+
+        SaveButton.setOnClickListener(new View.OnClickListener() {
+
                     BiweeklyBox.setChecked(false);
                 }
                 else{
@@ -155,6 +173,7 @@ public class SetBudget extends AppCompatActivity {
             }
         });
         BiweeklyBox.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View v) {
                 timePeriodSet = true;
