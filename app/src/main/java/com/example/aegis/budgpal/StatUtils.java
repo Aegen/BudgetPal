@@ -469,4 +469,28 @@ public class StatUtils {
 
     }
 
+    public static String AddDaysToDate(String date, int days){
+        SimpleDateFormat form = new SimpleDateFormat("yyyy-MM-dd");
+
+        long diff = days * (1000 * 60 * 60 * 24);
+
+        Log.d("hoper", Long.toString(diff));
+
+        Date time = new Date();
+        if(StatUtils.IsValidDate(date)) {
+            try {
+                time = form.parse(date);
+            } catch (ParseException e) {
+
+            }
+        }else{
+            return date;
+        }
+
+        time.setTime(time.getTime() + diff);
+
+
+        return form.format(time);
+    }
+
 }
