@@ -23,8 +23,8 @@ public class User {
     private boolean deleted;
     private DatabaseHandler aDBHandler;
 
-    public User(){
-
+    public User(Context context){
+        this.aDBHandler = new DatabaseHandler(context, "database", null, 1);
     }
 
     public User(String uName, String pw, boolean dl, Context context){

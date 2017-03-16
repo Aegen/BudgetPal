@@ -106,7 +106,7 @@ public class MainActivity extends AppCompatActivity {
                     String comp = cursee.getString(cursee.getColumnIndex("HashedPassword"));
 
                     if(comp.equals(hashedPassword)){
-                        Toast.makeText(getApplicationContext(), "Success", Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(getApplicationContext(), "Success", Toast.LENGTH_SHORT).show();
 
 
                         Intent goToLanding = SwitchManager.SwitchActivity(getApplicationContext(), "Homepage", cursee.getLong(cursee.getColumnIndex("UserID")));//new Intent(MainActivity.this, LandingPage.class).putExtra("UserID", cursee.getLong(cursee.getColumnIndex("UserID")));

@@ -6,10 +6,12 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.icu.util.Calendar;
+import android.icu.util.TimeUnit;
 import android.util.Log;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -58,7 +60,7 @@ public class StatUtils {
      * @return
      */
     public static String GetCurrentDate(){
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        //SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String tempDate = new SimpleDateFormat("yyyy-MM-dd").format(new java.util.Date());
         return  tempDate;
     }
@@ -404,5 +406,45 @@ public class StatUtils {
         curs.close();
         return tempEv;
     }
+
+    public static User GetUser(Context context, long UserID){
+        SQLiteDatabase db = GetDatabase(context);
+
+        Cursor curs = db.rawQuery("SELECT * FROM User WHERE UserID = " + UserID + " AND Deleted = 0", null);
+        if(curs.getCount() > 0){
+            curs.moveToFirst();
+        }else {
+            return null;
+        }
+
+        User tempU = new User(context);
+        tempU.setUserID(UserID);
+        tempU.setDeleted(false);
+        tempU.setLastModified(curs.getString(curs.getColumnIndex("LastModified")));
+        tempU.setPassword(curs.getString(curs.getColumnIndex("HashedPassword")));
+        tempU.setUsername(curs.getString(curs.getColumnIndex("Username")));
+
+        return tempU;
+    }
+
+    @TargetApi(9)
+    public static Long DaysSince(String DateToCompare){
+
+        SimpleDateFormat form = new SimpleDateFormat("yyyy-MM-dd");
+        Date curr;
+        Date comp;
+        try {
+            curr = form.parse(GetCurrentDate());
+            comp = form.parse(DateToCompare);
+        }catch (ParseException e){
+            return new Long(0);
+        }
+
+        Long diff = curr.getTime() - comp.getTime();
+        //Log.d("Diff", diff.toString());
+        //Log.d("Ceil", Double.toString(Math.ceil((double)diff/((1000 * 60 * 60 * 24)))));
+        return (long)Math.ceil((double)diff/((1000 * 60 * 60 * 24)));
+    }
+
 
 }
