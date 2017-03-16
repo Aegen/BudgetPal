@@ -122,6 +122,74 @@ public class StatUtils {
     }
 
     /**
+     * This method returns an Expense object associated with the given ExpenseID
+     * @param context
+     * @param ExpenseID
+     * @return
+     */
+    public static Expense GetExpense(Context context, Long ExpenseID) {
+
+        Expense tempExpense= new Expense(context);
+        SQLiteDatabase db = GetDatabase(context);
+        Cursor curs = db.rawQuery("SELECT * FROM Expense WHERE ExpenseID = " + ExpenseID + " AND Deleted = 0", null);
+
+        if(curs.getCount() > 0) {
+            curs.moveToFirst();
+
+            //Obtain the index of each individual column within the Expense Table
+            int expenseIDColumn = curs.getColumnIndex("ExpenseID");
+            int userIDColumn = curs.getColumnIndex("UserID");
+            int budgetIDColumn = curs.getColumnIndex("BudgetID");
+            int amountColumn = curs.getColumnIndex("Amount");
+            int lastModifiedColumn = curs.getColumnIndex("LastModified");
+            int dateCreatedColumn = curs.getColumnIndex("DateCreated");
+            int categoryColumn = curs.getColumnIndex("Category");
+            int descriptionColumn = curs.getColumnIndex("Description");
+            int exemptColumn = curs.getColumnIndex("Exempt");
+            int deletedColumn = curs.getColumnIndex("Deleted");
+
+            //Obtain the actual values at each of the previous indexes
+            long expenseID =  curs.getLong(expenseIDColumn);
+            long userID = curs.getLong(userIDColumn);
+            long budgetID = curs.getLong(budgetIDColumn);
+            float amount = curs.getFloat(amountColumn);
+            String lastModified = curs.getString(lastModifiedColumn);
+            String dateCreated = curs.getString(dateCreatedColumn);
+            int category = curs.getInt(categoryColumn);
+            String description = curs.getString(descriptionColumn);
+            int exempt = curs.getInt(exemptColumn);
+            int deleted = curs.getInt(deletedColumn);
+            boolean deletedBool = false;
+            boolean exemptBool = false;
+
+            if(exempt != 0) {
+                exemptBool = true;
+            } else {
+                exemptBool = false;
+            }
+
+            if(deleted != 0) {
+                deletedBool = true;
+            } else {
+                deletedBool = false;
+            }
+
+            //Set each field of the new Expense
+            tempExpense.setExpenseID(expenseID);
+            tempExpense.setUserID(userID);
+            tempExpense.setBudgetID(budgetID);
+            tempExpense.setAmount(amount);
+            tempExpense.setLastModified(lastModified);
+            tempExpense.setDateCreated(dateCreated);
+            tempExpense.setCategory(category);
+            tempExpense.setDescription(description);
+            tempExpense.setExempt(exemptBool);
+            tempExpense.setDeleted(deletedBool);
+        }
+        return tempExpense;
+    }
+
+    /**
      * This method queries the database and then returns all expenses associated with the given UserID
      * @param context
      * @param UserID

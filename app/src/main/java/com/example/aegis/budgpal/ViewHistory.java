@@ -22,7 +22,7 @@ import java.util.Locale;
 import static com.example.aegis.budgpal.StatUtils.GetBudgetID;
 import static com.example.aegis.budgpal.StatUtils.getExpenses;
 
-public class ViewHistory extends ListActivity {
+public class ViewHistory extends AppCompatActivity {
 
     private DrawerLayout NavDrawer;
     private ListView NavDrawerList;
@@ -31,6 +31,8 @@ public class ViewHistory extends ListActivity {
     private SQLiteDatabase db;
 
     private Long UserID;
+
+    private ListView expensesListView;
 
     ArrayList<String> listItems=new ArrayList<String>();
     ArrayAdapter<String> adapter;
@@ -63,21 +65,38 @@ public class ViewHistory extends ListActivity {
             }
         });
 
-        ArrayList<Expense> allExpenses = getExpenses(getApplicationContext(), UserID);
-        long myBudgetID = GetBudgetID(getApplicationContext(),UserID);
-        Log.d("Harrison Hruby",myBudgetID + "");
+        expensesListView = (ListView)findViewById(R.id.viewHistoryExpensesListView);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1);
+        expensesListView.setAdapter(adapter);
 
-        for(int i=0; i<allExpenses.size(); i++) {
+        ArrayList<Expense> expenses = getExpenses(getApplicationContext(), UserID);
+        for(int i=0; i<expenses.size(); i++) {
             if(allExpenses.get(i).getBudgetID() == myBudgetID) {
                 String temp = allExpenses.get(i).getExpenseID() + ": " + allExpenses.get(i).getDescription() + " = ";
                 String temp2 = NumberFormat.getCurrencyInstance(new Locale("en", "US")).format(allExpenses.get(i).getAmount());
-                listItems.add(temp + temp2);
-            }
+
+                adapter.add(temp + temp2);
         }
 
-        Toast.makeText(getApplicationContext(), "Number of Expenses: " + listItems.size(), Toast.LENGTH_SHORT).show();
+        expensesListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String[] items = parent.getItemAtPosition(position).toString().split("-");
+                Log.d("id", items[0]);
+                long ExpenseID = Long.parseLong(items[0]);
+                Log.d("post", Long.toString(ExpenseID));
 
-        adapter=new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, listItems);
-        setListAdapter(adapter);
+                Expense ex = StatUtils.GetExpense(getApplicationContext(), ExpenseID);
+
+                Intent goToExpenseDetails = new Intent(ViewHistory.this, ExpenseDetailsActivity.class);
+                goToExpenseDetails.putExtra("Amount", ex.getAmount());
+                goToExpenseDetails.putExtra("Description", ex.getDescription());
+                goToExpenseDetails.putExtra("User", ex.getUserID());
+                goToExpenseDetails.putExtra("LastModified", ex.getLastModified());
+
+                startActivity(goToExpenseDetails);
+            }
+        });
+
     }
 }
