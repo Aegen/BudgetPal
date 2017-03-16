@@ -474,6 +474,7 @@ public class StatUtils {
 
         long diff = days * (1000 * 60 * 60 * 24);
 
+        Log.d("hoper", Long.toString(diff));
 
         Date time = new Date();
         if(StatUtils.IsValidDate(date)) {

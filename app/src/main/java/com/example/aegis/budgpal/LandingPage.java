@@ -2,6 +2,7 @@ package com.example.aegis.budgpal;
 
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
+import android.support.v4.util.TimeUtils;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -174,7 +175,7 @@ public class LandingPage extends AppCompatActivity {
             daysToAdd = 14;
         }else if(budget.getTimePeriod() == MonthCode){
             period = "month";
-            daysToAdd = 1;
+            daysToAdd = GetMonthCode(budget.getStartDate());
         }else{
             Toast.makeText(getApplicationContext(), "Error: Invalid Time Period", Toast.LENGTH_SHORT).show();
             period = "cycle";
@@ -198,6 +199,6 @@ public class LandingPage extends AppCompatActivity {
 
     private int GetMonthCode(String date){
 
-        return 1;
+        return 31;
     }
 }
