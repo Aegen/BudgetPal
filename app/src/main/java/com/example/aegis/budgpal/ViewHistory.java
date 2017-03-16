@@ -89,7 +89,7 @@ public class ViewHistory extends AppCompatActivity {
                 Expense ex = StatUtils.GetExpense(getApplicationContext(), ExpenseID);
 
                 Intent goToExpenseDetails = new Intent(ViewHistory.this, ExpenseDetailsActivity.class);
-                goToExpenseDetails.putExtra("Amount", ex.getAmount());
+                goToExpenseDetails.putExtra("Amount", ex.getAmount() + "");
                 goToExpenseDetails.putExtra("Description", ex.getDescription());
                 goToExpenseDetails.putExtra("User", ex.getUserID());
                 goToExpenseDetails.putExtra("LastModified", ex.getLastModified());
