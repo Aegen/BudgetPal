@@ -29,7 +29,6 @@ public class ViewHistory extends AppCompatActivity {
     private String[] NavDrawerItems;
 
     private SQLiteDatabase db;
-//harrison was here
     private Long UserID;
     private Long myBudgetID;
 
