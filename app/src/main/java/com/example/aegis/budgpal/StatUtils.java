@@ -80,7 +80,6 @@ public class StatUtils {
         if(curs.getCount() > 0){
             return curs.getLong(curs.getColumnIndex("BudgetID"));
         }else{
-            Toast.makeText(context, "Got one", Toast.LENGTH_SHORT).show();
             return new Long(-1);
         }
     }

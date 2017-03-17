@@ -24,8 +24,6 @@ public class AddEvent extends AppCompatActivity {
     private String[] NavDrawerItems;
     private Long UserID;
 
-    private SQLiteDatabase db;
-
     private EditText DescriptionField;
     private EditText DateField;
     private Button AddButton;
@@ -39,10 +37,7 @@ public class AddEvent extends AppCompatActivity {
         DateField = (EditText)findViewById(R.id.addEventDateTextEdit);
         AddButton = (Button)findViewById(R.id.addEventButton);
 
-        db = StatUtils.GetDatabase(getApplicationContext());
-
         UserID = getIntent().getLongExtra("UserID", -1);
-        Toast.makeText(getApplicationContext(), UserID.toString(), Toast.LENGTH_SHORT).show();
 
         NavDrawer      = (DrawerLayout)findViewById(R.id.navDrawer);
         NavDrawerList  = (ListView)findViewById(R.id.navDrawerList);
@@ -66,10 +61,10 @@ public class AddEvent extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String desc = DescriptionField.getText().toString();
-                //Toast.makeText(getApplicationContext(), "Here", Toast.LENGTH_LONG).show();
+
                 Log.d("Description", desc);
                 String date = DateField.getText().toString();
-                Toast.makeText(getApplicationContext(), StatUtils.GetCurrentDate(), Toast.LENGTH_LONG).show();
+
                 Log.d("Date", date);
 
                 if(StatUtils.IsValidDate(date)){

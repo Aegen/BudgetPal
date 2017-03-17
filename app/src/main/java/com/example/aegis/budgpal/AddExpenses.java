@@ -58,8 +58,8 @@ public class AddExpenses extends AppCompatActivity {
         Toast.makeText(getApplicationContext(), UserID.toString(), Toast.LENGTH_SHORT).show();
 
         Categories = getResources().getStringArray(R.array.expenseCategories);
-        Spinner categorySelector = (Spinner)findViewById(R.id.expenseCategorySpinner);
-        categorySelector.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, Categories));
+        
+        CategorySpinner.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, Categories));
 
         NavDrawer      = (DrawerLayout)findViewById(R.id.navDrawer);
         NavDrawerList  = (ListView)findViewById(R.id.navDrawerList);

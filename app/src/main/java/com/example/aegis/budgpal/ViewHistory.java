@@ -20,10 +20,6 @@ import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Locale;
 
-import static com.example.aegis.budgpal.StatUtils.GetBudget;
-import static com.example.aegis.budgpal.StatUtils.GetBudgetID;
-import static com.example.aegis.budgpal.StatUtils.GetBudgets;
-import static com.example.aegis.budgpal.StatUtils.getExpenses;
 
 public class ViewHistory extends AppCompatActivity {
 
@@ -49,7 +45,6 @@ public class ViewHistory extends AppCompatActivity {
         db = StatUtils.GetDatabase(getApplicationContext());
 
         UserID = getIntent().getLongExtra("UserID", -1);
-        Toast.makeText(getApplicationContext(), UserID.toString(), Toast.LENGTH_SHORT).show();
 
         NavDrawer = (DrawerLayout) findViewById(R.id.navDrawer);
         NavDrawerList = (ListView) findViewById(R.id.navDrawerList);
@@ -72,7 +67,7 @@ public class ViewHistory extends AppCompatActivity {
         });
 
 
-        ArrayList<Budget> budgets = GetBudgets(getApplicationContext(),UserID);
+        ArrayList<Budget> budgets = StatUtils.GetBudgets(getApplicationContext(),UserID);
         ArrayList<String> budgetInfo = new ArrayList<String>();
         String someBudgetInfo;
         Budget someBudget;
@@ -160,7 +155,7 @@ public class ViewHistory extends AppCompatActivity {
     private void PopulateList(){
         adapter.clear();
 
-        ArrayList<Expense> expenses = getExpenses(getApplicationContext(), UserID);
+        ArrayList<Expense> expenses = StatUtils.GetExpenses(getApplicationContext(), UserID);
         for (int i = 0; i < expenses.size(); i++) {
             if (expenses.get(i).getBudgetID() == myBudgetID) {
                 String temp = expenses.get(i).getExpenseID() + ": " + expenses.get(i).getDescription() + " = ";

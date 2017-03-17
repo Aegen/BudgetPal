@@ -89,8 +89,6 @@ public class SetBudget extends AppCompatActivity {
                     .format(tempB.getAmount()).toString() + " per " + period);
         }
 
-        Toast.makeText(getApplicationContext(), UserID.toString(), Toast.LENGTH_SHORT).show();
-
         NavDrawer      = (DrawerLayout)findViewById(R.id.navDrawer);
         NavDrawerList  = (ListView)findViewById(R.id.navDrawerList);
         NavDrawerItems = getResources().getStringArray(R.array.navListItems);

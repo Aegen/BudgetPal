@@ -38,8 +38,6 @@ public class ViewEvents extends AppCompatActivity {
 
         UserID = getIntent().getLongExtra("UserID", -1);
 
-        Toast.makeText(getApplicationContext(), UserID.toString(), Toast.LENGTH_SHORT).show();
-
         NavDrawer      = (DrawerLayout)findViewById(R.id.navDrawer);
         NavDrawerList  = (ListView)findViewById(R.id.navDrawerList);
         NavDrawerItems = getResources().getStringArray(R.array.navListItems);

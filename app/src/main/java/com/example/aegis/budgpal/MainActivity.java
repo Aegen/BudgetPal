@@ -58,35 +58,8 @@ public class MainActivity extends AppCompatActivity {
 
         CameFromLogout = getIntent().getBooleanExtra("CameFromLogout", false);
 
-        Integer a = StatUtils.GetMonthResetCode();
-
-        Toast.makeText(getApplicationContext(), a.toString(), Toast.LENGTH_LONG).show();
 
 
-        /***********************************************/
-//        Database access zone
-//        Log.d("Date",new Date(1,1,1,).toString());
-
-
-        final String tempDate = StatUtils.GetCurrentDate();
-//        Create Database object, declared globally above
-//        User horse = new User("dave", "asdlhfasd;l", tempDate, false, getApplicationContext());
-//        a.addUser(horse);
-//        horse.pushToDatabase();
-
-//        db = StatUtils.GetDatabase(getApplicationContext()); //Create Database object, declared globally above
-//        db.execSQL("INSERT INTO User (Username, HashedPassword, LastModified, Deleted) VALUES ('harrison', 'password', '1996-01-01 12:00:00', 0);"); //Load item into db
-//        Cursor curse = db.rawQuery("SELECT * FROM User WHERE Username = 'dave'", null); //Self explanatory
-//        curse.moveToFirst(); //Important, sets the cursor to the first result, exception gets thrown if you try to get the contents without running this first
-//        String hash = curse.getString(curse.getColumnIndex("HashedPassword"));
-//        Log.d("hash", hash);
-//        String pw = "asdlhfasd;l";
-//        String temp = StatUtils.GetHashedString(pw);
-//        Boolean c = temp.equals(hash);
-//        Toast.makeText(getApplicationContext(), c.toString(), Toast.LENGTH_LONG).show();
-//        Toast.makeText(getApplicationContext(), curse.getString(1), Toast.LENGTH_LONG).show(); //Make username appear on screen
-
-        /***********************************************/
 
         LoginButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -106,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
                     String comp = cursee.getString(cursee.getColumnIndex("HashedPassword"));
 
                     if(comp.equals(hashedPassword)){
-//                        Toast.makeText(getApplicationContext(), "Success", Toast.LENGTH_SHORT).show();
+
                         Long UserID = cursee.getLong(cursee.getColumnIndex("UserID"));
                         Budget tempB = StatUtils.GetBudget(getApplicationContext(), StatUtils.GetBudgetID(getApplicationContext(), UserID));
 
