@@ -514,6 +514,44 @@ public class StatUtils {
         return (long)Math.ceil((double)diff/((1000 * 60 * 60 * 24)));
     }
 
+    public static ArrayList<Budget> GetBudgets(Context context, Long UserID){
+        SQLiteDatabase db = GetDatabase(context);
+        ArrayList<Budget> output = new ArrayList<>();
+
+        Cursor curs = db.rawQuery("SELECT * FROM Budget WHERE UserID = " + UserID + " AND Deleted = 0 ORDER BY StartDate DESC", null);
+
+        if(curs.getCount() > 0) {
+            curs.moveToFirst();
+            while(!curs.isAfterLast()){
+                Budget tempBudg = new Budget(context);
+                tempBudg.setBudgetID(curs.getLong(curs.getColumnIndex("BudgetID")));
+                tempBudg.setUserID(curs.getLong(curs.getColumnIndex("UserID")));
+                tempBudg.setTimePeriod(curs.getInt(curs.getColumnIndex("TimePeriod")));
+                tempBudg.setResetCode(curs.getInt(curs.getColumnIndex("ResetCode")));
+                tempBudg.setAnchorDate(curs.getString(curs.getColumnIndex("AnchorDate")));
+                tempBudg.setStartDate(curs.getString(curs.getColumnIndex("StartDate")));
+                tempBudg.setLastModified(curs.getString(curs.getColumnIndex("LastModified")));
+                tempBudg.setAmount(curs.getFloat(curs.getColumnIndex("Amount")));
+                tempBudg.setActive(false);
+                int del = curs.getInt(curs.getColumnIndex("Deleted"));
+                boolean tempBool;
+                if(del == 0){
+                    tempBool = false;
+                }else{
+                    tempBool = true;
+                }
+                tempBudg.setDeleted(tempBool);
+                curs.moveToNext();
+
+                output.add(tempBudg);
+            }
+        }
+
+        curs.close();
+
+        return output;
+    }
+
     public static void ChangeBudget(Context context, Long UserID){
         Long BudgetID = GetBudgetID(context, UserID);
 
