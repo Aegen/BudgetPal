@@ -13,13 +13,16 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Locale;
 
+import static com.example.aegis.budgpal.StatUtils.GetBudget;
 import static com.example.aegis.budgpal.StatUtils.GetBudgetID;
+import static com.example.aegis.budgpal.StatUtils.GetBudgets;
 import static com.example.aegis.budgpal.StatUtils.getExpenses;
 
 public class ViewHistory extends AppCompatActivity {
@@ -33,6 +36,7 @@ public class ViewHistory extends AppCompatActivity {
     private Long myBudgetID;
 
     private ListView expensesListView;
+    private Spinner expenseSpinner;
 
     ArrayList<String> listItems = new ArrayList<String>();
     ArrayAdapter<String> adapter;
@@ -51,6 +55,8 @@ public class ViewHistory extends AppCompatActivity {
         NavDrawerList = (ListView) findViewById(R.id.navDrawerList);
         NavDrawerItems = getResources().getStringArray(R.array.navListItems);
         NavDrawerList.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, NavDrawerItems));
+        expenseSpinner = (Spinner) findViewById(R.id.viewExpensesPeriodSpinner);
+        expensesListView = (ListView) findViewById(R.id.viewHistoryExpensesListView);
 
         NavDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -65,42 +71,81 @@ public class ViewHistory extends AppCompatActivity {
             }
         });
 
-        expensesListView = (ListView) findViewById(R.id.viewHistoryExpensesListView);
+
+        ArrayList<Budget> budgets = GetBudgets(getApplicationContext(),UserID);
+        ArrayList<String> budgetInfo = new ArrayList<String>();
+        String someBudgetInfo;
+        Budget someBudget;
+
+        for(int i = 0; i < budgets.size(); i ++){
+            someBudget = budgets.get(i);
+            someBudgetInfo = someBudget.getBudgetID() + ": " + NumberFormat.getCurrencyInstance(new Locale("en", "US")).format(someBudget.getAmount())+ " Start Date: " + someBudget.getStartDate();
+            budgetInfo.add(someBudgetInfo);
+        }
+
+
+
+        expenseSpinner.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1,budgetInfo));
+
+        expenseSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                myBudgetID = Long.parseLong(parent.getItemAtPosition(position).toString().split(":")[0]);
+
+                PopulateList();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+//        expenseSpinner.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                myBudgetID = Long.parseLong(parent.getItemAtPosition(position).toString().split(":")[0]);
+
+//                PopulateList();
+//            }
+//        });
+
+
         adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1);
         expensesListView.setAdapter(adapter);
 
         myBudgetID = StatUtils.GetBudgetID(getApplicationContext(), UserID);
 
-        ArrayList<Expense> expenses = getExpenses(getApplicationContext(), UserID);
-        for (int i = 0; i < expenses.size(); i++) {
-            if (expenses.get(i).getBudgetID() == myBudgetID) {
-                String temp = expenses.get(i).getExpenseID() + ": " + expenses.get(i).getDescription() + " = ";
-                String temp2 = NumberFormat.getCurrencyInstance(new Locale("en", "US")).format(expenses.get(i).getAmount());
+        PopulateList();
+//        ArrayList<Expense> expenses = getExpenses(getApplicationContext(), UserID);
+//        for (int i = 0; i < expenses.size(); i++) {
+//            if (expenses.get(i).getBudgetID() == myBudgetID) {
+//                String temp = expenses.get(i).getExpenseID() + ": " + expenses.get(i).getDescription() + " = ";
+//                String temp2 = NumberFormat.getCurrencyInstance(new Locale("en", "US")).format(expenses.get(i).getAmount());
 
-                adapter.add(temp + temp2);
-            }
-        }
+//                adapter.add(temp + temp2);
+//            }
+//        }
 
-            expensesListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    String[] items = parent.getItemAtPosition(position).toString().split(":");
-                    Log.d("id", items[0]);
-                    long ExpenseID = Long.parseLong(items[0]);
-                    Log.d("post", Long.toString(ExpenseID));
+        expensesListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            String[] items = parent.getItemAtPosition(position).toString().split(":");
+            Log.d("id", items[0]);
+            long ExpenseID = Long.parseLong(items[0]);
+            Log.d("post", Long.toString(ExpenseID));
 
-                    Expense ex = StatUtils.GetExpense(getApplicationContext(), ExpenseID);
+            Expense ex = StatUtils.GetExpense(getApplicationContext(), ExpenseID);
 
-                    Intent goToExpenseDetails = new Intent(ViewHistory.this, ExpenseDetailsActivity.class);
+            Intent goToExpenseDetails = new Intent(ViewHistory.this, ExpenseDetailsActivity.class);
 //                    goToExpenseDetails.putExtra("Amount", ex.getAmount() + "");
 //                    goToExpenseDetails.putExtra("Description", ex.getDescription());
 //                    goToExpenseDetails.putExtra("User", ex.getUserID());
 //                    goToExpenseDetails.putExtra("LastModified", ex.getLastModified());
-                    goToExpenseDetails.putExtra("ExpenseID", ExpenseID);
+            goToExpenseDetails.putExtra("ExpenseID", ExpenseID);
 
-                    startActivityForResult(goToExpenseDetails, 0);
-                }
-            });
+            startActivityForResult(goToExpenseDetails, 0);
+            }
+        });
 
 
     }
@@ -108,9 +153,12 @@ public class ViewHistory extends AppCompatActivity {
     @Override
     protected void onActivityResult(int code, int res, Intent intent){
         super.onActivityResult(code, res, intent);
+
+        PopulateList();
+    }
+
+    private void PopulateList(){
         adapter.clear();
-
-
 
         ArrayList<Expense> expenses = getExpenses(getApplicationContext(), UserID);
         for (int i = 0; i < expenses.size(); i++) {
