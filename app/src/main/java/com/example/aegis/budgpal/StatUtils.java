@@ -244,7 +244,7 @@ public class StatUtils {
                 } else {
                     deletedBool = false;
                 }
-
+                //
                 //Set each field of the new Expense
                 tempExpense.setExpenseID(expenseID);
                 tempExpense.setUserID(userID);
