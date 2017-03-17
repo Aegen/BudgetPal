@@ -140,6 +140,9 @@ public class LandingPage extends AppCompatActivity {
                 amount -= expenses.get(i).getAmount();
         }
 
+        ArrayList<Event> houser = StatUtils.GetAllEvents(getApplicationContext(), UserID);
+
+
         String period = new String();
 
 /*        switch (budget.getTimePeriod()){
