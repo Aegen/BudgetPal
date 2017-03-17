@@ -518,7 +518,7 @@ public class StatUtils {
         SQLiteDatabase db = GetDatabase(context);
         ArrayList<Budget> output = new ArrayList<>();
 
-        Cursor curs = db.rawQuery("SELECT * FROM Budget WHERE UserID = " + UserID + " ORDER BY StartDate DESC", null);
+        Cursor curs = db.rawQuery("SELECT * FROM Budget WHERE UserID = " + UserID + " ORDER BY BudgetID DESC", null);
 
         if(curs.getCount() > 0) {
             curs.moveToFirst();
