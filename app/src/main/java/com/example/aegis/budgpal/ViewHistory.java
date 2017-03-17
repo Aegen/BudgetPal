@@ -13,12 +13,14 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Locale;
 
+import static com.example.aegis.budgpal.StatUtils.GetBudget;
 import static com.example.aegis.budgpal.StatUtils.GetBudgetID;
 import static com.example.aegis.budgpal.StatUtils.getExpenses;
 
@@ -33,6 +35,7 @@ public class ViewHistory extends AppCompatActivity {
     private Long myBudgetID;
 
     private ListView expensesListView;
+    private Spinner expenseSpinner;
 
     ArrayList<String> listItems = new ArrayList<String>();
     ArrayAdapter<String> adapter;
@@ -51,6 +54,7 @@ public class ViewHistory extends AppCompatActivity {
         NavDrawerList = (ListView) findViewById(R.id.navDrawerList);
         NavDrawerItems = getResources().getStringArray(R.array.navListItems);
         NavDrawerList.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, NavDrawerItems));
+        expenseSpinner = (Spinner) findViewById(R.id.viewExpensesPeriodSpinner);
 
         NavDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -64,6 +68,9 @@ public class ViewHistory extends AppCompatActivity {
                 }
             }
         });
+
+
+        //ArrayList<Budget> budgets = GetBudget
 
         expensesListView = (ListView) findViewById(R.id.viewHistoryExpensesListView);
         adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1);
