@@ -146,11 +146,12 @@ public class LandingPage extends AppCompatActivity {
             period = "cycle";
         }
 
-
-        currentBudgetText.setText(NumberFormat.getCurrencyInstance(new Locale("en", "US"))
-                .format(budget.getAmount()).toString() + " per " + period);
-        remainingBudgetText.setText(NumberFormat.getCurrencyInstance(new Locale("en", "US"))
-                .format(amount) + " until " + StatUtils.AddDaysToDate(budget.getStartDate(), daysToAdd));
+        if(StatUtils.GetBudgetID(getApplicationContext(), UserID) != -1) {
+            currentBudgetText.setText(NumberFormat.getCurrencyInstance(new Locale("en", "US"))
+                    .format(budget.getAmount()).toString() + " per " + period);
+            remainingBudgetText.setText(NumberFormat.getCurrencyInstance(new Locale("en", "US"))
+                    .format(amount) + " until " + StatUtils.AddDaysToDate(budget.getStartDate(), daysToAdd));
+        }
     }
 
 

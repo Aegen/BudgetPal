@@ -9,7 +9,6 @@
         <item>View Events</item>
         <item>Change Budget</item>
         <item>Logout</item>
-        <item>Settings</item>
     </string-array>
 
     <string-array name="expenseCategories">
