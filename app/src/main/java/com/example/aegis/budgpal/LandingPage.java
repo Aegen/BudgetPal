@@ -19,6 +19,7 @@ import org.w3c.dom.Text;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 import static com.example.aegis.budgpal.StatUtils.GetBudget;
@@ -38,6 +39,8 @@ public class LandingPage extends AppCompatActivity {
 
     private TextView currentBudgetText;
     private TextView remainingBudgetText;
+
+    private ListView UpcomingEvents;
 
     private int DayCode;
     private int WeekCode;
@@ -62,58 +65,12 @@ public class LandingPage extends AppCompatActivity {
         CameFromEntry = getIntent().getBooleanExtra("CameFromEntry", false);
         Toast.makeText(getApplicationContext(), UserID.toString(), Toast.LENGTH_SHORT).show();
 
-//        Toast.makeText(getApplicationContext(), StatUtils.DaysSince("2017-03-11").toString(), Toast.LENGTH_SHORT).show();
-//        Toast.makeText(getApplicationContext(), StatUtils.GetCurrentDate(), Toast.LENGTH_SHORT).show();
-
-//        Log.d("2017-01-31", StatUtils.DaysSince("2016-03-15").toString());
-//        Log.d("2017-02-01", StatUtils.DaysSince("2017-02-01").toString());
-//        Log.d("2017-02-02", StatUtils.DaysSince("2017-02-02").toString());
-//        Log.d("2017-02-03", StatUtils.DaysSince("2017-02-03").toString());
-//        Log.d("2017-02-04", StatUtils.DaysSince("2017-02-04").toString());
-//        Log.d("2017-02-05", StatUtils.DaysSince("2017-02-05").toString());
-//        Log.d("2017-02-06", StatUtils.DaysSince("2017-02-06").toString());
-//        Log.d("2017-02-07", StatUtils.DaysSince("2017-02-07").toString());
-//        Log.d("2017-02-08", StatUtils.DaysSince("2017-02-08").toString());
-//        Log.d("2017-02-09", StatUtils.DaysSince("2017-02-09").toString());
-//        Log.d("2017-02-10", StatUtils.DaysSince("2017-02-10").toString());
-//        Log.d("2017-02-11", StatUtils.DaysSince("2017-02-11").toString());
-//        Log.d("2017-02-12", StatUtils.DaysSince("2017-02-12").toString());
-//        Log.d("2017-02-13", StatUtils.DaysSince("2017-02-13").toString());
-//        Log.d("2017-02-14", StatUtils.DaysSince("2017-02-14").toString());
-//        Log.d("2017-02-15", StatUtils.DaysSince("2017-02-15").toString());
-//        Log.d("2017-02-16", StatUtils.DaysSince("2017-02-16").toString());
-//        Log.d("2017-02-17", StatUtils.DaysSince("2017-02-17").toString());
-//        Log.d("2017-02-18", StatUtils.DaysSince("2017-02-18").toString());
-//        Log.d("2017-02-19", StatUtils.DaysSince("2017-02-19").toString());
-//        Log.d("2017-02-20", StatUtils.DaysSince("2017-02-20").toString());
-//        Log.d("2017-02-21", StatUtils.DaysSince("2017-02-21").toString());
-//        Log.d("2017-02-22", StatUtils.DaysSince("2017-02-22").toString());
-//        Log.d("2017-02-23", StatUtils.DaysSince("2017-02-23").toString());
-//        Log.d("2017-02-24", StatUtils.DaysSince("2017-02-24").toString());
-//        Log.d("2017-02-25", StatUtils.DaysSince("2017-02-25").toString());
-//        Log.d("2017-02-26", StatUtils.DaysSince("2017-02-26").toString());
-//        Log.d("2017-02-27", StatUtils.DaysSince("2017-02-27").toString());
-//        Log.d("2017-02-28", StatUtils.DaysSince("2017-02-28").toString());
-//        Log.d("2017-03-01", StatUtils.DaysSince("2017-03-01").toString());
-//        Log.d("2017-03-02", StatUtils.DaysSince("2017-03-02").toString());
-//        Log.d("2017-03-03", StatUtils.DaysSince("2017-03-03").toString());
-//        Log.d("2017-03-04", StatUtils.DaysSince("2017-03-04").toString());
-//        Log.d("2017-03-05", StatUtils.DaysSince("2017-03-05").toString());
-//        Log.d("2017-03-06", StatUtils.DaysSince("2017-03-06").toString());
-//        Log.d("2017-03-07", StatUtils.DaysSince("2017-03-07").toString());
-//        Log.d("2017-03-08", StatUtils.DaysSince("2017-03-08").toString());
-//        Log.d("2017-03-09", StatUtils.DaysSince("2017-03-09").toString());
-//        Log.d("2017-03-10", StatUtils.DaysSince("2017-03-10").toString());
-//        Log.d("2017-03-11", StatUtils.DaysSince("2017-03-11").toString());
-//        Log.d("2017-03-12", StatUtils.DaysSince("2017-03-12").toString());
-//        Log.d("2017-03-13", StatUtils.DaysSince("2017-03-13").toString());
-//        Log.d("2017-03-14", StatUtils.DaysSince("2017-03-14").toString());
-//        Log.d("2017-03-15", StatUtils.DaysSince("2017-03-15").toString());
 
         NavDrawer      = (DrawerLayout)findViewById(R.id.navDrawer);
         NavDrawerList  = (ListView)findViewById(R.id.navDrawerList);
         NavDrawerItems = getResources().getStringArray(R.array.navListItems);
         NavDrawerList.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, NavDrawerItems));
+
 
         NavDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -131,6 +88,10 @@ public class LandingPage extends AppCompatActivity {
         currentBudgetText = (TextView)findViewById(R.id.landingPageCurrentBudgetText);
         remainingBudgetText = (TextView)findViewById(R.id.landingPageRemainingBudgetText);
 
+        UpcomingEvents = (ListView)findViewById(R.id.upcomingEventsListView);
+
+
+
         Budget budget = GetBudget(getApplicationContext(), GetBudgetID(getApplicationContext(), UserID));
         float amount = budget.getAmount();
 
@@ -142,28 +103,18 @@ public class LandingPage extends AppCompatActivity {
 
         ArrayList<Event> houser = StatUtils.GetAllEvents(getApplicationContext(), UserID);
 
+        ArrayList<String> budgetListItems = new ArrayList<>();
+
+        for(int i = houser.size()- 1; i >= 0; i--){
+            if(StatUtils.DaysSince(houser.get(i).getStartDate()) <= 0) {
+                budgetListItems.add(houser.get(i).getDescription() + " Starts: " + houser.get(i).getStartDate());
+            }
+        }
+
+        UpcomingEvents.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, budgetListItems));
 
         String period = new String();
 
-/*        switch (budget.getTimePeriod()){
-            case 1:
-                period = "day";
-                break;
-            case 2:
-                period = "week";
-                break;
-            case 3:
-                period = "2 weeks";
-                break;
-            case 4:
-                period = "month";
-                break;
-            default:
-                Toast.makeText(getApplicationContext(), "Error: Invalid Time Period", Toast.LENGTH_SHORT).show();
-                period = "cycle";
-                break;
-        }
-*/
         if(budget.getTimePeriod() == DayCode){
             period = "day";
         }else if(budget.getTimePeriod() == WeekCode){
