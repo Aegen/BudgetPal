@@ -39,14 +39,14 @@ public class LandingPage extends AppCompatActivity {
     private int BiweekCode;
     private int MonthCode;
 
-    private ArrayList<Expense> expenses = null;
+    private ArrayList<Expense> expenses;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_landing_page);
 
-/*************************************** Initialization Area ***************************************************/
+        /*************************************** Initialization Area ***************************************************/
 
 
         db = StatUtils.GetDatabase(getApplicationContext());
@@ -71,13 +71,14 @@ public class LandingPage extends AppCompatActivity {
         RemainingBudgetText = (TextView)findViewById(R.id.landingPageRemainingBudgetText);
         UpcomingEvents = (ListView)findViewById(R.id.upcomingEventsListView);
         //End Get Views
+
         NavDrawerItems = getResources().getStringArray(R.array.navListItems);
 
 
 
 
 
-/**************************************** End Initialization Area **********************************************/
+        /**************************************** End Initialization Area **********************************************/
 
         NavDrawerList.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, NavDrawerItems));
 
@@ -86,7 +87,7 @@ public class LandingPage extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                NavDrawer.closeDrawer(Gravity.LEFT);
+                NavDrawer.closeDrawer(Gravity.START);
                 Intent tempIntent = SwitchManager.SwitchActivity(LandingPage.this, parent.getItemAtPosition(position).toString(), UserID);
 
                 if(tempIntent != null){
@@ -127,7 +128,7 @@ public class LandingPage extends AppCompatActivity {
 
         if(StatUtils.GetBudgetID(getApplicationContext(), UserID) != -1) {
             CurrentBudgetText.setText(NumberFormat.getCurrencyInstance(new Locale("en", "US"))
-                    .format(budget.getAmount()).toString() + " per " + period);
+                    .format(budget.getAmount()) + " per " + period);
             RemainingBudgetText.setText(NumberFormat.getCurrencyInstance(new Locale("en", "US"))
                     .format(amount) + " until " + StatUtils.AddDaysToDate(budget.getStartDate(), daysToAdd));
         }
@@ -144,7 +145,7 @@ public class LandingPage extends AppCompatActivity {
     }
 
     public String GetPeriodText(int code){
-        String period = new String();
+        String period;
 
         if(code == DayCode){
             period = "day";
@@ -221,7 +222,7 @@ public class LandingPage extends AppCompatActivity {
                 ret = 30;
                 break;
             case 12:
-                ret = 30;
+                ret = 31;
                 break;
 
         }
