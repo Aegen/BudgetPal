@@ -197,7 +197,7 @@ public class StatUtils {
      * @param UserID
      * @return
      */
-    public static ArrayList<Expense> getExpenses(Context context, Long UserID) {
+    public static ArrayList<Expense> GetExpenses(Context context, Long UserID) {
 
         SQLiteDatabase db = GetDatabase(context);
         Cursor curs = db.rawQuery("SELECT * FROM Expense WHERE UserID = '" + UserID + "'", null);
