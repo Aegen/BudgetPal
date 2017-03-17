@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.icu.util.Calendar;
 import android.icu.util.TimeUnit;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
@@ -79,6 +80,7 @@ public class StatUtils {
         if(curs.getCount() > 0){
             return curs.getLong(curs.getColumnIndex("BudgetID"));
         }else{
+            Toast.makeText(context, "Got one", Toast.LENGTH_SHORT).show();
             return new Long(-1);
         }
     }
