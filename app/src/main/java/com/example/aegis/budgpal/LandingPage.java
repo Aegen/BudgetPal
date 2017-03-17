@@ -52,6 +52,8 @@ public class LandingPage extends AppCompatActivity {
         db = StatUtils.GetDatabase(getApplicationContext());
 
         //Get Resources
+        UserID = getIntent().getLongExtra("UserID", -1);
+        CameFromEntry = getIntent().getBooleanExtra("CameFromEntry", false);
         DayCode = getResources().getInteger(R.integer.DAY_CODE);
         WeekCode = getResources().getInteger(R.integer.WEEK_CODE);
         BiweekCode = getResources().getInteger(R.integer.BIWEEK_CODE);
@@ -60,8 +62,7 @@ public class LandingPage extends AppCompatActivity {
 
         //End Get Resources
 
-        UserID = getIntent().getLongExtra("UserID", -1);
-        CameFromEntry = getIntent().getBooleanExtra("CameFromEntry", false);
+
 
         //Get Views
         NavDrawer      = (DrawerLayout)findViewById(R.id.navDrawer);
