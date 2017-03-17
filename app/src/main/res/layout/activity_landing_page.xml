@@ -59,6 +59,24 @@
             android:text="                                            "
             android:textAlignment="center" />
 
+        <ListView
+            android:layout_width="300dp"
+            android:layout_height="100dp"
+            android:layout_below="@+id/landingPageRemainingBudgetText"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="49dp"
+            android:id="@+id/upcomingEventsListView" />
+
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/upcomingEventsListView"
+            android:layout_below="@+id/landingPageRemainingBudgetText"
+            android:layout_marginTop="34dp"
+            android:text="Upcoming Events"
+            android:textColor="@android:color/black" />
+
     </RelativeLayout>
 
     <ListView
