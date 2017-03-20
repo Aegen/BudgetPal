@@ -37,7 +37,7 @@ public class SetBudget extends AppCompatActivity {
     private CheckBox MonthlyBox;
 
     private Long UserID;
-    private Long BudgetID;
+//    private Long BudgetID;
 
     private SharedPreferences Preferences;
     private SharedPreferences.Editor PreferencesEditor;
@@ -64,11 +64,10 @@ public class SetBudget extends AppCompatActivity {
 
 //        UserID = getIntent().getLongExtra("UserID", -1);
         UserID = Preferences.getLong("UserID", -1);
-        BudgetID = StatUtils.GetBudgetID(getApplicationContext(), UserID);
+        final Budget tempB = Budget.getCurrentBudgetForUser(getApplicationContext(), UserID);
 
-        if(BudgetID != -1){
+        if(tempB.getBudgetID() != -1){
             String period;
-            Budget tempB = StatUtils.GetBudget(getApplicationContext(), BudgetID);
 
             switch (tempB.getTimePeriod()){
                 case 1:
@@ -187,8 +186,7 @@ public class SetBudget extends AppCompatActivity {
             public void onClick(View v) {
                 if (!AmountField.getText().toString().equals("")) {
 
-                    if (BudgetID != -1) {
-                        Budget tempB = StatUtils.GetBudget(getApplicationContext(), BudgetID);
+                    if (tempB.getBudgetID() != -1) {
                         tempB.setDeleted(true);
                         tempB.pushToDatabase();
                     }

@@ -1,10 +1,15 @@
 package com.example.aegis.budgpal;
 
 import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import java.sql.Date;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+
 /**
  * Created by Harrison on 2/25/2017.
  */
@@ -97,4 +102,52 @@ public class Event {
             this.handler.updateEvent(this);
         }
     }
+
+    public static ArrayList<Event> getEventsByUserID(Context context, long UserID){
+        SQLiteDatabase db = StatUtils.GetDatabase(context);
+        ArrayList<Event> output = new ArrayList<Event>();
+
+        Cursor curs = db.rawQuery("SELECT * FROM Event WHERE UserID = " + UserID + " AND Deleted = 0 ORDER BY StartDate DESC", null);
+
+        if(curs.getCount() > 0) {
+            curs.moveToFirst();
+            while(!curs.isAfterLast()){
+                Event tempEv = new Event(context);
+                tempEv.setEventID(curs.getLong(curs.getColumnIndex("EventID")));
+                tempEv.setDeleted(false);
+                tempEv.setLastModified(curs.getString(curs.getColumnIndex("LastModified")));
+                tempEv.setDescription(curs.getString(curs.getColumnIndex("Description")));
+                tempEv.setUserID(UserID);
+                tempEv.setStartDate(curs.getString(curs.getColumnIndex("StartDate")));
+                tempEv.setEndDate(tempEv.getStartDate());
+                curs.moveToNext();
+
+                output.add(tempEv);
+            }
+        }
+
+        curs.close();
+
+        return output;
+    }
+
+    public static Event getEventByEventID(Context context, long EventID){
+        SQLiteDatabase db = StatUtils.GetDatabase(context);
+
+        Cursor curs = db.rawQuery("SELECT * FROM Event WHERE EventID = " + EventID, null);
+        curs.moveToFirst();
+        Log.d("other id:", Long.toString(EventID));
+        Event tempEv = new Event(context);
+        tempEv.setEventID(EventID);
+        tempEv.setDeleted(false);
+        tempEv.setLastModified(curs.getString(curs.getColumnIndex("LastModified")));
+        tempEv.setDescription(curs.getString(curs.getColumnIndex("Description")));
+        tempEv.setUserID(curs.getLong(curs.getColumnIndex("UserID")));
+        tempEv.setStartDate(curs.getString(curs.getColumnIndex("StartDate")));
+        tempEv.setEndDate(tempEv.getStartDate());
+        Log.d("Description", tempEv.getDescription());
+        curs.close();
+        return tempEv;
+    }
+
 }

@@ -75,7 +75,7 @@ public class ViewHistory extends AppCompatActivity {
         });
 
 
-        ArrayList<Budget> budgets = StatUtils.GetBudgets(getApplicationContext(),UserID);
+        ArrayList<Budget> budgets = Budget.getBudgetsByUser(getApplicationContext(),UserID);
         ArrayList<String> budgetInfo = new ArrayList<String>();
         String someBudgetInfo;
         Budget someBudget;
@@ -116,7 +116,7 @@ public class ViewHistory extends AppCompatActivity {
         adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1);
         expensesListView.setAdapter(adapter);
 
-        myBudgetID = StatUtils.GetBudgetID(getApplicationContext(), UserID);
+        myBudgetID = Budget.getCurrentBudgetForUser(getApplicationContext(), UserID).getBudgetID();
 
         PopulateList();
 //        ArrayList<Expense> expenses = getExpenses(getApplicationContext(), UserID);
@@ -137,7 +137,7 @@ public class ViewHistory extends AppCompatActivity {
             long ExpenseID = Long.parseLong(items[0]);
             Log.d("post", Long.toString(ExpenseID));
 
-            Expense ex = StatUtils.GetExpense(getApplicationContext(), ExpenseID);
+            Expense ex = Expense.getExpenseByExpenseID(getApplicationContext(), ExpenseID);
 
             Intent goToExpenseDetails = new Intent(ViewHistory.this, ExpenseDetailsActivity.class);
 //                    goToExpenseDetails.putExtra("Amount", ex.getAmount() + "");
@@ -163,7 +163,7 @@ public class ViewHistory extends AppCompatActivity {
     private void PopulateList(){
         adapter.clear();
 
-        ArrayList<Expense> expenses = StatUtils.GetExpenses(getApplicationContext(), UserID);
+        ArrayList<Expense> expenses = Expense.getExpensesByUser(getApplicationContext(), UserID);
         for (int i = 0; i < expenses.size(); i++) {
             if (expenses.get(i).getBudgetID() == myBudgetID) {
                 String temp = expenses.get(i).getExpenseID() + ": " + expenses.get(i).getDescription() + " = ";

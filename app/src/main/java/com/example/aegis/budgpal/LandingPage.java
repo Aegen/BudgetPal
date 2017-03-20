@@ -51,7 +51,7 @@ public class LandingPage extends AppCompatActivity {
         WeekCode = getResources().getInteger(R.integer.WEEK_CODE);
         BiweekCode = getResources().getInteger(R.integer.BIWEEK_CODE);
         MonthCode = getResources().getInteger(R.integer.MONTH_CODE);
-        Budget budget = StatUtils.GetBudget(getApplicationContext(), StatUtils.GetBudgetID(getApplicationContext(), UserID));
+        Budget budget = Budget.getCurrentBudgetForUser(getApplicationContext(),  UserID);
 
         //End Get Resources
 
@@ -96,13 +96,13 @@ public class LandingPage extends AppCompatActivity {
 
         float amount = budget.getAmount();
 
-        ArrayList<Expense> expenses = StatUtils.GetExpenses(getApplicationContext(), UserID);
+        ArrayList<Expense> expenses = Expense.getExpensesByUser(getApplicationContext(), UserID);
         for(int i = 0; i< expenses.size(); i++) {
             if(budget.getBudgetID() == expenses.get(i).getBudgetID())
                 amount -= expenses.get(i).getAmount();
         }
 
-        ArrayList<Event> houser = StatUtils.GetAllEvents(getApplicationContext(), UserID);
+        ArrayList<Event> houser = Event.getEventsByUserID(getApplicationContext(), UserID);
 
         ArrayList<String> budgetListItems = new ArrayList<>();
 
@@ -119,7 +119,7 @@ public class LandingPage extends AppCompatActivity {
         int daysToAdd = GetPeriodDays(budget.getTimePeriod(), budget.getStartDate());
 
 
-        if(StatUtils.GetBudgetID(getApplicationContext(), UserID) != -1) {
+        if(Budget.getCurrentBudgetForUser(getApplicationContext(), UserID).getBudgetID() != -1) {
             currentBudgetText.setText(NumberFormat.getCurrencyInstance(new Locale("en", "US"))
                     .format(budget.getAmount()) + " per " + period);
             remainingBudgetText.setText(NumberFormat.getCurrencyInstance(new Locale("en", "US"))

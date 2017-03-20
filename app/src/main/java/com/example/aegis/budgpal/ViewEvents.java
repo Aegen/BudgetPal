@@ -77,7 +77,7 @@ public class ViewEvents extends AppCompatActivity {
                 long EventID = Long.parseLong(items[0]);
                 Log.d("post", Long.toString(EventID));
 
-                Event ev = StatUtils.GetEvent(getApplicationContext(), EventID);
+                Event ev = Event.getEventByEventID(getApplicationContext(), EventID);
 
                 Intent goToEventDetails = new Intent(ViewEvents.this, EventDetailsActivity.class);
                 goToEventDetails.putExtra("EventID", ev.getEventID());
@@ -96,7 +96,7 @@ public class ViewEvents extends AppCompatActivity {
         EventsList.setAdapter(listAdapter);
         listAdapter.clear();
 
-        ArrayList<Event> eventsList = StatUtils.GetAllEvents(getApplicationContext(), UserID);
+        ArrayList<Event> eventsList = Event.getEventsByUserID(getApplicationContext(), UserID);
         for(int i = 0; i < eventsList.size(); i++){
             listAdapter.add(Long.toString(eventsList.get(i).getEventID()) + "- " + eventsList.get(i).getDescription() + "- Starts: " + eventsList.get(i).getStartDate());
         }

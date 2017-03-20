@@ -36,12 +36,15 @@ public class EventDetailsActivity extends AppCompatActivity {
         CreatedOnField = (EditText)findViewById(R.id.CreatedOnField);
         UpdateButton = (Button)findViewById(R.id.eventDetailsUpdateButton);
         DeleteButton = (Button)findViewById(R.id.eventDetailsDeleteButton);
+
         UpdateButton.setEnabled(false);
+
+
 
         DeleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Event ev = StatUtils.GetEvent(getApplicationContext(), getIntent().getLongExtra("EventID", new Long(-1)));
+                Event ev = Event.getEventByEventID(getApplicationContext(), getIntent().getLongExtra("EventID", new Long(-1)));
                 ev.setDeleted(true);
                 ev.pushToDatabase();
 
@@ -51,10 +54,12 @@ public class EventDetailsActivity extends AppCompatActivity {
             }
         });
 
+
+
         UpdateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Event ev = StatUtils.GetEvent(getApplicationContext(), getIntent().getLongExtra("EventID", new Long(-1)));
+                Event ev = Event.getEventByEventID(getApplicationContext(), getIntent().getLongExtra("EventID", new Long(-1)));
 
                 if(ev.getUserID() == -1){
                     Toast.makeText(getApplicationContext(), "No event found", Toast.LENGTH_SHORT).show();
@@ -79,11 +84,13 @@ public class EventDetailsActivity extends AppCompatActivity {
             }
         });
 
+
+
         if(getIntent().getLongExtra("EventID", new Long(-1)) != -1){
-            Event house = StatUtils.GetEvent(getApplicationContext(), getIntent().getLongExtra("EventID", new Long(-1)));
+            Event house = Event.getEventByEventID(getApplicationContext(), getIntent().getLongExtra("EventID", new Long(-1)));
             DescriptionField.setText(house.getDescription());
             DateField.setText(house.getStartDate());
-            CreatedByField.setText(StatUtils.GetUser(getApplicationContext(), house.getUserID()).getUsername());
+            CreatedByField.setText(User.getUserByUserID(getApplicationContext(), house.getUserID()).getUsername());
             CreatedOnField.setText(house.getLastModified());
 
             UpdateButton.setEnabled(true);

@@ -7,6 +7,8 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import android.app.Activity;
 import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.widget.Toast;
 
 /**
@@ -81,5 +83,39 @@ public class User {
         }else{
             this.aDBHandler.updateUser(this);
         }
+    }
+
+    public static User getUserByUsername(Context context, String username){
+        SQLiteDatabase db = StatUtils.GetDatabase(context);
+        Cursor cursee = db.rawQuery("SELECT * FROM User WHERE Username = '" + username + "'", null);
+        User output = new User(context);
+        if(cursee.getCount() > 0) {
+            output.setUsername(cursee.getString(cursee.getColumnIndex(context.getString(R.string.User_Username))));
+            output.setPassword(cursee.getString(cursee.getColumnIndex(context.getString(R.string.User_Password))));
+            output.setDeleted(false);
+            output.setLastModified(cursee.getString(cursee.getColumnIndex(context.getString(R.string.User_LastModified))));
+            output.setUserID(cursee.getLong(cursee.getColumnIndex(context.getString(R.string.User_UserID))));
+        }
+        return output;
+    }
+
+    public static User getUserByUserID(Context context, long UserID){
+        SQLiteDatabase db = StatUtils.GetDatabase(context);
+
+        Cursor curs = db.rawQuery("SELECT * FROM User WHERE UserID = " + UserID + " AND Deleted = 0", null);
+        if(curs.getCount() > 0){
+            curs.moveToFirst();
+        }else {
+            return null;
+        }
+
+        User tempU = new User(context);
+        tempU.setUserID(UserID);
+        tempU.setDeleted(false);
+        tempU.setLastModified(curs.getString(curs.getColumnIndex("LastModified")));
+        tempU.setPassword(curs.getString(curs.getColumnIndex("HashedPassword")));
+        tempU.setUsername(curs.getString(curs.getColumnIndex("Username")));
+
+        return tempU;
     }
 }

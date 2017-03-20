@@ -45,7 +45,7 @@ public class ExpenseDetailsActivity extends AppCompatActivity {
         DeleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Expense ex = StatUtils.GetExpense(getApplicationContext(), getIntent().getLongExtra("ExpenseID", new Long(-1)));
+                Expense ex = Expense.getExpenseByExpenseID(getApplicationContext(), getIntent().getLongExtra("ExpenseID", new Long(-1)));
                 ex.setDeleted(true);
                 ex.pushToDatabase();
 
@@ -58,7 +58,7 @@ public class ExpenseDetailsActivity extends AppCompatActivity {
         UpdateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Expense ex = StatUtils. GetExpense(getApplicationContext(), getIntent().getLongExtra("ExpenseID", new Long(-1)));
+                Expense ex = Expense.getExpenseByExpenseID(getApplicationContext(), getIntent().getLongExtra("ExpenseID", new Long(-1)));
 
                 if(ex.getUserID() == -1){
                     Toast.makeText(getApplicationContext(), "No expense found", Toast.LENGTH_SHORT).show();
@@ -77,10 +77,10 @@ public class ExpenseDetailsActivity extends AppCompatActivity {
         });
 
         if(getIntent().getLongExtra("ExpenseID", new Long(-1)) != -1){
-            Expense house = StatUtils.GetExpense(getApplicationContext(), getIntent().getLongExtra("ExpenseID", new Long(-1)));
+            Expense house = Expense.getExpenseByExpenseID(getApplicationContext(), getIntent().getLongExtra("ExpenseID", new Long(-1)));
             AmountField.setText(house.getAmount() + "");
             DescriptionField.setText(house.getDescription());
-            CreatedByField.setText(StatUtils.GetUser(getApplicationContext(), house.getUserID()).getUsername());
+            CreatedByField.setText(User.getUserByUserID(getApplicationContext(), house.getUserID()).getUsername());
             CreatedOnField.setText(house.getLastModified());
 
             UpdateButton.setEnabled(true);

@@ -43,7 +43,7 @@ public class AddExpenses extends AppCompatActivity {
         setContentView(R.layout.activity_add_expenses);
 
         Preferences = getSharedPreferences(getString(R.string.preferences_name), MODE_PRIVATE);
-        PreferencesEditor = getSharedPreferences(getString(R.string.preferences_name), MODE_PRIVATE).edit();
+        PreferencesEditor = getSharedPreferences(getString(R.string.preferences_name),MODE_PRIVATE).edit();
 
         db = StatUtils.GetDatabase(getApplicationContext());
 
@@ -55,7 +55,7 @@ public class AddExpenses extends AppCompatActivity {
         AddButton = (Button)findViewById(R.id.expenseAddButton);
 
         UserID = Preferences.getLong("UserID", -1);
-        BudgetID = StatUtils.GetBudgetID(getApplicationContext(), UserID);
+        BudgetID = Budget.getCurrentBudgetForUser(getApplicationContext(), UserID).getBudgetID();
 
         if(BudgetID == -1){
             AddButton.setEnabled(false);

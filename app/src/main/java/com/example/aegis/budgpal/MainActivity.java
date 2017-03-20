@@ -89,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
                     if(comp.equals(hashedPassword)){
 
                         Long UserID = cursee.getLong(cursee.getColumnIndex("UserID"));
-                        Budget tempB = StatUtils.GetBudget(getApplicationContext(), StatUtils.GetBudgetID(getApplicationContext(), UserID));
+                        Budget tempB = Budget.getCurrentBudgetForUser(getApplicationContext(), UserID);
 
                         if(tempB.getTimePeriod() != -1){
                             switch (tempB.getTimePeriod()){
