@@ -1,5 +1,6 @@
 package com.example.aegis.budgpal;
 
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteCursorDriver;
 import android.database.sqlite.SQLiteDatabase;
@@ -7,6 +8,8 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteQuery;
 import android.content.Intent;
 import android.icu.util.Calendar;
+import android.preference.PreferenceManager;
+import android.support.annotation.Nullable;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -28,6 +31,7 @@ import java.security.MessageDigest;
 import java.sql.Date;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Set;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -43,10 +47,17 @@ public class MainActivity extends AppCompatActivity {
 
     private Boolean CameFromLogout;
 
+    private SharedPreferences Preferences;
+    private SharedPreferences.Editor PreferencesEditor;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
+        Preferences = getSharedPreferences(getString(R.string.preferences_name), MODE_PRIVATE);
+        PreferencesEditor = getSharedPreferences(getString(R.string.preferences_name),MODE_PRIVATE).edit();
 
         db = StatUtils.GetDatabase(getApplicationContext());
 
@@ -57,36 +68,6 @@ public class MainActivity extends AppCompatActivity {
         NewUserButton = (Button)findViewById(R.id.newUserButton);
 
         CameFromLogout = getIntent().getBooleanExtra("CameFromLogout", false);
-
-        Integer a = StatUtils.GetMonthResetCode();
-
-        Toast.makeText(getApplicationContext(), a.toString(), Toast.LENGTH_LONG).show();
-
-
-        /***********************************************/
-//        Database access zone
-//        Log.d("Date",new Date(1,1,1,).toString());
-
-
-        final String tempDate = StatUtils.GetCurrentDate();
-//        Create Database object, declared globally above
-//        User horse = new User("dave", "asdlhfasd;l", tempDate, false, getApplicationContext());
-//        a.addUser(horse);
-//        horse.pushToDatabase();
-
-//        db = StatUtils.GetDatabase(getApplicationContext()); //Create Database object, declared globally above
-//        db.execSQL("INSERT INTO User (Username, HashedPassword, LastModified, Deleted) VALUES ('harrison', 'password', '1996-01-01 12:00:00', 0);"); //Load item into db
-//        Cursor curse = db.rawQuery("SELECT * FROM User WHERE Username = 'dave'", null); //Self explanatory
-//        curse.moveToFirst(); //Important, sets the cursor to the first result, exception gets thrown if you try to get the contents without running this first
-//        String hash = curse.getString(curse.getColumnIndex("HashedPassword"));
-//        Log.d("hash", hash);
-//        String pw = "asdlhfasd;l";
-//        String temp = StatUtils.GetHashedString(pw);
-//        Boolean c = temp.equals(hash);
-//        Toast.makeText(getApplicationContext(), c.toString(), Toast.LENGTH_LONG).show();
-//        Toast.makeText(getApplicationContext(), curse.getString(1), Toast.LENGTH_LONG).show(); //Make username appear on screen
-
-        /***********************************************/
 
         LoginButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -106,9 +87,9 @@ public class MainActivity extends AppCompatActivity {
                     String comp = cursee.getString(cursee.getColumnIndex("HashedPassword"));
 
                     if(comp.equals(hashedPassword)){
-//                        Toast.makeText(getApplicationContext(), "Success", Toast.LENGTH_SHORT).show();
+
                         Long UserID = cursee.getLong(cursee.getColumnIndex("UserID"));
-                        Budget tempB = StatUtils.GetBudget(getApplicationContext(), StatUtils.GetBudgetID(getApplicationContext(), UserID));
+                        Budget tempB = Budget.getCurrentBudgetForUser(getApplicationContext(), UserID);
 
                         if(tempB.getTimePeriod() != -1){
                             switch (tempB.getTimePeriod()){
@@ -135,7 +116,12 @@ public class MainActivity extends AppCompatActivity {
 
                             }
                         }
-                        Intent goToLanding = SwitchManager.SwitchActivity(getApplicationContext(), "Homepage", cursee.getLong(cursee.getColumnIndex("UserID")));//new Intent(MainActivity.this, LandingPage.class).putExtra("UserID", cursee.getLong(cursee.getColumnIndex("UserID")));
+
+                        Intent goToLanding = SwitchManager.SwitchActivity(getApplicationContext(), "Homepage");//new Intent(MainActivity.this, LandingPage.class).putExtra("UserID", cursee.getLong(cursee.getColumnIndex("UserID")));
+
+                        PreferencesEditor.putLong("UserID", UserID);
+                        PreferencesEditor.commit();
+
                         goToLanding.putExtra("CameFromEntry", true);
                         startActivity(goToLanding);
                         finish();

@@ -9,6 +9,8 @@
     <string name="app_name">BudgetPal</string>
     <string name="title_activity_login">Sign in</string>
 
+    <string name="preferences_name">Our_Preferences</string>
+
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password (optional)</string>
@@ -21,5 +23,41 @@
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
+    <string name="Table_User">User</string>
+    <string name="Table_Budget">Budget</string>
+    <string name="Table_Expense">Expense</string>
+    <string name="Table_Event">Event</string>
+    <string name="User_UserID">UserID</string>
+    <string name="User_Username">Username</string>
+    <string name="User_Password">HashedPassword</string>
+    <string name="User_Deleted">Deleted</string>
+    <string name="User_LastModified">LastModified</string>
+    <string name="Budget_BudgetID">BudgetID</string>
+    <string name="Budget_UserID">UserID</string>
+    <string name="Budget_ResetCode">ResetCode</string>
+    <string name="Budget_TimePeriod">TimePeriod</string>
+    <string name="Budget_AnchorDate">AnchorDate</string>
+    <string name="Budget_StartDate">StartDate</string>
+    <string name="Budget_Amount">Amount</string>
+    <string name="Budget_LastModified">LastModified</string>
+    <string name="Budget_Deleted">Deleted</string>
+    <string name="Budget_Active">Active</string>
+    <string name="Expense_ExpenseID">ExpenseID</string>
+    <string name="Expense_UserID">UserID</string>
+    <string name="Expense_BudgetID">BudgetID</string>
+    <string name="Expense_LastModified">LastModified</string>
+    <string name="Expense_Description">Description</string>
+    <string name="Expense_Deleted">Deleted</string>
+    <string name="Expense_Amount">Amount</string>
+    <string name="Expense_DateCreated">DateCreated</string>
+    <string name="Expense_Category">Category</string>
+    <string name="Expense_Exempt">Exempt</string>
+    <string name="Event_EventID">EventID</string>
+    <string name="Event_UserID">UserID</string>
+    <string name="Event_LastModified">LastModified</string>
+    <string name="Event_StartDate">StartDate</string>
+    <string name="Event_EndDate">EndDate</string>
+    <string name="Event_Description">Description</string>
+    <string name="Event_Deleted">Deleted</string>
 
 </resources>

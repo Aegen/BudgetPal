@@ -1,10 +1,14 @@
 package com.example.aegis.budgpal;
 
 import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 
 import java.sql.Date;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+
 /**
  * Created by Harrison on 2/25/2017.
  */
@@ -126,6 +130,93 @@ public class Budget {
         }else{
             this.handler.updateBudget(this);
         }
+    }
+
+    public static Budget getCurrentBudgetForUser(Context context, long UserID){
+        SQLiteDatabase db = StatUtils.GetDatabase(context);
+
+        long BID;
+        Cursor curs = db.rawQuery("SELECT * FROM Budget WHERE UserID = " + UserID + " AND Deleted = 0", null);
+        curs.moveToFirst();
+        if(curs.getCount() > 0){
+            BID =  curs.getLong(curs.getColumnIndex("BudgetID"));
+        }else{
+            return null;
+        }
+
+        return getBudgetByBudgetID(context, BID);
+    }
+
+    public static ArrayList<Budget> getBudgetsByUser(Context context, long UserID){
+        SQLiteDatabase db = StatUtils.GetDatabase(context);
+        ArrayList<Budget> output = new ArrayList<>();
+
+        if(UserID != -1) {
+            Cursor curs = db.rawQuery("SELECT * FROM Budget WHERE UserID = " + UserID + " ORDER BY BudgetID DESC", null);
+
+            if (curs.getCount() > 0) {
+                curs.moveToFirst();
+                while (!curs.isAfterLast()) {
+                    Budget tempBudg = new Budget(context);
+                    tempBudg.setBudgetID(curs.getLong(curs.getColumnIndex("BudgetID")));
+                    tempBudg.setUserID(curs.getLong(curs.getColumnIndex("UserID")));
+                    tempBudg.setTimePeriod(curs.getInt(curs.getColumnIndex("TimePeriod")));
+                    tempBudg.setResetCode(curs.getInt(curs.getColumnIndex("ResetCode")));
+                    tempBudg.setAnchorDate(curs.getString(curs.getColumnIndex("AnchorDate")));
+                    tempBudg.setStartDate(curs.getString(curs.getColumnIndex("StartDate")));
+                    tempBudg.setLastModified(curs.getString(curs.getColumnIndex("LastModified")));
+                    tempBudg.setAmount(curs.getFloat(curs.getColumnIndex("Amount")));
+                    tempBudg.setActive(false);
+                    int del = curs.getInt(curs.getColumnIndex("Deleted"));
+                    boolean tempBool;
+                    if (del == 0) {
+                        tempBool = false;
+                    } else {
+                        tempBool = true;
+                    }
+                    tempBudg.setDeleted(tempBool);
+                    curs.moveToNext();
+
+                    output.add(tempBudg);
+                }
+            }
+
+            curs.close();
+        }
+
+        return output;
+    }
+
+    public static Budget getBudgetByBudgetID(Context context, long BudgetID){
+        Budget tempBudg = new Budget(context);
+
+        SQLiteDatabase db = StatUtils.GetDatabase(context);
+
+        Cursor curs = db.rawQuery("SELECT * FROM Budget WHERE BudgetID = " + BudgetID + " AND Deleted = 0", null);
+
+        if(curs.getCount() > 0){
+            curs.moveToFirst();
+
+            tempBudg.setBudgetID(curs.getLong(curs.getColumnIndex("BudgetID")));
+            tempBudg.setUserID(curs.getLong(curs.getColumnIndex("UserID")));
+            tempBudg.setTimePeriod(curs.getInt(curs.getColumnIndex("TimePeriod")));
+            tempBudg.setResetCode(curs.getInt(curs.getColumnIndex("ResetCode")));
+            tempBudg.setAnchorDate(curs.getString(curs.getColumnIndex("AnchorDate")));
+            tempBudg.setStartDate(curs.getString(curs.getColumnIndex("StartDate")));
+            tempBudg.setLastModified(curs.getString(curs.getColumnIndex("LastModified")));
+            tempBudg.setAmount(curs.getFloat(curs.getColumnIndex("Amount")));
+            tempBudg.setActive(false);
+            int del = curs.getInt(curs.getColumnIndex("Deleted"));
+            boolean tempBool;
+            if(del == 0){
+                tempBool = false;
+            }else{
+                tempBool = true;
+            }
+            tempBudg.setDeleted(tempBool);
+        }
+
+        return tempBudg;
     }
 
 }

@@ -1,5 +1,6 @@
 package com.example.aegis.budgpal;
 
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -17,10 +18,16 @@ public class ExpenseDetailsActivity extends AppCompatActivity {
     private Button UpdateButton;
     private Button DeleteButton;
 
+    private SharedPreferences Preferences;
+    private SharedPreferences.Editor PreferencesEditor;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_expense_details);
+
+        Preferences = getSharedPreferences(getString(R.string.preferences_name), MODE_PRIVATE);
+        PreferencesEditor = getSharedPreferences(getString(R.string.preferences_name),MODE_PRIVATE).edit();
 
         AmountField = (EditText)findViewById(R.id.amountField);
         DescriptionField = (EditText)findViewById(R.id.descriptionField);
@@ -38,7 +45,7 @@ public class ExpenseDetailsActivity extends AppCompatActivity {
         DeleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Expense ex = StatUtils.GetExpense(getApplicationContext(), getIntent().getLongExtra("ExpenseID", new Long(-1)));
+                Expense ex = Expense.getExpenseByExpenseID(getApplicationContext(), getIntent().getLongExtra("ExpenseID", new Long(-1)));
                 ex.setDeleted(true);
                 ex.pushToDatabase();
 
@@ -51,7 +58,7 @@ public class ExpenseDetailsActivity extends AppCompatActivity {
         UpdateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Expense ex = StatUtils. GetExpense(getApplicationContext(), getIntent().getLongExtra("ExpenseID", new Long(-1)));
+                Expense ex = Expense.getExpenseByExpenseID(getApplicationContext(), getIntent().getLongExtra("ExpenseID", new Long(-1)));
 
                 if(ex.getUserID() == -1){
                     Toast.makeText(getApplicationContext(), "No expense found", Toast.LENGTH_SHORT).show();
@@ -70,10 +77,10 @@ public class ExpenseDetailsActivity extends AppCompatActivity {
         });
 
         if(getIntent().getLongExtra("ExpenseID", new Long(-1)) != -1){
-            Expense house = StatUtils.GetExpense(getApplicationContext(), getIntent().getLongExtra("ExpenseID", new Long(-1)));
+            Expense house = Expense.getExpenseByExpenseID(getApplicationContext(), getIntent().getLongExtra("ExpenseID", new Long(-1)));
             AmountField.setText(house.getAmount() + "");
             DescriptionField.setText(house.getDescription());
-            CreatedByField.setText(StatUtils.GetUser(getApplicationContext(), house.getUserID()).getUsername());
+            CreatedByField.setText(User.getUserByUserID(getApplicationContext(), house.getUserID()).getUsername());
             CreatedOnField.setText(house.getLastModified());
 
             UpdateButton.setEnabled(true);

@@ -1,6 +1,7 @@
 package com.example.aegis.budgpal;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -25,6 +26,9 @@ public class ViewEvents extends AppCompatActivity {
 
     private Long UserID;
 
+    private SharedPreferences Preferences;
+    private SharedPreferences.Editor PreferencesEditor;
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data){
         super.onActivityResult(requestCode, resultCode, data);
@@ -36,9 +40,11 @@ public class ViewEvents extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_events);
 
-        UserID = getIntent().getLongExtra("UserID", -1);
+        Preferences = getSharedPreferences(getString(R.string.preferences_name), MODE_PRIVATE);
+        PreferencesEditor = getSharedPreferences(getString(R.string.preferences_name),MODE_PRIVATE).edit();
 
-        Toast.makeText(getApplicationContext(), UserID.toString(), Toast.LENGTH_SHORT).show();
+        UserID = Preferences.getLong("UserID", -1);
+        //UserID = getIntent().getLongExtra("UserID", -1);
 
         NavDrawer      = (DrawerLayout)findViewById(R.id.navDrawer);
         NavDrawerList  = (ListView)findViewById(R.id.navDrawerList);
@@ -53,7 +59,7 @@ public class ViewEvents extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
                 NavDrawer.closeDrawer(Gravity.LEFT);
-                Intent tempIntent = SwitchManager.SwitchActivity(ViewEvents.this, parent.getItemAtPosition(position).toString(), UserID);
+                Intent tempIntent = SwitchManager.SwitchActivity(ViewEvents.this, parent.getItemAtPosition(position).toString());
 
                 if(tempIntent != null){
                     startActivity(tempIntent);
@@ -71,7 +77,7 @@ public class ViewEvents extends AppCompatActivity {
                 long EventID = Long.parseLong(items[0]);
                 Log.d("post", Long.toString(EventID));
 
-                Event ev = StatUtils.GetEvent(getApplicationContext(), EventID);
+                Event ev = Event.getEventByEventID(getApplicationContext(), EventID);
 
                 Intent goToEventDetails = new Intent(ViewEvents.this, EventDetailsActivity.class);
                 goToEventDetails.putExtra("EventID", ev.getEventID());
@@ -90,7 +96,7 @@ public class ViewEvents extends AppCompatActivity {
         EventsList.setAdapter(listAdapter);
         listAdapter.clear();
 
-        ArrayList<Event> eventsList = StatUtils.GetAllEvents(getApplicationContext(), UserID);
+        ArrayList<Event> eventsList = Event.getEventsByUserID(getApplicationContext(), UserID);
         for(int i = 0; i < eventsList.size(); i++){
             listAdapter.add(Long.toString(eventsList.get(i).getEventID()) + "- " + eventsList.get(i).getDescription() + "- Starts: " + eventsList.get(i).getStartDate());
         }

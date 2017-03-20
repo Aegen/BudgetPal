@@ -19,36 +19,35 @@ public class SwitchManager {
      *
      * @param context Should be given getApplicationContext()
      * @param activity Should be given the name that will match with the intended activity
-     * @param UserID Should be provided a userID that will be maintained throughout the session
      * @return An intent used to change activities
      */
-    public static Intent SwitchActivity(Context context, String activity, Long UserID){
+    public static Intent SwitchActivity(Context context, String activity){
         Intent tempIntent;
         switch (activity){
             case "Homepage":
-                tempIntent = new Intent(context, LandingPage.class).putExtra("UserID", UserID);
+                tempIntent = new Intent(context, LandingPage.class);
                 break;
             case "Change Budget":
-                tempIntent = new Intent(context, SetBudget.class).putExtra("UserID", UserID);
+                tempIntent = new Intent(context, SetBudget.class);
                 break;
             case "Add Expense":
-                tempIntent = new Intent(context, AddExpenses.class).putExtra("UserID", UserID);
+                tempIntent = new Intent(context, AddExpenses.class);
                 break;
             case "Add Event":
-                tempIntent = new Intent(context, AddEvent.class).putExtra("UserID", UserID);
+                tempIntent = new Intent(context, AddEvent.class);
                 break;
             case "View Expenses":
-                tempIntent = new Intent(context, ViewHistory.class).putExtra("UserID", UserID);
+                tempIntent = new Intent(context, ViewHistory.class);
                 break;
             case "View Events":
-                tempIntent = new Intent(context, ViewEvents.class).putExtra("UserID", UserID);
+                tempIntent = new Intent(context, ViewEvents.class);
                 break;
             case "Logout":
-                tempIntent = new Intent(context, MainActivity.class).putExtra("UserID", UserID);
+                tempIntent = new Intent(context, MainActivity.class);
                 tempIntent.putExtra("CameFromLogout", true);
                 break;
             case "Settings":
-                tempIntent = new Intent(context, LandingPage.class).putExtra("UserID", UserID);
+                tempIntent = new Intent(context, LandingPage.class);
                 break;
             default:
                 Log.e("Invalid Selection", activity + " failed to match with an activity.");

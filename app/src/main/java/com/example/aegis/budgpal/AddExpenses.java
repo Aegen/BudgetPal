@@ -1,6 +1,7 @@
 package com.example.aegis.budgpal;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -33,10 +34,16 @@ public class AddExpenses extends AppCompatActivity {
     private EditText DescriptionField;
     private Button AddButton;
 
+    private SharedPreferences Preferences;
+    private SharedPreferences.Editor PreferencesEditor;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_expenses);
+
+        Preferences = getSharedPreferences(getString(R.string.preferences_name), MODE_PRIVATE);
+        PreferencesEditor = getSharedPreferences(getString(R.string.preferences_name),MODE_PRIVATE).edit();
 
         db = StatUtils.GetDatabase(getApplicationContext());
 
@@ -47,19 +54,17 @@ public class AddExpenses extends AppCompatActivity {
 
         AddButton = (Button)findViewById(R.id.expenseAddButton);
 
-        UserID = getIntent().getLongExtra("UserID", -1);
-        BudgetID = StatUtils.GetBudgetID(getApplicationContext(), UserID);
+        UserID = Preferences.getLong("UserID", -1);
+        BudgetID = Budget.getCurrentBudgetForUser(getApplicationContext(), UserID).getBudgetID();
 
         if(BudgetID == -1){
             AddButton.setEnabled(false);
             Toast.makeText(getApplicationContext(), "No budget set for this user", Toast.LENGTH_LONG).show();
         }
 
-        Toast.makeText(getApplicationContext(), UserID.toString(), Toast.LENGTH_SHORT).show();
-
         Categories = getResources().getStringArray(R.array.expenseCategories);
-        Spinner categorySelector = (Spinner)findViewById(R.id.expenseCategorySpinner);
-        categorySelector.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, Categories));
+        
+        CategorySpinner.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, Categories));
 
         NavDrawer      = (DrawerLayout)findViewById(R.id.navDrawer);
         NavDrawerList  = (ListView)findViewById(R.id.navDrawerList);
@@ -71,7 +76,7 @@ public class AddExpenses extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
                 NavDrawer.closeDrawer(Gravity.LEFT);
-                Intent tempIntent = SwitchManager.SwitchActivity(AddExpenses.this, parent.getItemAtPosition(position).toString(), UserID);
+                Intent tempIntent = SwitchManager.SwitchActivity(AddExpenses.this, parent.getItemAtPosition(position).toString());
 
                 if(tempIntent != null){
                     startActivity(tempIntent);
@@ -83,12 +88,12 @@ public class AddExpenses extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if(!AmountField.getText().toString().isEmpty()) {
-                    Float am = new Float(AmountField.getText().toString());
+                    Float am = Float.valueOf(AmountField.getText().toString());
                     Expense tempExp = new Expense(UserID, BudgetID, am, StatUtils.GetCurrentDate(), StatUtils.GetCategoryCode(CategorySpinner.getSelectedItem().toString()), DescriptionField.getText().toString(), false, getApplicationContext());
                     tempExp.pushToDatabase();
 
 
-                    startActivity(SwitchManager.SwitchActivity(getApplicationContext(), "Homepage", UserID));
+                    startActivity(SwitchManager.SwitchActivity(getApplicationContext(), "Homepage"));
                     finish();
                 }else{
                     Toast.makeText(getApplicationContext(), "You must enter an amount", Toast.LENGTH_SHORT).show();
