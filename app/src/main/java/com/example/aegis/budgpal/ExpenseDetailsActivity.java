@@ -1,5 +1,6 @@
 package com.example.aegis.budgpal;
 
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -17,10 +18,16 @@ public class ExpenseDetailsActivity extends AppCompatActivity {
     private Button UpdateButton;
     private Button DeleteButton;
 
+    private SharedPreferences Preferences;
+    private SharedPreferences.Editor PreferencesEditor;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_expense_details);
+
+        Preferences = getSharedPreferences(getString(R.string.preferences_name), MODE_PRIVATE);
+        PreferencesEditor = getSharedPreferences(getString(R.string.preferences_name),MODE_PRIVATE).edit();
 
         AmountField = (EditText)findViewById(R.id.amountField);
         DescriptionField = (EditText)findViewById(R.id.descriptionField);

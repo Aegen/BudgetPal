@@ -1,6 +1,7 @@
 package com.example.aegis.budgpal;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -18,11 +19,16 @@ public class EventDetailsActivity extends AppCompatActivity {
     private Button UpdateButton;
     private Button DeleteButton;
 
+    private SharedPreferences Preferences;
+    private SharedPreferences.Editor PreferencesEditor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event_details);
+
+        Preferences = getSharedPreferences(getString(R.string.preferences_name), MODE_PRIVATE);
+        PreferencesEditor = getSharedPreferences(getString(R.string.preferences_name),MODE_PRIVATE).edit();
 
         DateField = (EditText)findViewById(R.id.DateField);
         DescriptionField = (EditText)findViewById(R.id.DescriptionField);

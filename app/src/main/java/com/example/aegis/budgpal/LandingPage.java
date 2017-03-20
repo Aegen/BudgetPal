@@ -1,6 +1,7 @@
 package com.example.aegis.budgpal;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -20,26 +21,18 @@ import java.util.Locale;
 
 public class LandingPage extends AppCompatActivity {
 
-    private SQLiteDatabase db;
-
     private DrawerLayout NavDrawer;
-    private ListView NavDrawerList;
-    private String[] NavDrawerItems;
 
     private Long UserID;
     private Boolean CameFromEntry;
-
-    private TextView CurrentBudgetText;
-    private TextView RemainingBudgetText;
-
-    private ListView UpcomingEvents;
 
     private int DayCode;
     private int WeekCode;
     private int BiweekCode;
     private int MonthCode;
 
-    private ArrayList<Expense> expenses;
+    private SharedPreferences Preferences;
+    private SharedPreferences.Editor PreferencesEditor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,11 +41,11 @@ public class LandingPage extends AppCompatActivity {
 
         /*************************************** Initialization Area ***************************************************/
 
-
-        db = StatUtils.GetDatabase(getApplicationContext());
+        Preferences = getSharedPreferences(getString(R.string.preferences_name), MODE_PRIVATE);
+        PreferencesEditor = getSharedPreferences(getString(R.string.preferences_name),MODE_PRIVATE).edit();
 
         //Get Resources
-        UserID = getIntent().getLongExtra("UserID", -1);
+        UserID = Preferences.getLong("UserID", -1);
         CameFromEntry = getIntent().getBooleanExtra("CameFromEntry", false);
         DayCode = getResources().getInteger(R.integer.DAY_CODE);
         WeekCode = getResources().getInteger(R.integer.WEEK_CODE);
@@ -66,13 +59,13 @@ public class LandingPage extends AppCompatActivity {
 
         //Get Views
         NavDrawer      = (DrawerLayout)findViewById(R.id.navDrawer);
-        NavDrawerList  = (ListView)findViewById(R.id.navDrawerList);
-        CurrentBudgetText = (TextView)findViewById(R.id.landingPageCurrentBudgetText);
-        RemainingBudgetText = (TextView)findViewById(R.id.landingPageRemainingBudgetText);
-        UpcomingEvents = (ListView)findViewById(R.id.upcomingEventsListView);
+        ListView navDrawerList = (ListView) findViewById(R.id.navDrawerList);
+        TextView currentBudgetText = (TextView) findViewById(R.id.landingPageCurrentBudgetText);
+        TextView remainingBudgetText = (TextView) findViewById(R.id.landingPageRemainingBudgetText);
+        ListView upcomingEvents = (ListView) findViewById(R.id.upcomingEventsListView);
         //End Get Views
 
-        NavDrawerItems = getResources().getStringArray(R.array.navListItems);
+        String[] navDrawerItems = getResources().getStringArray(R.array.navListItems);
 
 
 
@@ -80,15 +73,15 @@ public class LandingPage extends AppCompatActivity {
 
         /**************************************** End Initialization Area **********************************************/
 
-        NavDrawerList.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, NavDrawerItems));
+        navDrawerList.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, navDrawerItems));
 
 
-        NavDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        navDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
                 NavDrawer.closeDrawer(Gravity.START);
-                Intent tempIntent = SwitchManager.SwitchActivity(LandingPage.this, parent.getItemAtPosition(position).toString(), UserID);
+                Intent tempIntent = SwitchManager.SwitchActivity(LandingPage.this, parent.getItemAtPosition(position).toString());
 
                 if(tempIntent != null){
                     startActivity(tempIntent);
@@ -103,8 +96,8 @@ public class LandingPage extends AppCompatActivity {
 
         float amount = budget.getAmount();
 
-        expenses = StatUtils.GetExpenses(getApplicationContext(), UserID);
-        for(int i=0; i<expenses.size(); i++) {
+        ArrayList<Expense> expenses = StatUtils.GetExpenses(getApplicationContext(), UserID);
+        for(int i = 0; i< expenses.size(); i++) {
             if(budget.getBudgetID() == expenses.get(i).getBudgetID())
                 amount -= expenses.get(i).getAmount();
         }
@@ -119,7 +112,7 @@ public class LandingPage extends AppCompatActivity {
             }
         }
 
-        UpcomingEvents.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, budgetListItems));
+        upcomingEvents.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, budgetListItems));
 
         String period = GetPeriodText(budget.getTimePeriod());
 
@@ -127,9 +120,9 @@ public class LandingPage extends AppCompatActivity {
 
 
         if(StatUtils.GetBudgetID(getApplicationContext(), UserID) != -1) {
-            CurrentBudgetText.setText(NumberFormat.getCurrencyInstance(new Locale("en", "US"))
+            currentBudgetText.setText(NumberFormat.getCurrencyInstance(new Locale("en", "US"))
                     .format(budget.getAmount()) + " per " + period);
-            RemainingBudgetText.setText(NumberFormat.getCurrencyInstance(new Locale("en", "US"))
+            remainingBudgetText.setText(NumberFormat.getCurrencyInstance(new Locale("en", "US"))
                     .format(amount) + " until " + StatUtils.AddDaysToDate(budget.getStartDate(), daysToAdd));
         }
     }

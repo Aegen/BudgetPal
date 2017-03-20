@@ -1,6 +1,7 @@
 package com.example.aegis.budgpal;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -28,16 +29,23 @@ public class AddEvent extends AppCompatActivity {
     private EditText DateField;
     private Button AddButton;
 
+    private SharedPreferences Preferences;
+    private SharedPreferences.Editor PreferencesEditor;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_event);
 
+        Preferences = getSharedPreferences(getString(R.string.preferences_name), MODE_PRIVATE);
+        PreferencesEditor = getSharedPreferences(getString(R.string.preferences_name),MODE_PRIVATE).edit();
+
         DescriptionField = (EditText)findViewById(R.id.addEventNameTextEdit);
         DateField = (EditText)findViewById(R.id.addEventDateTextEdit);
         AddButton = (Button)findViewById(R.id.addEventButton);
 
-        UserID = getIntent().getLongExtra("UserID", -1);
+        UserID = Preferences.getLong("UserID", -1);
+//        UserID = getIntent().getLongExtra("UserID", -1);
 
         NavDrawer      = (DrawerLayout)findViewById(R.id.navDrawer);
         NavDrawerList  = (ListView)findViewById(R.id.navDrawerList);
@@ -49,7 +57,7 @@ public class AddEvent extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
                 NavDrawer.closeDrawer(Gravity.LEFT);
-                Intent tempIntent = SwitchManager.SwitchActivity(AddEvent.this, parent.getItemAtPosition(position).toString(), UserID);
+                Intent tempIntent = SwitchManager.SwitchActivity(AddEvent.this, parent.getItemAtPosition(position).toString());
 
                 if(tempIntent != null){
                     startActivity(tempIntent);
@@ -71,7 +79,7 @@ public class AddEvent extends AppCompatActivity {
                     Event tempEv = new Event(UserID, date, date, desc, getApplicationContext());
                     tempEv.pushToDatabase();
 
-                    startActivity(SwitchManager.SwitchActivity(getApplicationContext(), "Homepage", UserID));
+                    startActivity(SwitchManager.SwitchActivity(getApplicationContext(), "Homepage"));
                     finish();
                 }else{
                     Toast.makeText(getApplicationContext(), "Invalid Date must be of the form yyyy-mm-dd", Toast.LENGTH_LONG).show();
