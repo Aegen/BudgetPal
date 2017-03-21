@@ -45,9 +45,8 @@ public class MainActivity extends AppCompatActivity {
     private Button LoginButton;
     private Button NewUserButton;
 
-    private String TAG = "MainActivity";
+    private final String TAG = "MainActivity";
 
-    private Boolean CameFromLogout;
 
     private SharedPreferences Preferences;
     private SharedPreferences.Editor PreferencesEditor;
@@ -70,7 +69,6 @@ public class MainActivity extends AppCompatActivity {
         LoginButton = (Button)findViewById(R.id.loginButton);
         NewUserButton = (Button)findViewById(R.id.newUserButton);
 
-        CameFromLogout = getIntent().getBooleanExtra("CameFromLogout", false);
 
         LoginButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -149,7 +147,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed(){
-        if(CameFromLogout){
+        if(getIntent().getBooleanExtra("CameFromLogout", false)){
             return;
         }else{
             super.onBackPressed();

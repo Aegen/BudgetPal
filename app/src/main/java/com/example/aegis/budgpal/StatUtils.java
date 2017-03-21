@@ -1,13 +1,21 @@
 package com.example.aegis.budgpal;
 
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.icu.util.Calendar;
 import android.icu.util.TimeUnit;
+import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import java.nio.charset.StandardCharsets;
@@ -335,4 +343,33 @@ public class StatUtils {
         return form.format(time);
     }
 
+    /**
+     * Adds the items to the list view and sets the onclick listener for each item.
+     * @param context The application context.
+     */
+    public static void InitializeNavigationDrawer(final Context context){
+
+        String[] navDrawerItems = context.getResources().getStringArray(R.array.navListItems);
+        final DrawerLayout NavDrawer = (DrawerLayout) ((Activity)context).findViewById(R.id.navDrawer);
+        ListView NavList = (ListView) ((Activity)context).findViewById(R.id.navDrawerList);
+
+        NavList.setAdapter(new ArrayAdapter<>(context, android.R.layout.simple_list_item_1, navDrawerItems));
+
+
+        NavList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                NavDrawer.closeDrawer(Gravity.START);
+                Intent tempIntent = SwitchManager.SwitchActivity(context, parent.getItemAtPosition(position).toString());
+
+                if(tempIntent != null){
+                    context.startActivity(tempIntent);
+                }
+            }
+        });
+    }
+
 }
+
+
