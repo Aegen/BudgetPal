@@ -28,6 +28,8 @@ public class Budget {
     private boolean deleted;
     private DatabaseHandler handler;
 
+    private final static String TAG = "Budget";
+
     public Budget(Context context){
         this.handler = new DatabaseHandler(context, "database", null, 1);
     }

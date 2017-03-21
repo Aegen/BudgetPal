@@ -41,7 +41,7 @@ public class ViewHistory extends AppCompatActivity {
     private SharedPreferences Preferences;
     private SharedPreferences.Editor PreferencesEditor;
 
-    private String TAG = "ViewExpenses";
+    private final static String TAG = "ViewExpenses";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

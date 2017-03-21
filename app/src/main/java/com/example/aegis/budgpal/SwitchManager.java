@@ -15,6 +15,7 @@ import android.widget.EditText;
 
 public class SwitchManager {
 
+    private final static String TAG = "SwitchManager";
     /**
      *
      * @param context Should be given getApplicationContext()
@@ -50,7 +51,7 @@ public class SwitchManager {
                 tempIntent = new Intent(context, LandingPage.class);
                 break;
             default:
-                Log.e("Invalid Selection", activity + " failed to match with an activity.");
+                Log.e(TAG, activity + " failed to match with an activity.");
                 return null;
         }
 

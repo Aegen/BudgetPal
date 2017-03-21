@@ -29,7 +29,7 @@ public class ViewEvents extends AppCompatActivity {
     private SharedPreferences Preferences;
     private SharedPreferences.Editor PreferencesEditor;
 
-    private String TAG = "ViewEvents";
+    private final static String TAG = "ViewEvents";
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data){

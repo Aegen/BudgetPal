@@ -24,7 +24,7 @@ public class LandingPage extends AppCompatActivity {
     private SharedPreferences Preferences;
     private SharedPreferences.Editor PreferencesEditor;
 
-    private final String TAG = "LandingPage";
+    private final static String TAG = "LandingPage";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

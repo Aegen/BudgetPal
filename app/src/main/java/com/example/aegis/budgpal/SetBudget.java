@@ -36,7 +36,7 @@ public class SetBudget extends AppCompatActivity {
     private CheckBox BiweeklyBox;
     private CheckBox MonthlyBox;
 
-    private String TAG = "SetBudgetActivity";
+    private final static String TAG = "SetBudgetActivity";
 
     private Long UserID;
 //    private Long BudgetID;

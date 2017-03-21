@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
     private EditText UsernameField;
     private EditText PasswordField;
 
-    private final String TAG = "MainActivity";
+    private final static String TAG = "MainActivity";
 
 
     private SharedPreferences Preferences;

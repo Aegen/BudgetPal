@@ -23,7 +23,7 @@ public class CreateUser extends AppCompatActivity {
     private SharedPreferences Preferences;
     private SharedPreferences.Editor PreferencesEditor;
 
-    private String TAG = "CreateUser";
+    private final static String TAG = "CreateUser";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

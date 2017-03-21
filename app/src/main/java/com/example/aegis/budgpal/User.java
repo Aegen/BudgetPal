@@ -25,6 +25,8 @@ public class User {
     private boolean deleted;
     private DatabaseHandler aDBHandler;
 
+    private final static String TAG = "User";
+
     public User(Context context){
         this.aDBHandler = new DatabaseHandler(context, "database", null, 1);
     }
