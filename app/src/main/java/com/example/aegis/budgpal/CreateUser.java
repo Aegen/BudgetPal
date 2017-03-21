@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -22,10 +23,14 @@ public class CreateUser extends AppCompatActivity {
     private SharedPreferences Preferences;
     private SharedPreferences.Editor PreferencesEditor;
 
+    private String TAG = "CreateUser";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_user);
+
+        Log.d(TAG, "Entered");
 
         Preferences = getSharedPreferences(getString(R.string.preferences_name), MODE_PRIVATE);
         PreferencesEditor = getSharedPreferences(getString(R.string.preferences_name),MODE_PRIVATE).edit();

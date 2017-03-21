@@ -45,6 +45,8 @@ public class MainActivity extends AppCompatActivity {
     private Button LoginButton;
     private Button NewUserButton;
 
+    private String TAG = "MainActivity";
+
     private Boolean CameFromLogout;
 
     private SharedPreferences Preferences;
@@ -55,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        Log.d(TAG, "Entered");
 
         Preferences = getSharedPreferences(getString(R.string.preferences_name), MODE_PRIVATE);
         PreferencesEditor = getSharedPreferences(getString(R.string.preferences_name),MODE_PRIVATE).edit();

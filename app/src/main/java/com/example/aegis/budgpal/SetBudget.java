@@ -36,6 +36,8 @@ public class SetBudget extends AppCompatActivity {
     private CheckBox BiweeklyBox;
     private CheckBox MonthlyBox;
 
+    private String TAG = "SetBudgetActivity";
+
     private Long UserID;
 //    private Long BudgetID;
 
@@ -116,8 +118,7 @@ public class SetBudget extends AppCompatActivity {
 
                 SaveButton.setEnabled(true);
 
-                boolean dIsChecked = DailyBox.isChecked();
-                if (dIsChecked){
+                if (DailyBox.isChecked()){
                     WeeklyBox.setChecked(false);
                     MonthlyBox.setChecked(false);
                     BiweeklyBox.setChecked(false);
@@ -134,8 +135,7 @@ public class SetBudget extends AppCompatActivity {
 
                 SaveButton.setEnabled(true);
 
-                boolean dIsChecked = WeeklyBox.isChecked();
-                if (dIsChecked){
+                if (WeeklyBox.isChecked()){
                     DailyBox.setChecked(false);
                     MonthlyBox.setChecked(false);
                     BiweeklyBox.setChecked(false);
@@ -152,12 +152,13 @@ public class SetBudget extends AppCompatActivity {
 
                 SaveButton.setEnabled(true);
 
-                boolean dIsChecked = MonthlyBox.isChecked();
-                if (dIsChecked){
+                if (MonthlyBox.isChecked()){
                     WeeklyBox.setChecked(false);
                     DailyBox.setChecked(false);
                     BiweeklyBox.setChecked(false);
 
+                }else {
+                    SaveButton.setEnabled(false);
                 }
             }
         });
@@ -169,8 +170,8 @@ public class SetBudget extends AppCompatActivity {
             public void onClick(View v) {
 
                 SaveButton.setEnabled(true);
-                boolean dIsChecked = BiweeklyBox.isChecked();
-                if (dIsChecked){
+
+                if (BiweeklyBox.isChecked()){
                     WeeklyBox.setChecked(false);
                     DailyBox.setChecked(false);
                     MonthlyBox.setChecked(false);
@@ -189,10 +190,6 @@ public class SetBudget extends AppCompatActivity {
                     if (tempB.getBudgetID() != -1) {
                         tempB.setDeleted(true);
                         tempB.pushToDatabase();
-                    }
-                    else{
-                        Toast.makeText(getApplicationContext(), "Budget not found", Toast.LENGTH_SHORT).show();
-                        return;
                     }
 
                     int TPC = getResources().getInteger(R.integer.DAY_CODE);

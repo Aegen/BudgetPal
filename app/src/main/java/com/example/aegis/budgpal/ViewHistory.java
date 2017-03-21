@@ -41,10 +41,14 @@ public class ViewHistory extends AppCompatActivity {
     private SharedPreferences Preferences;
     private SharedPreferences.Editor PreferencesEditor;
 
+    private String TAG = "ViewExpenses";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_history);
+
+        Log.d(TAG, "Entered");
 
         Preferences = getSharedPreferences(getString(R.string.preferences_name), MODE_PRIVATE);
         PreferencesEditor = getSharedPreferences(getString(R.string.preferences_name),MODE_PRIVATE).edit();
