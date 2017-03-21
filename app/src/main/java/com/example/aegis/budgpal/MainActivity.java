@@ -42,8 +42,6 @@ public class MainActivity extends AppCompatActivity {
 
     private EditText UsernameField;
     private EditText PasswordField;
-    private Button LoginButton;
-    private Button NewUserButton;
 
     private final String TAG = "MainActivity";
 
@@ -66,11 +64,11 @@ public class MainActivity extends AppCompatActivity {
         UsernameField = (EditText)findViewById(R.id.loginUsernameField);
         PasswordField = (EditText)findViewById(R.id.loginPasswordField);
 
-        LoginButton = (Button)findViewById(R.id.loginButton);
-        NewUserButton = (Button)findViewById(R.id.newUserButton);
+        Button loginButton = (Button) findViewById(R.id.loginButton);
+        Button newUserButton = (Button) findViewById(R.id.newUserButton);
 
 
-        LoginButton.setOnClickListener(new View.OnClickListener() {
+        loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -135,7 +133,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        NewUserButton.setOnClickListener(new View.OnClickListener() {
+        newUserButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent temp = new Intent(MainActivity.this, CreateUser.class);
@@ -161,48 +159,48 @@ public class MainActivity extends AppCompatActivity {
         int code = Integer.parseInt(dates[1]);
         int year = Integer.parseInt(dates[0]);
 
-        Long ret = new Long(0);
+        Long ret = 0L;
 
         switch (code){
             case 1:
-                ret = new Long(30);
+                ret = 30L;
                 break;
             case 2:
-                ret = new Long(30);
+                ret = 30L;
                 break;
             case 3:
                 if(year % 4 == 0 && year % 100 != 0 || year % 400 == 0){
-                    ret = new Long(28);
+                    ret = 28L;
                 }else{
-                    ret = new Long(27);
+                    ret = 27L;
                 }
                 break;
             case 4:
-                ret = new Long(30);
+                ret = 30L;
                 break;
             case 5:
-                ret = new Long(29);
+                ret = 29L;
                 break;
             case 6:
-                ret = new Long(30);
+                ret = 30L;
                 break;
             case 7:
-                ret = new Long(29);
+                ret = 29L;
                 break;
             case 8:
-                ret = new Long(30);
+                ret = 30L;
                 break;
             case 9:
-                ret = new Long(29);
+                ret = 29L;
                 break;
             case 10:
-                ret = new Long(30);
+                ret = 30L;
                 break;
             case 11:
-                ret = new Long(30);
+                ret = 30L;
                 break;
             case 12:
-                ret = new Long(29);
+                ret = 29L;
                 break;
 
         }
