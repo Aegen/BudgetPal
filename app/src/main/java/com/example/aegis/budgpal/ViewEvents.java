@@ -29,6 +29,8 @@ public class ViewEvents extends AppCompatActivity {
     private SharedPreferences Preferences;
     private SharedPreferences.Editor PreferencesEditor;
 
+    private String TAG = "ViewEvents";
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data){
         super.onActivityResult(requestCode, resultCode, data);
@@ -39,6 +41,8 @@ public class ViewEvents extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_events);
+
+        Log.d(TAG, "Entered");
 
         Preferences = getSharedPreferences(getString(R.string.preferences_name), MODE_PRIVATE);
         PreferencesEditor = getSharedPreferences(getString(R.string.preferences_name),MODE_PRIVATE).edit();

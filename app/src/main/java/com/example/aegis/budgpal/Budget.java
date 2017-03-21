@@ -141,7 +141,7 @@ public class Budget {
         if(curs.getCount() > 0){
             BID =  curs.getLong(curs.getColumnIndex("BudgetID"));
         }else{
-            return null;
+            return new Budget(context);
         }
 
         return getBudgetByBudgetID(context, BID);

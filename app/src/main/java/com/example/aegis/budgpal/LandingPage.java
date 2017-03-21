@@ -90,40 +90,38 @@ public class LandingPage extends AppCompatActivity {
         });
 
 
+        if(budget != null) {
+            float amount = budget.getAmount();
 
-
-
-
-        float amount = budget.getAmount();
-
-        ArrayList<Expense> expenses = Expense.getExpensesByUser(getApplicationContext(), UserID);
-        for(int i = 0; i< expenses.size(); i++) {
-            if(budget.getBudgetID() == expenses.get(i).getBudgetID())
-                amount -= expenses.get(i).getAmount();
-        }
-
-        ArrayList<Event> houser = Event.getEventsByUserID(getApplicationContext(), UserID);
-
-        ArrayList<String> budgetListItems = new ArrayList<>();
-
-        for(int i = houser.size()- 1; i >= 0; i--){
-            if(StatUtils.DaysSince(houser.get(i).getStartDate()) <= 0) {
-                budgetListItems.add(houser.get(i).getDescription() + " Starts: " + houser.get(i).getStartDate());
+            ArrayList<Expense> expenses = Expense.getExpensesByUser(getApplicationContext(), UserID);
+            for (int i = 0; i < expenses.size(); i++) {
+                if (budget.getBudgetID() == expenses.get(i).getBudgetID())
+                    amount -= expenses.get(i).getAmount();
             }
-        }
 
-        upcomingEvents.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, budgetListItems));
+            ArrayList<Event> houser = Event.getEventsByUserID(getApplicationContext(), UserID);
 
-        String period = GetPeriodText(budget.getTimePeriod());
+            ArrayList<String> budgetListItems = new ArrayList<>();
 
-        int daysToAdd = GetPeriodDays(budget.getTimePeriod(), budget.getStartDate());
+            for (int i = houser.size() - 1; i >= 0; i--) {
+                if (StatUtils.DaysSince(houser.get(i).getStartDate()) <= 0) {
+                    budgetListItems.add(houser.get(i).getDescription() + " Starts: " + houser.get(i).getStartDate());
+                }
+            }
+
+            upcomingEvents.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, budgetListItems));
+
+            String period = GetPeriodText(budget.getTimePeriod());
+
+            int daysToAdd = GetPeriodDays(budget.getTimePeriod(), budget.getStartDate());
 
 
-        if(Budget.getCurrentBudgetForUser(getApplicationContext(), UserID).getBudgetID() != -1) {
-            currentBudgetText.setText(NumberFormat.getCurrencyInstance(new Locale("en", "US"))
-                    .format(budget.getAmount()) + " per " + period);
-            remainingBudgetText.setText(NumberFormat.getCurrencyInstance(new Locale("en", "US"))
-                    .format(amount) + " until " + StatUtils.AddDaysToDate(budget.getStartDate(), daysToAdd));
+            if (Budget.getCurrentBudgetForUser(getApplicationContext(), UserID).getBudgetID() != -1) {
+                currentBudgetText.setText(NumberFormat.getCurrencyInstance(new Locale("en", "US"))
+                        .format(budget.getAmount()) + " per " + period);
+                remainingBudgetText.setText(NumberFormat.getCurrencyInstance(new Locale("en", "US"))
+                        .format(amount) + " until " + StatUtils.AddDaysToDate(budget.getStartDate(), daysToAdd));
+            }
         }
     }
 
