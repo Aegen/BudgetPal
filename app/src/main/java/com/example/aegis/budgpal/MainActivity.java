@@ -36,11 +36,6 @@ import java.util.Set;
 
 public class MainActivity extends AppCompatActivity {
 
-    private SQLiteDatabase db;
-
-    private EditText UsernameField;
-    private EditText PasswordField;
-
     private final static String TAG = "MainActivity";
 
 
@@ -57,13 +52,47 @@ public class MainActivity extends AppCompatActivity {
         Preferences = getSharedPreferences(getString(R.string.preferences_name), MODE_PRIVATE);
         PreferencesEditor = getSharedPreferences(getString(R.string.preferences_name),MODE_PRIVATE).edit();
 
-        db = StatUtils.GetDatabase(getApplicationContext());
+        AddLoginButtonListener();
 
-        UsernameField = (EditText)findViewById(R.id.loginUsernameField);
-        PasswordField = (EditText)findViewById(R.id.loginPasswordField);
+        AddNewUserButtonListener();
+    }
+
+    @Override
+    public void onBackPressed(){
+        if(getIntent().getBooleanExtra("CameFromLogout", false)){
+            return;
+        }else{
+            super.onBackPressed();
+        }
+    }
+
+    /**
+     * Adds the on click event listener to the New User button
+     */
+    private void AddNewUserButtonListener(){
+
+        Button newUserButton = (Button) findViewById(R.id.newUserButton);
+
+        newUserButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent temp = new Intent(MainActivity.this, CreateUser.class);
+                startActivity(temp);
+            }
+        });
+    }
+
+    /**
+     * Add the on click event listener to the Login button
+     */
+    private void AddLoginButtonListener(){
+        final SQLiteDatabase db = StatUtils.GetDatabase(getApplicationContext());
+
+        final EditText UsernameField = (EditText)findViewById(R.id.loginUsernameField);
+        final EditText PasswordField = (EditText)findViewById(R.id.loginPasswordField);
 
         Button loginButton = (Button) findViewById(R.id.loginButton);
-        Button newUserButton = (Button) findViewById(R.id.newUserButton);
+
 
 
         loginButton.setOnClickListener(new View.OnClickListener() {
@@ -81,43 +110,16 @@ public class MainActivity extends AppCompatActivity {
 
                     cursee.moveToFirst();
 
+                    PreferencesEditor.putLong("UserID", cursee.getLong(cursee.getColumnIndex("UserID")));
+                    PreferencesEditor.commit();
+
                     String comp = cursee.getString(cursee.getColumnIndex("HashedPassword"));
 
                     if(comp.equals(hashedPassword)){
 
-                        Long UserID = cursee.getLong(cursee.getColumnIndex("UserID"));
-                        Budget tempB = Budget.getCurrentBudgetForUser(getApplicationContext(), UserID);
-
-                        if(tempB.getTimePeriod() != -1){
-                            switch (tempB.getTimePeriod()){
-                                case 1:
-                                    if(StatUtils.DaysSince(tempB.getStartDate()) > 0){
-                                        StatUtils.ChangeBudget(getApplicationContext(), UserID);
-                                    }
-                                    break;
-                                case 2:
-                                    if(StatUtils.DaysSince(tempB.getStartDate()) > 6){
-                                        StatUtils.ChangeBudget(getApplicationContext(), UserID);
-                                    }
-                                    break;
-                                case 3:
-                                    if(StatUtils.DaysSince(tempB.getStartDate()) > 13){
-                                        StatUtils.ChangeBudget(getApplicationContext(), UserID);
-                                    }
-                                case 4:
-
-                                    if(StatUtils.DaysSince(tempB.getStartDate()) > GetMonthLength()){
-                                        StatUtils.ChangeBudget(getApplicationContext(), UserID);
-                                    }
-                                    break;
-
-                            }
-                        }
+                        CycleBudgetIfNecessary();
 
                         Intent goToLanding = SwitchManager.SwitchActivity(getApplicationContext(), "Homepage");//new Intent(MainActivity.this, LandingPage.class).putExtra("UserID", cursee.getLong(cursee.getColumnIndex("UserID")));
-
-                        PreferencesEditor.putLong("UserID", UserID);
-                        PreferencesEditor.commit();
 
                         goToLanding.putExtra("CameFromEntry", true);
                         startActivity(goToLanding);
@@ -130,23 +132,39 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-
-        newUserButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent temp = new Intent(MainActivity.this, CreateUser.class);
-                startActivity(temp);
-            }
-        });
-
     }
 
-    @Override
-    public void onBackPressed(){
-        if(getIntent().getBooleanExtra("CameFromLogout", false)){
-            return;
-        }else{
-            super.onBackPressed();
+    /**
+     * Checks if the budget needs to be cycled, then creates a new one if it does.
+     */
+    public void CycleBudgetIfNecessary(){
+        Long UserID = Preferences.getLong("UserID", -1);
+        Budget tempB = Budget.getCurrentBudgetForUser(getApplicationContext(), UserID);
+
+        if(tempB.getTimePeriod() != -1){
+            switch (tempB.getTimePeriod()){
+                case 1:
+                    if(StatUtils.DaysSince(tempB.getStartDate()) > 0){
+                        StatUtils.ChangeBudget(getApplicationContext(), UserID);
+                    }
+                    break;
+                case 2:
+                    if(StatUtils.DaysSince(tempB.getStartDate()) > 6){
+                        StatUtils.ChangeBudget(getApplicationContext(), UserID);
+                    }
+                    break;
+                case 3:
+                    if(StatUtils.DaysSince(tempB.getStartDate()) > 13){
+                        StatUtils.ChangeBudget(getApplicationContext(), UserID);
+                    }
+                case 4:
+
+                    if(StatUtils.DaysSince(tempB.getStartDate()) > GetMonthLength()){
+                        StatUtils.ChangeBudget(getApplicationContext(), UserID);
+                    }
+                    break;
+
+            }
         }
     }
 
