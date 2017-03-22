@@ -196,6 +196,9 @@ public class LandingPage extends AppCompatActivity {
         upcomingEvents.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, eventListItems));
     }
 
+    /**
+     * Adds the text to the appropriate textviews.
+     */
     private void SetBudgetDetails(){
 
         Long UserID = Preferences.getLong("UserID", -1);

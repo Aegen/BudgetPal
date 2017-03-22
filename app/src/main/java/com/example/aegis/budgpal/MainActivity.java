@@ -152,6 +152,10 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Gets how many days are in the current month.
+     * @return The number of days in this month.
+     */
     private Long GetMonthLength() {
         String date = StatUtils.GetCurrentDate();
         String[] dates = date.split("-");
