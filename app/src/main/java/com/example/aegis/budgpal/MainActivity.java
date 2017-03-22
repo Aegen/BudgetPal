@@ -36,8 +36,6 @@ import java.util.Set;
 
 public class MainActivity extends AppCompatActivity {
 
-//harrison
-
     private SQLiteDatabase db;
 
     private EditText UsernameField;
