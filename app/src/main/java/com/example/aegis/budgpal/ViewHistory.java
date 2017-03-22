@@ -24,11 +24,6 @@ import java.util.Locale;
 
 public class ViewHistory extends AppCompatActivity {
 
-    private Long myBudgetID;
-
-    ArrayList<String> listItems = new ArrayList<String>();
-    //ArrayAdapter<String> adapter;
-
     private SharedPreferences Preferences;
     private SharedPreferences.Editor PreferencesEditor;
 
@@ -56,13 +51,14 @@ public class ViewHistory extends AppCompatActivity {
     protected void onActivityResult(int code, int res, Intent intent){
         super.onActivityResult(code, res, intent);
 
-        PopulateList();
+        PopulateList(GetActiveBudgetID());
     }
 
     /**
      * Adds items to the listview.
+     * @param myBudgetID ID of the budget being used
      */
-    private void PopulateList(){
+    private void PopulateList(Long myBudgetID){
 
         Long UserID = Preferences.getLong("UserID", -1);
 
@@ -89,14 +85,14 @@ public class ViewHistory extends AppCompatActivity {
         Long UserID = Preferences.getLong("UserID", -1);
 
         Long BudgetID = Budget.getCurrentBudgetForUser(getApplicationContext(), UserID).getBudgetID();
-        myBudgetID = Budget.getCurrentBudgetForUser(getApplicationContext(), UserID).getBudgetID();
+        //myBudgetID = Budget.getCurrentBudgetForUser(getApplicationContext(), UserID).getBudgetID();
 
         final ListView expensesListView = (ListView) findViewById(R.id.viewHistoryExpensesListView);
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1);
         expensesListView.setAdapter(adapter);
 
-        PopulateList();
+        PopulateList(BudgetID);
 
         SetupListViewListener();
     }
@@ -154,7 +150,7 @@ public class ViewHistory extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 Long myBudgetID = Long.parseLong(parent.getItemAtPosition(position).toString().split(":")[0]);
 
-                PopulateList();
+                PopulateList(myBudgetID);
             }
 
             @Override
@@ -163,4 +159,19 @@ public class ViewHistory extends AppCompatActivity {
             }
         });
     }
+
+    /**
+     * Gets the current budgetID.
+     * @return The budgetID of the currently selected budget.
+     */
+    private Long GetActiveBudgetID(){
+        Long output = 0L;
+
+        final Spinner expenseSpinner = (Spinner) findViewById(R.id.viewExpensesPeriodSpinner);
+
+        output = Long.valueOf(expenseSpinner.getSelectedItem().toString().split(":")[0]);
+
+        return output;
+    }
+
 }
