@@ -23,41 +23,43 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String TABLE_EXPENSES = "Expense";
     private static final String TABLE_EVENTS = "Event";
 
-    public static final String U_USER_ID = "UserID";
-    public static final String U_USERNAME = "Username";
-    public static final String U_PASSWORD = "HashedPassword";
-    public static final String U_LAST_MODIFIED = "LastModified";
-    public static final String U_DELETED = "Deleted";
+    private static final String U_USER_ID = "UserID";
+    private static final String U_USERNAME = "Username";
+    private static final String U_PASSWORD = "HashedPassword";
+    private static final String U_LAST_MODIFIED = "LastModified";
+    private static final String U_DELETED = "Deleted";
 
-    public static final String B_BUDGET_ID = "BudgetID";
-    public static final String B_USER_ID = "UserID";
-    public static final String B_TIME_PERIOD = "TimePeriod";
-    public static final String B_RESET_CODE = "ResetCode";
-    public static final String B_ANCHOR_DATE = "AnchorDate";
-    public static final String B_START_DATE = "StartDate";
-    public static final String B_LAST_MODIFIED = "LastModified";
-    public static final String B_AMOUNT = "Amount";
-    public static final String B_ACTIVE = "Active";
-    public static final String B_DELETED = "Deleted";
+    private static final String B_BUDGET_ID = "BudgetID";
+    private static final String B_USER_ID = "UserID";
+    private static final String B_TIME_PERIOD = "TimePeriod";
+    private static final String B_RESET_CODE = "ResetCode";
+    private static final String B_ANCHOR_DATE = "AnchorDate";
+    private static final String B_START_DATE = "StartDate";
+    private static final String B_LAST_MODIFIED = "LastModified";
+    private static final String B_AMOUNT = "Amount";
+    private static final String B_ACTIVE = "Active";
+    private static final String B_DELETED = "Deleted";
 
-    public static final String EX_EXPENSE_ID = "ExpenseID";
-    public static final String EX_USER_ID = "UserID";
-    public static final String EX_BUDGET_ID = "BudgetID";
-    public static final String EX_AMOUNT = "Amount";
-    public static final String EX_LAST_MODIFIED = "LastModified";
-    public static final String EX_DATE_CREATED = "DateCreated";
-    public static final String EX_CATEGORY = "Category";
-    public static final String EX_DESCRIPTION = "Description";
-    public static final String EX_EXEMPT = "Exempt";
-    public static final String EX_DELETED = "Deleted";
+    private static final String EX_EXPENSE_ID = "ExpenseID";
+    private static final String EX_USER_ID = "UserID";
+    private static final String EX_BUDGET_ID = "BudgetID";
+    private static final String EX_AMOUNT = "Amount";
+    private static final String EX_LAST_MODIFIED = "LastModified";
+    private static final String EX_DATE_CREATED = "DateCreated";
+    private static final String EX_CATEGORY = "Category";
+    private static final String EX_DESCRIPTION = "Description";
+    private static final String EX_EXEMPT = "Exempt";
+    private static final String EX_DELETED = "Deleted";
 
-    public static final String EV_EVENT_ID = "EventID";
-    public static final String EV_USER_ID = "UserID";
-    public static final String EV_LAST_MODIFIED = "LastModified";
-    public static final String EV_START_DATE = "StartDate";
-    public static final String EV_END_DATE = "EndDate";
-    public static final String EV_DESCRIPTION = "Description";
-    public static final String EV_DELETED = "Deleted";
+    private static final String EV_EVENT_ID = "EventID";
+    private static final String EV_USER_ID = "UserID";
+    private static final String EV_LAST_MODIFIED = "LastModified";
+    private static final String EV_START_DATE = "StartDate";
+    private static final String EV_END_DATE = "EndDate";
+    private static final String EV_DESCRIPTION = "Description";
+    private static final String EV_DELETED = "Deleted";
+
+    private final static String TAG = "DatabaseHandler";
 
     public DatabaseHandler(Context context, String name, SQLiteDatabase.CursorFactory factory, int version){
         super(context,DATABASE_NAME,factory,DATABASE_VERSION);

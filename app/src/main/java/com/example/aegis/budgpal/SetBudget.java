@@ -24,22 +24,7 @@ import java.util.Locale;
 
 public class SetBudget extends AppCompatActivity {
 
-    private DrawerLayout NavDrawer;
-    private ListView NavDrawerList;
-    private String[] NavDrawerItems;
-
-    private EditText AmountField;
-    private Button SaveButton;
-
-    private CheckBox DailyBox;
-    private CheckBox WeeklyBox;
-    private CheckBox BiweeklyBox;
-    private CheckBox MonthlyBox;
-
-    private String TAG = "SetBudgetActivity";
-
-    private Long UserID;
-//    private Long BudgetID;
+    private final static String TAG = "SetBudgetActivity";
 
     private SharedPreferences Preferences;
     private SharedPreferences.Editor PreferencesEditor;
@@ -52,65 +37,22 @@ public class SetBudget extends AppCompatActivity {
         Preferences = getSharedPreferences(getString(R.string.preferences_name), MODE_PRIVATE);
         PreferencesEditor = getSharedPreferences(getString(R.string.preferences_name),MODE_PRIVATE).edit();
 
-        TextView oldBudget = (TextView) findViewById(R.id.currentBudgetText);
+        StatUtils.InitializeNavigationDrawer(this);
 
-        AmountField = (EditText)findViewById(R.id.newBudgetText);
+        SetupSaveButton();
 
-        SaveButton  = (Button)findViewById(R.id.budgetSaveButton);
-        SaveButton.setEnabled(false);
+        SetupPreviousBudgetText();
 
-        DailyBox = (CheckBox)findViewById(R.id.budgetDailyCheckBox);
-        WeeklyBox = (CheckBox)findViewById(R.id.budgetWeeklyCheckBox);
-        BiweeklyBox = (CheckBox)findViewById(R.id.budgetBiweeklyCheckBox);
-        MonthlyBox = (CheckBox)findViewById(R.id.budgetMonthlyCheckBox);
+        SetupCheckBoxListeners();
+    }
 
-//        UserID = getIntent().getLongExtra("UserID", -1);
-        UserID = Preferences.getLong("UserID", -1);
-        final Budget tempB = Budget.getCurrentBudgetForUser(getApplicationContext(), UserID);
+    private void SetupCheckBoxListeners(){
+        final CheckBox DailyBox = (CheckBox)findViewById(R.id.budgetDailyCheckBox);
+        final CheckBox WeeklyBox = (CheckBox)findViewById(R.id.budgetWeeklyCheckBox);
+        final CheckBox BiweeklyBox = (CheckBox)findViewById(R.id.budgetBiweeklyCheckBox);
+        final CheckBox MonthlyBox = (CheckBox)findViewById(R.id.budgetMonthlyCheckBox);
 
-        if(tempB.getBudgetID() != -1){
-            String period;
-
-            switch (tempB.getTimePeriod()){
-                case 1:
-                    period = "day";
-                    break;
-                case 2:
-                    period = "week";
-                    break;
-                case 3:
-                    period = "2 weeks";
-                    break;
-                case 4:
-                    period = "month";
-                    break;
-                default:
-                    period = "cycle";
-                    break;
-            }
-
-            oldBudget.setText(NumberFormat.getCurrencyInstance(new Locale("en", "US"))
-                    .format(tempB.getAmount()) + " per " + period);
-        }
-
-        NavDrawer      = (DrawerLayout)findViewById(R.id.navDrawer);
-        NavDrawerList  = (ListView)findViewById(R.id.navDrawerList);
-        NavDrawerItems = getResources().getStringArray(R.array.navListItems);
-        NavDrawerList.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, NavDrawerItems));
-
-        NavDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-                NavDrawer.closeDrawer(Gravity.LEFT);
-                Intent tempIntent = SwitchManager.SwitchActivity(SetBudget.this, parent.getItemAtPosition(position).toString());
-
-                if(tempIntent != null){
-                    startActivity(tempIntent);
-                }
-            }
-        });
-
+        final Button SaveButton  = (Button)findViewById(R.id.budgetSaveButton);
 
         DailyBox.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -181,6 +123,23 @@ public class SetBudget extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    private void SetupSaveButton(){
+        final CheckBox DailyBox = (CheckBox)findViewById(R.id.budgetDailyCheckBox);
+        final CheckBox WeeklyBox = (CheckBox)findViewById(R.id.budgetWeeklyCheckBox);
+        final CheckBox BiweeklyBox = (CheckBox)findViewById(R.id.budgetBiweeklyCheckBox);
+        final CheckBox MonthlyBox = (CheckBox)findViewById(R.id.budgetMonthlyCheckBox);
+
+        final Button SaveButton  = (Button)findViewById(R.id.budgetSaveButton);
+
+        final Long UserID = Preferences.getLong("UserID", -1);
+
+        SaveButton.setEnabled(false);
+
+        final EditText AmountField = (EditText)findViewById(R.id.newBudgetText);
+        final Budget tempB = Budget.getCurrentBudgetForUser(getApplicationContext(), UserID);
+
 
         SaveButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -217,5 +176,38 @@ public class SetBudget extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    private void SetupPreviousBudgetText(){
+        final TextView oldBudget = (TextView) findViewById(R.id.currentBudgetText);
+
+        final Long UserID = Preferences.getLong("UserID", -1);
+
+        final Budget tempB = Budget.getCurrentBudgetForUser(getApplicationContext(), UserID);
+
+        if(tempB.getBudgetID() != -1){
+            String period;
+
+            switch (tempB.getTimePeriod()){
+                case 1:
+                    period = "day";
+                    break;
+                case 2:
+                    period = "week";
+                    break;
+                case 3:
+                    period = "2 weeks";
+                    break;
+                case 4:
+                    period = "month";
+                    break;
+                default:
+                    period = "cycle";
+                    break;
+            }
+
+            oldBudget.setText(NumberFormat.getCurrencyInstance(new Locale("en", "US"))
+                    .format(tempB.getAmount()) + " per " + period);
+        }
     }
 }

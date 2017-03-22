@@ -21,122 +21,53 @@ import java.util.Locale;
 
 public class LandingPage extends AppCompatActivity {
 
-    private DrawerLayout NavDrawer;
-
-    private Long UserID;
-    private Boolean CameFromEntry;
-
-    private int DayCode;
-    private int WeekCode;
-    private int BiweekCode;
-    private int MonthCode;
-
     private SharedPreferences Preferences;
     private SharedPreferences.Editor PreferencesEditor;
+
+    private final static String TAG = "LandingPage";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_landing_page);
 
-        /*************************************** Initialization Area ***************************************************/
-
         Preferences = getSharedPreferences(getString(R.string.preferences_name), MODE_PRIVATE);
         PreferencesEditor = getSharedPreferences(getString(R.string.preferences_name),MODE_PRIVATE).edit();
 
-        //Get Resources
-        UserID = Preferences.getLong("UserID", -1);
-        CameFromEntry = getIntent().getBooleanExtra("CameFromEntry", false);
-        DayCode = getResources().getInteger(R.integer.DAY_CODE);
-        WeekCode = getResources().getInteger(R.integer.WEEK_CODE);
-        BiweekCode = getResources().getInteger(R.integer.BIWEEK_CODE);
-        MonthCode = getResources().getInteger(R.integer.MONTH_CODE);
-        Budget budget = Budget.getCurrentBudgetForUser(getApplicationContext(),  UserID);
+        StatUtils.InitializeNavigationDrawer(this);
 
-        //End Get Resources
+        SetBudgetDetails();
 
-
-
-        //Get Views
-        NavDrawer      = (DrawerLayout)findViewById(R.id.navDrawer);
-        ListView navDrawerList = (ListView) findViewById(R.id.navDrawerList);
-        TextView currentBudgetText = (TextView) findViewById(R.id.landingPageCurrentBudgetText);
-        TextView remainingBudgetText = (TextView) findViewById(R.id.landingPageRemainingBudgetText);
-        ListView upcomingEvents = (ListView) findViewById(R.id.upcomingEventsListView);
-        //End Get Views
-
-        String[] navDrawerItems = getResources().getStringArray(R.array.navListItems);
-
-
-
-
-
-        /**************************************** End Initialization Area **********************************************/
-
-        navDrawerList.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, navDrawerItems));
-
-
-        navDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-                NavDrawer.closeDrawer(Gravity.START);
-                Intent tempIntent = SwitchManager.SwitchActivity(LandingPage.this, parent.getItemAtPosition(position).toString());
-
-                if(tempIntent != null){
-                    startActivity(tempIntent);
-                }
-            }
-        });
-
-
-        if(budget != null) {
-            float amount = budget.getAmount();
-
-            ArrayList<Expense> expenses = Expense.getExpensesByUser(getApplicationContext(), UserID);
-            for (int i = 0; i < expenses.size(); i++) {
-                if (budget.getBudgetID() == expenses.get(i).getBudgetID())
-                    amount -= expenses.get(i).getAmount();
-            }
-
-            ArrayList<Event> houser = Event.getEventsByUserID(getApplicationContext(), UserID);
-
-            ArrayList<String> budgetListItems = new ArrayList<>();
-
-            for (int i = houser.size() - 1; i >= 0; i--) {
-                if (StatUtils.DaysSince(houser.get(i).getStartDate()) <= 0) {
-                    budgetListItems.add(houser.get(i).getDescription() + " Starts: " + houser.get(i).getStartDate());
-                }
-            }
-
-            upcomingEvents.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, budgetListItems));
-
-            String period = GetPeriodText(budget.getTimePeriod());
-
-            int daysToAdd = GetPeriodDays(budget.getTimePeriod(), budget.getStartDate());
-
-
-            if (Budget.getCurrentBudgetForUser(getApplicationContext(), UserID).getBudgetID() != -1) {
-                currentBudgetText.setText(NumberFormat.getCurrencyInstance(new Locale("en", "US"))
-                        .format(budget.getAmount()) + " per " + period);
-                remainingBudgetText.setText(NumberFormat.getCurrencyInstance(new Locale("en", "US"))
-                        .format(amount) + " until " + StatUtils.AddDaysToDate(budget.getStartDate(), daysToAdd));
-            }
-        }
+        SetUpcomingEventsList();
     }
 
 
+    /**
+     * Stops the back button from  trying to return to the previous screen if this activity was
+     * created by the create user activity.
+     */
     @Override
     public void onBackPressed(){
-        if(CameFromEntry){
+        if(getIntent().getBooleanExtra("CameFromEntry", false)){
             return;
         }else{
             super.onBackPressed();
         }
     }
 
+    /**
+     * Returns the correponding text for the code input.
+     * If the code is invalid, returns "cycle".
+     * @param code The time period code
+     * @return String representation of the code
+     */
     public String GetPeriodText(int code){
         String period;
+
+        int DayCode = getResources().getInteger(R.integer.DAY_CODE);
+        int WeekCode = getResources().getInteger(R.integer.WEEK_CODE);
+        int BiweekCode = getResources().getInteger(R.integer.BIWEEK_CODE);
+        int MonthCode = getResources().getInteger(R.integer.MONTH_CODE);
 
         if(code == DayCode){
             period = "day";
@@ -153,7 +84,20 @@ public class LandingPage extends AppCompatActivity {
         return  period;
     }
 
-    public int GetPeriodDays(int code, String date){
+    /**
+     * Returns the number of days that should be added to the date
+     * in order to obtain the start date of the next cycle.
+     * @param code The time period code for the budget.
+     * @param date The start date of the budget.
+     * @return The number of days to be added.
+     */
+    private int GetPeriodDays(int code, String date){
+
+        int DayCode = getResources().getInteger(R.integer.DAY_CODE);
+        int WeekCode = getResources().getInteger(R.integer.WEEK_CODE);
+        int BiweekCode = getResources().getInteger(R.integer.BIWEEK_CODE);
+        int MonthCode = getResources().getInteger(R.integer.MONTH_CODE);
+
         int daysToAdd;
         if(code == DayCode){
             daysToAdd = 1;
@@ -170,7 +114,12 @@ public class LandingPage extends AppCompatActivity {
         return daysToAdd;
     }
 
-    public int GetMonthCode(String date){
+    /**
+     * Returns the length of the month in the date given.
+     * @param date The date string in the format yyyy-MM-dd.
+     * @return An integer containing the number of days in the month.
+     */
+    private static int GetMonthCode(String date){
         String[] dates = date.split("-");
 
         int code = Integer.parseInt(dates[1]);
@@ -183,7 +132,11 @@ public class LandingPage extends AppCompatActivity {
                 ret = 31;
                 break;
             case 2:
-                ret = 28;
+                if(year % 4 == 0 && year % 100 != 0 || year % 400 == 0){
+                    ret = 29;
+                }else {
+                    ret = 28;
+                }
                 break;
             case 3:
                 ret = 31;
@@ -219,5 +172,62 @@ public class LandingPage extends AppCompatActivity {
         }
 
         return ret;
+    }
+
+    /**
+     * Retrieves the list of events for the user and adds all future events to the listview.
+     */
+    private void SetUpcomingEventsList(){
+
+        Long UserID = Preferences.getLong("UserID", -1);
+
+        ListView upcomingEvents = (ListView) findViewById(R.id.upcomingEventsListView);
+
+        ArrayList<Event> allEvents = Event.getEventsByUserID(getApplicationContext(), UserID);
+
+        ArrayList<String> eventListItems = new ArrayList<>();
+
+        for (int i = allEvents.size() - 1; i >= 0; i--) {
+            if (StatUtils.DaysSince(allEvents.get(i).getStartDate()) <= 0) {
+                eventListItems.add(allEvents.get(i).getDescription() + " Starts: " + allEvents.get(i).getStartDate());
+            }
+        }
+
+        upcomingEvents.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, eventListItems));
+    }
+
+    /**
+     * Adds the text to the appropriate textviews.
+     */
+    private void SetBudgetDetails(){
+
+        Long UserID = Preferences.getLong("UserID", -1);
+
+        Budget budget = Budget.getCurrentBudgetForUser(getApplicationContext(),  UserID);
+
+        TextView currentBudgetText = (TextView) findViewById(R.id.landingPageCurrentBudgetText);
+        TextView remainingBudgetText = (TextView) findViewById(R.id.landingPageRemainingBudgetText);
+
+        if(budget != null) {
+            float amount = budget.getAmount();
+
+            ArrayList<Expense> expenses = Expense.getExpensesByUser(getApplicationContext(), UserID);
+            for (int i = 0; i < expenses.size(); i++) {
+                if (budget.getBudgetID() == expenses.get(i).getBudgetID())
+                    amount -= expenses.get(i).getAmount();
+            }
+
+            String period = GetPeriodText(budget.getTimePeriod());
+
+            int daysToAdd = GetPeriodDays(budget.getTimePeriod(), budget.getStartDate());
+
+
+            if (Budget.getCurrentBudgetForUser(getApplicationContext(), UserID).getBudgetID() != -1) {
+                currentBudgetText.setText(NumberFormat.getCurrencyInstance(new Locale("en", "US"))
+                        .format(budget.getAmount()) + " per " + period);
+                remainingBudgetText.setText(NumberFormat.getCurrencyInstance(new Locale("en", "US"))
+                        .format(amount) + " until " + StatUtils.AddDaysToDate(budget.getStartDate(), daysToAdd));
+            }
+        }
     }
 }

@@ -22,6 +22,8 @@ public class EventDetailsActivity extends AppCompatActivity {
     private SharedPreferences Preferences;
     private SharedPreferences.Editor PreferencesEditor;
 
+    private final static String TAG = "EventDetails";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

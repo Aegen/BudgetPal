@@ -1,13 +1,21 @@
 package com.example.aegis.budgpal;
 
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.icu.util.Calendar;
 import android.icu.util.TimeUnit;
+import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import java.nio.charset.StandardCharsets;
@@ -28,10 +36,12 @@ import java.util.List;
 
 public class StatUtils {
 
+
+    private static final String TAG = "StatUtils";
     /**
-     * Returns the output of hashing the string with SHA-256
-     * @param rawSTR
-     * @return
+     * Returns the output of hashing the string with SHA-256.
+     * @param rawSTR Passworod to be hashed.
+     * @return The resulting hashed string.
      */
     public static String GetHashedString(String rawSTR){
 
@@ -40,7 +50,8 @@ public class StatUtils {
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
             hash = digest.digest(rawSTR.getBytes(StandardCharsets.UTF_8));
         }catch (Exception e){
-            hash = null;
+            Log.e(TAG, "GetHashedString - Hashing failed");
+            return null;
         }
 
         return new String(hash);
@@ -147,9 +158,9 @@ public class StatUtils {
     }
 
     /**
-     * Determines whether the input string is a valid date
-     * @param date
-     * @return
+     * Determines whether the input string is a valid date.
+     * @param date String in the format yyyy-MM-dd.
+     * @return Boolean indicating if the date is valid.
      */
     public static boolean IsValidDate(String date){
         String[] blocks = date.split("-");
@@ -164,12 +175,14 @@ public class StatUtils {
         try {
             year = Integer.parseInt(blocks[0]);
         }catch (NumberFormatException e){
+            Log.e(TAG, "IsValidDate - Year parse failed");
             return false;
         }
 
         try{
             month = Integer.parseInt(blocks[1]);
         }catch (NumberFormatException e){
+            Log.e(TAG, "IsValidDate - Month parse failed");
             return false;
         }
 
@@ -180,6 +193,7 @@ public class StatUtils {
         try{
             day = Integer.parseInt(blocks[2]);
         }catch (NumberFormatException e){
+            Log.e(TAG, "IsValidDate - Day parse failed");
             return false;
         }
 
@@ -224,31 +238,33 @@ public class StatUtils {
                 break;
         }
 
-        if(day < 1 || day > maxDay){
-            return false;
-        }
+        return !(day < 1 || day > maxDay);
 
-        return true;
     }
 
 
 //    @TargetApi(9)
     public static Long DaysSince(String DateToCompare){
 
-        SimpleDateFormat form = new SimpleDateFormat("yyyy-MM-dd");
-        Date curr;
-        Date comp;
-        try {
-            curr = form.parse(GetCurrentDate());
-            comp = form.parse(DateToCompare);
-        }catch (ParseException e){
-            return new Long(0);
-        }
+        if(IsValidDate(DateToCompare)) {
+            SimpleDateFormat form = new SimpleDateFormat("yyyy-MM-dd");
+            Date curr;
+            Date comp;
+            try {
+                curr = form.parse(GetCurrentDate());
+                comp = form.parse(DateToCompare);
+            } catch (ParseException e) {
+                Log.wtf(TAG, "DaysSince - Date Parsing Failed");
+                return 0L;
+            }
 
-        Long diff = curr.getTime() - comp.getTime();
+            Long diff = curr.getTime() - comp.getTime();
 //        Log.d("Diff", diff.toString());
 //        Log.d("Ceil", Double.toString(Math.ceil((double)diff/((1000 * 60 * 60 * 24)))));
-        return (long)Math.ceil((double)diff/((1000 * 60 * 60 * 24)));
+            return (long) Math.ceil((double) diff / ((1000 * 60 * 60 * 24)));
+        }else {
+            return 0L;
+        }
     }
 
     public static ArrayList<Budget> GetBudgets(Context context, Long UserID){
@@ -323,7 +339,8 @@ public class StatUtils {
             try {
                 time = form.parse(date);
             } catch (ParseException e) {
-
+                Log.wtf(TAG, "AddDaysToDate - Date Parse Failed");
+                return date;
             }
         }else{
             return date;
@@ -335,4 +352,33 @@ public class StatUtils {
         return form.format(time);
     }
 
+    /**
+     * Adds the items to the list view and sets the onclick listener for each item.
+     * @param context The application context.
+     */
+    public static void InitializeNavigationDrawer(final Context context){
+
+        String[] navDrawerItems = context.getResources().getStringArray(R.array.navListItems);
+        final DrawerLayout NavDrawer = (DrawerLayout) ((Activity)context).findViewById(R.id.navDrawer);
+        ListView NavList = (ListView) ((Activity)context).findViewById(R.id.navDrawerList);
+
+        NavList.setAdapter(new ArrayAdapter<>(context, android.R.layout.simple_list_item_1, navDrawerItems));
+
+
+        NavList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                NavDrawer.closeDrawer(Gravity.START);
+                Intent tempIntent = SwitchManager.SwitchActivity(context, parent.getItemAtPosition(position).toString());
+
+                if(tempIntent != null){
+                    context.startActivity(tempIntent);
+                }
+            }
+        });
+    }
+
 }
+
+

@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
@@ -18,24 +19,10 @@ import android.widget.Toast;
 
 public class AddExpenses extends AppCompatActivity {
 
-    private DrawerLayout NavDrawer;
-    private ListView NavDrawerList;
-    private String[] NavDrawerItems;
-    private String[] Categories;
-
-    private SQLiteDatabase db;
-
-    private Long UserID;
-    private Long BudgetID;
-
-
-    private Spinner CategorySpinner;
-    private EditText AmountField;
-    private EditText DescriptionField;
-    private Button AddButton;
-
     private SharedPreferences Preferences;
     private SharedPreferences.Editor PreferencesEditor;
+
+    private final static String TAG = "AddExpense";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,46 +32,44 @@ public class AddExpenses extends AppCompatActivity {
         Preferences = getSharedPreferences(getString(R.string.preferences_name), MODE_PRIVATE);
         PreferencesEditor = getSharedPreferences(getString(R.string.preferences_name),MODE_PRIVATE).edit();
 
-        db = StatUtils.GetDatabase(getApplicationContext());
+        StatUtils.InitializeNavigationDrawer(this);
 
-        CategorySpinner = (Spinner)findViewById(R.id.expenseCategorySpinner);
+        SetupCategorySpinner();
 
-        AmountField = (EditText)findViewById(R.id.expenseAmountText);
-        DescriptionField = (EditText)findViewById(R.id.expenseDescriptionText);
+        SetupAddButton();
+    }
 
-        AddButton = (Button)findViewById(R.id.expenseAddButton);
+    /**
+     * Adds the predefined items in Strings.xml to the catergory spinner.
+     */
+    private void SetupCategorySpinner(){
+        final Spinner CategorySpinner = (Spinner)findViewById(R.id.expenseCategorySpinner);
 
-        UserID = Preferences.getLong("UserID", -1);
-        BudgetID = Budget.getCurrentBudgetForUser(getApplicationContext(), UserID).getBudgetID();
+        String[] categories = getResources().getStringArray(R.array.expenseCategories);
+
+        CategorySpinner.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, categories));
+    }
+
+    /**
+     * Adds the onclick listener to the Add button.
+     */
+    private void SetupAddButton(){
+        final Spinner CategorySpinner = (Spinner)findViewById(R.id.expenseCategorySpinner);
+        final EditText AmountField = (EditText)findViewById(R.id.expenseAmountText);
+        final EditText DescriptionField = (EditText)findViewById(R.id.expenseDescriptionText);
+
+        final Button addButton = (Button) findViewById(R.id.expenseAddButton);
+
+        final Long UserID = Preferences.getLong("UserID", -1);
+        final Long BudgetID = Budget.getCurrentBudgetForUser(getApplicationContext(), UserID).getBudgetID();
 
         if(BudgetID == -1){
-            AddButton.setEnabled(false);
+            Log.e(TAG, "SetupAddButton - BudgetID is -1");
+            addButton.setEnabled(false);
             Toast.makeText(getApplicationContext(), "No budget set for this user", Toast.LENGTH_LONG).show();
         }
 
-        Categories = getResources().getStringArray(R.array.expenseCategories);
-        
-        CategorySpinner.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, Categories));
-
-        NavDrawer      = (DrawerLayout)findViewById(R.id.navDrawer);
-        NavDrawerList  = (ListView)findViewById(R.id.navDrawerList);
-        NavDrawerItems = getResources().getStringArray(R.array.navListItems);
-        NavDrawerList.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, NavDrawerItems));
-
-        NavDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-                NavDrawer.closeDrawer(Gravity.LEFT);
-                Intent tempIntent = SwitchManager.SwitchActivity(AddExpenses.this, parent.getItemAtPosition(position).toString());
-
-                if(tempIntent != null){
-                    startActivity(tempIntent);
-                }
-            }
-        });
-
-        AddButton.setOnClickListener(new View.OnClickListener() {
+        addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(!AmountField.getText().toString().isEmpty()) {
@@ -100,6 +85,5 @@ public class AddExpenses extends AppCompatActivity {
                 }
             }
         });
-
     }
 }

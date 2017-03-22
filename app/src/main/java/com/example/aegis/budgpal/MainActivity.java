@@ -36,18 +36,8 @@ import java.util.Set;
 
 public class MainActivity extends AppCompatActivity {
 
-//harrison
+    private final static String TAG = "MainActivity";
 
-    private SQLiteDatabase db;
-
-    private EditText UsernameField;
-    private EditText PasswordField;
-    private Button LoginButton;
-    private Button NewUserButton;
-
-    private String TAG = "MainActivity";
-
-    private Boolean CameFromLogout;
 
     private SharedPreferences Preferences;
     private SharedPreferences.Editor PreferencesEditor;
@@ -62,17 +52,50 @@ public class MainActivity extends AppCompatActivity {
         Preferences = getSharedPreferences(getString(R.string.preferences_name), MODE_PRIVATE);
         PreferencesEditor = getSharedPreferences(getString(R.string.preferences_name),MODE_PRIVATE).edit();
 
-        db = StatUtils.GetDatabase(getApplicationContext());
+        AddLoginButtonListener();
 
-        UsernameField = (EditText)findViewById(R.id.loginUsernameField);
-        PasswordField = (EditText)findViewById(R.id.loginPasswordField);
+        AddNewUserButtonListener();
+    }
 
-        LoginButton = (Button)findViewById(R.id.loginButton);
-        NewUserButton = (Button)findViewById(R.id.newUserButton);
+    @Override
+    public void onBackPressed(){
+        if(getIntent().getBooleanExtra("CameFromLogout", false)){
+            return;
+        }else{
+            super.onBackPressed();
+        }
+    }
 
-        CameFromLogout = getIntent().getBooleanExtra("CameFromLogout", false);
+    /**
+     * Adds the on click event listener to the New User button
+     */
+    private void AddNewUserButtonListener(){
 
-        LoginButton.setOnClickListener(new View.OnClickListener() {
+        Button newUserButton = (Button) findViewById(R.id.newUserButton);
+
+        newUserButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent temp = new Intent(MainActivity.this, CreateUser.class);
+                startActivity(temp);
+            }
+        });
+    }
+
+    /**
+     * Add the on click event listener to the Login button
+     */
+    private void AddLoginButtonListener(){
+        final SQLiteDatabase db = StatUtils.GetDatabase(getApplicationContext());
+
+        final EditText UsernameField = (EditText)findViewById(R.id.loginUsernameField);
+        final EditText PasswordField = (EditText)findViewById(R.id.loginPasswordField);
+
+        Button loginButton = (Button) findViewById(R.id.loginButton);
+
+
+
+        loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -87,43 +110,16 @@ public class MainActivity extends AppCompatActivity {
 
                     cursee.moveToFirst();
 
+                    PreferencesEditor.putLong("UserID", cursee.getLong(cursee.getColumnIndex("UserID")));
+                    PreferencesEditor.commit();
+
                     String comp = cursee.getString(cursee.getColumnIndex("HashedPassword"));
 
                     if(comp.equals(hashedPassword)){
 
-                        Long UserID = cursee.getLong(cursee.getColumnIndex("UserID"));
-                        Budget tempB = Budget.getCurrentBudgetForUser(getApplicationContext(), UserID);
-
-                        if(tempB.getTimePeriod() != -1){
-                            switch (tempB.getTimePeriod()){
-                                case 1:
-                                    if(StatUtils.DaysSince(tempB.getStartDate()) > 0){
-                                        StatUtils.ChangeBudget(getApplicationContext(), UserID);
-                                    }
-                                    break;
-                                case 2:
-                                    if(StatUtils.DaysSince(tempB.getStartDate()) > 6){
-                                        StatUtils.ChangeBudget(getApplicationContext(), UserID);
-                                    }
-                                    break;
-                                case 3:
-                                    if(StatUtils.DaysSince(tempB.getStartDate()) > 13){
-                                        StatUtils.ChangeBudget(getApplicationContext(), UserID);
-                                    }
-                                case 4:
-
-                                    if(StatUtils.DaysSince(tempB.getStartDate()) > GetMonthLength()){
-                                        StatUtils.ChangeBudget(getApplicationContext(), UserID);
-                                    }
-                                    break;
-
-                            }
-                        }
+                        CycleBudgetIfNecessary();
 
                         Intent goToLanding = SwitchManager.SwitchActivity(getApplicationContext(), "Homepage");//new Intent(MainActivity.this, LandingPage.class).putExtra("UserID", cursee.getLong(cursee.getColumnIndex("UserID")));
-
-                        PreferencesEditor.putLong("UserID", UserID);
-                        PreferencesEditor.commit();
 
                         goToLanding.putExtra("CameFromEntry", true);
                         startActivity(goToLanding);
@@ -136,26 +132,46 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-
-        NewUserButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent temp = new Intent(MainActivity.this, CreateUser.class);
-                startActivity(temp);
-            }
-        });
-
     }
 
-    @Override
-    public void onBackPressed(){
-        if(CameFromLogout){
-            return;
-        }else{
-            super.onBackPressed();
+    /**
+     * Checks if the budget needs to be cycled, then creates a new one if it does.
+     */
+    public void CycleBudgetIfNecessary(){
+        Long UserID = Preferences.getLong("UserID", -1);
+        Budget tempB = Budget.getCurrentBudgetForUser(getApplicationContext(), UserID);
+
+        if(tempB.getTimePeriod() != -1){
+            switch (tempB.getTimePeriod()){
+                case 1:
+                    if(StatUtils.DaysSince(tempB.getStartDate()) > 0){
+                        StatUtils.ChangeBudget(getApplicationContext(), UserID);
+                    }
+                    break;
+                case 2:
+                    if(StatUtils.DaysSince(tempB.getStartDate()) > 6){
+                        StatUtils.ChangeBudget(getApplicationContext(), UserID);
+                    }
+                    break;
+                case 3:
+                    if(StatUtils.DaysSince(tempB.getStartDate()) > 13){
+                        StatUtils.ChangeBudget(getApplicationContext(), UserID);
+                    }
+                case 4:
+
+                    if(StatUtils.DaysSince(tempB.getStartDate()) > GetMonthLength()){
+                        StatUtils.ChangeBudget(getApplicationContext(), UserID);
+                    }
+                    break;
+
+            }
         }
     }
 
+    /**
+     * Gets how many days are in the current month.
+     * @return The number of days in this month.
+     */
     private Long GetMonthLength() {
         String date = StatUtils.GetCurrentDate();
         String[] dates = date.split("-");
@@ -163,48 +179,48 @@ public class MainActivity extends AppCompatActivity {
         int code = Integer.parseInt(dates[1]);
         int year = Integer.parseInt(dates[0]);
 
-        Long ret = new Long(0);
+        Long ret = 0L;
 
         switch (code){
             case 1:
-                ret = new Long(30);
+                ret = 30L;
                 break;
             case 2:
-                ret = new Long(30);
+                ret = 30L;
                 break;
             case 3:
                 if(year % 4 == 0 && year % 100 != 0 || year % 400 == 0){
-                    ret = new Long(28);
+                    ret = 28L;
                 }else{
-                    ret = new Long(27);
+                    ret = 27L;
                 }
                 break;
             case 4:
-                ret = new Long(30);
+                ret = 30L;
                 break;
             case 5:
-                ret = new Long(29);
+                ret = 29L;
                 break;
             case 6:
-                ret = new Long(30);
+                ret = 30L;
                 break;
             case 7:
-                ret = new Long(29);
+                ret = 29L;
                 break;
             case 8:
-                ret = new Long(30);
+                ret = 30L;
                 break;
             case 9:
-                ret = new Long(29);
+                ret = 29L;
                 break;
             case 10:
-                ret = new Long(30);
+                ret = 30L;
                 break;
             case 11:
-                ret = new Long(30);
+                ret = 30L;
                 break;
             case 12:
-                ret = new Long(29);
+                ret = 29L;
                 break;
 
         }

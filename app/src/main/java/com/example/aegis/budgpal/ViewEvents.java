@@ -18,18 +18,10 @@ import java.util.ArrayList;
 
 public class ViewEvents extends AppCompatActivity {
 
-    private DrawerLayout NavDrawer;
-    private ListView NavDrawerList;
-    private String[] NavDrawerItems;
-
-    private ListView EventsList;
-
-    private Long UserID;
-
     private SharedPreferences Preferences;
     private SharedPreferences.Editor PreferencesEditor;
 
-    private String TAG = "ViewEvents";
+    private final static String TAG = "ViewEvents";
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data){
@@ -47,63 +39,55 @@ public class ViewEvents extends AppCompatActivity {
         Preferences = getSharedPreferences(getString(R.string.preferences_name), MODE_PRIVATE);
         PreferencesEditor = getSharedPreferences(getString(R.string.preferences_name),MODE_PRIVATE).edit();
 
-        UserID = Preferences.getLong("UserID", -1);
-        //UserID = getIntent().getLongExtra("UserID", -1);
+        StatUtils.InitializeNavigationDrawer(this);
 
-        NavDrawer      = (DrawerLayout)findViewById(R.id.navDrawer);
-        NavDrawerList  = (ListView)findViewById(R.id.navDrawerList);
-        NavDrawerItems = getResources().getStringArray(R.array.navListItems);
-        NavDrawerList.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, NavDrawerItems));
-        EventsList = (ListView)findViewById(R.id.viewEventsListView);
+        SetupEventList();
 
-        PopulateList();
-
-        NavDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-                NavDrawer.closeDrawer(Gravity.LEFT);
-                Intent tempIntent = SwitchManager.SwitchActivity(ViewEvents.this, parent.getItemAtPosition(position).toString());
-
-                if(tempIntent != null){
-                    startActivity(tempIntent);
-                }
-            }
-        });
-
-
-
-        EventsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String[] items = parent.getItemAtPosition(position).toString().split("-");
-                Log.d("id", items[0]);
-                long EventID = Long.parseLong(items[0]);
-                Log.d("post", Long.toString(EventID));
-
-                Event ev = Event.getEventByEventID(getApplicationContext(), EventID);
-
-                Intent goToEventDetails = new Intent(ViewEvents.this, EventDetailsActivity.class);
-                goToEventDetails.putExtra("EventID", ev.getEventID());
-                goToEventDetails.putExtra("Description", ev.getDescription());
-                goToEventDetails.putExtra("Date", ev.getStartDate());
-                goToEventDetails.putExtra("User", ev.getUserID());
-                goToEventDetails.putExtra("LastModified", ev.getLastModified());
-
-                startActivityForResult(goToEventDetails, 0);
-            }
-        });
     }
 
+    /**
+     * Add all items to the listview.
+     */
     private void PopulateList(){
+        Long UserID = Preferences.getLong("UserID", -1);
+
+        ListView EventsList = (ListView)findViewById(R.id.viewEventsListView);
+
         ArrayAdapter<String> listAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1);
+
         EventsList.setAdapter(listAdapter);
+
         listAdapter.clear();
 
         ArrayList<Event> eventsList = Event.getEventsByUserID(getApplicationContext(), UserID);
         for(int i = 0; i < eventsList.size(); i++){
             listAdapter.add(Long.toString(eventsList.get(i).getEventID()) + "- " + eventsList.get(i).getDescription() + "- Starts: " + eventsList.get(i).getStartDate());
         }
+    }
+
+    /**
+     * Adds events to the list and adds a listener.
+     */
+    private void SetupEventList(){
+        ListView EventsList = (ListView)findViewById(R.id.viewEventsListView);
+
+        PopulateList();
+
+        EventsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String[] items = parent.getItemAtPosition(position).toString().split("-");
+
+                long EventID = Long.parseLong(items[0]);
+
+                Event ev = Event.getEventByEventID(getApplicationContext(), EventID);
+
+                Intent goToEventDetails = new Intent(ViewEvents.this, EventDetailsActivity.class);
+                goToEventDetails.putExtra("EventID", ev.getEventID());
+
+                startActivityForResult(goToEventDetails, 0);
+            }
+        });
     }
 
 }

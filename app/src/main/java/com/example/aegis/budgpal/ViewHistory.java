@@ -24,24 +24,10 @@ import java.util.Locale;
 
 public class ViewHistory extends AppCompatActivity {
 
-    private DrawerLayout NavDrawer;
-    private ListView NavDrawerList;
-    private String[] NavDrawerItems;
-
-    private SQLiteDatabase db;
-    private Long UserID;
-    private Long myBudgetID;
-
-    private ListView expensesListView;
-    private Spinner expenseSpinner;
-
-    ArrayList<String> listItems = new ArrayList<String>();
-    ArrayAdapter<String> adapter;
-
     private SharedPreferences Preferences;
     private SharedPreferences.Editor PreferencesEditor;
 
-    private String TAG = "ViewExpenses";
+    private final static String TAG = "ViewExpenses";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,107 +39,11 @@ public class ViewHistory extends AppCompatActivity {
         Preferences = getSharedPreferences(getString(R.string.preferences_name), MODE_PRIVATE);
         PreferencesEditor = getSharedPreferences(getString(R.string.preferences_name),MODE_PRIVATE).edit();
 
-        db = StatUtils.GetDatabase(getApplicationContext());
+        StatUtils.InitializeNavigationDrawer(this);
 
-        UserID = Preferences.getLong("UserID", -1);
-//        UserID = getIntent().getLongExtra("UserID", -1);
+        SetupBudgetSpinner();
 
-        NavDrawer = (DrawerLayout) findViewById(R.id.navDrawer);
-        NavDrawerList = (ListView) findViewById(R.id.navDrawerList);
-        NavDrawerItems = getResources().getStringArray(R.array.navListItems);
-        NavDrawerList.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, NavDrawerItems));
-        expenseSpinner = (Spinner) findViewById(R.id.viewExpensesPeriodSpinner);
-        expensesListView = (ListView) findViewById(R.id.viewHistoryExpensesListView);
-
-        NavDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-                NavDrawer.closeDrawer(Gravity.LEFT);
-                Intent tempIntent = SwitchManager.SwitchActivity(ViewHistory.this, parent.getItemAtPosition(position).toString());
-
-                if (tempIntent != null) {
-                    startActivity(tempIntent);
-                }
-            }
-        });
-
-
-        ArrayList<Budget> budgets = Budget.getBudgetsByUser(getApplicationContext(),UserID);
-        ArrayList<String> budgetInfo = new ArrayList<String>();
-        String someBudgetInfo;
-        Budget someBudget;
-
-        for(int i = 0; i < budgets.size(); i ++){
-            someBudget = budgets.get(i);
-            someBudgetInfo = someBudget.getBudgetID() + ": " + NumberFormat.getCurrencyInstance(new Locale("en", "US")).format(someBudget.getAmount())+ " Start Date: " + someBudget.getStartDate();
-            budgetInfo.add(someBudgetInfo);
-        }
-
-
-
-        expenseSpinner.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1,budgetInfo));
-
-        expenseSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                myBudgetID = Long.parseLong(parent.getItemAtPosition(position).toString().split(":")[0]);
-
-                PopulateList();
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-//        expenseSpinner.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                myBudgetID = Long.parseLong(parent.getItemAtPosition(position).toString().split(":")[0]);
-
-//                PopulateList();
-//            }
-//        });
-
-
-        adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1);
-        expensesListView.setAdapter(adapter);
-
-        myBudgetID = Budget.getCurrentBudgetForUser(getApplicationContext(), UserID).getBudgetID();
-
-        PopulateList();
-//        ArrayList<Expense> expenses = getExpenses(getApplicationContext(), UserID);
-//        for (int i = 0; i < expenses.size(); i++) {
-//            if (expenses.get(i).getBudgetID() == myBudgetID) {
-//                String temp = expenses.get(i).getExpenseID() + ": " + expenses.get(i).getDescription() + " = ";
-//                String temp2 = NumberFormat.getCurrencyInstance(new Locale("en", "US")).format(expenses.get(i).getAmount());
-
-//                adapter.add(temp + temp2);
-//            }
-//        }
-
-        expensesListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            String[] items = parent.getItemAtPosition(position).toString().split(":");
-            Log.d("id", items[0]);
-            long ExpenseID = Long.parseLong(items[0]);
-            Log.d("post", Long.toString(ExpenseID));
-
-            Expense ex = Expense.getExpenseByExpenseID(getApplicationContext(), ExpenseID);
-
-            Intent goToExpenseDetails = new Intent(ViewHistory.this, ExpenseDetailsActivity.class);
-//                    goToExpenseDetails.putExtra("Amount", ex.getAmount() + "");
-//                    goToExpenseDetails.putExtra("Description", ex.getDescription());
-//                    goToExpenseDetails.putExtra("User", ex.getUserID());
-//                    goToExpenseDetails.putExtra("LastModified", ex.getLastModified());
-            goToExpenseDetails.putExtra("ExpenseID", ExpenseID);
-
-            startActivityForResult(goToExpenseDetails, 0);
-            }
-        });
-
+        SetupListView();
 
     }
 
@@ -161,10 +51,19 @@ public class ViewHistory extends AppCompatActivity {
     protected void onActivityResult(int code, int res, Intent intent){
         super.onActivityResult(code, res, intent);
 
-        PopulateList();
+        PopulateList(GetActiveBudgetID());
     }
 
-    private void PopulateList(){
+    /**
+     * Adds items to the listview.
+     * @param myBudgetID ID of the budget being used
+     */
+    private void PopulateList(Long myBudgetID){
+
+        Long UserID = Preferences.getLong("UserID", -1);
+
+        ListView expenseListView = (ListView) findViewById(R.id.viewHistoryExpensesListView);
+        ArrayAdapter<String> adapter = (ArrayAdapter)expenseListView.getAdapter();
         adapter.clear();
 
         ArrayList<Expense> expenses = Expense.getExpensesByUser(getApplicationContext(), UserID);
@@ -178,4 +77,101 @@ public class ViewHistory extends AppCompatActivity {
         }
 
     }
+
+    /**
+     * Adds items to the listview and adds a listener.
+     */
+    private void SetupListView() {
+        Long UserID = Preferences.getLong("UserID", -1);
+
+        Long BudgetID = Budget.getCurrentBudgetForUser(getApplicationContext(), UserID).getBudgetID();
+        //myBudgetID = Budget.getCurrentBudgetForUser(getApplicationContext(), UserID).getBudgetID();
+
+        final ListView expensesListView = (ListView) findViewById(R.id.viewHistoryExpensesListView);
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1);
+        expensesListView.setAdapter(adapter);
+
+        PopulateList(BudgetID);
+
+        SetupListViewListener();
+    }
+
+    /**
+     * Adds the on click listener to the listview
+     */
+    private void SetupListViewListener(){
+        Long UserID = Preferences.getLong("UserID", -1);
+
+        final ListView expensesListView = (ListView) findViewById(R.id.viewHistoryExpensesListView);
+
+        expensesListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String[] items = parent.getItemAtPosition(position).toString().split(":");
+                Log.d("id", items[0]);
+                long ExpenseID = Long.parseLong(items[0]);
+                Log.d("post", Long.toString(ExpenseID));
+
+                //Expense ex = Expense.getExpenseByExpenseID(getApplicationContext(), ExpenseID);
+
+                Intent goToExpenseDetails = new Intent(ViewHistory.this, ExpenseDetailsActivity.class);
+
+                goToExpenseDetails.putExtra("ExpenseID", ExpenseID);
+
+                startActivityForResult(goToExpenseDetails, 0);
+            }
+        });
+    }
+
+    /**
+     * Adds the budget items to the spinner
+     */
+    private void SetupBudgetSpinner(){
+        Long UserID = Preferences.getLong("UserID", -1);
+
+        final Spinner expenseSpinner = (Spinner) findViewById(R.id.viewExpensesPeriodSpinner);
+
+        ArrayList<Budget> budgets = Budget.getBudgetsByUser(getApplicationContext(),UserID);
+        ArrayList<String> budgetInfo = new ArrayList<String>();
+        String someBudgetInfo;
+        Budget someBudget;
+
+        for(int i = 0; i < budgets.size(); i ++){
+            someBudget = budgets.get(i);
+            someBudgetInfo = someBudget.getBudgetID() + ": " + NumberFormat.getCurrencyInstance(new Locale("en", "US")).format(someBudget.getAmount())+ " Start Date: " + someBudget.getStartDate();
+            budgetInfo.add(someBudgetInfo);
+        }
+
+        expenseSpinner.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1,budgetInfo));
+
+        expenseSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                Long myBudgetID = Long.parseLong(parent.getItemAtPosition(position).toString().split(":")[0]);
+
+                PopulateList(myBudgetID);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+    }
+
+    /**
+     * Gets the current budgetID.
+     * @return The budgetID of the currently selected budget.
+     */
+    private Long GetActiveBudgetID(){
+        Long output = 0L;
+
+        final Spinner expenseSpinner = (Spinner) findViewById(R.id.viewExpensesPeriodSpinner);
+
+        output = Long.valueOf(expenseSpinner.getSelectedItem().toString().split(":")[0]);
+
+        return output;
+    }
+
 }

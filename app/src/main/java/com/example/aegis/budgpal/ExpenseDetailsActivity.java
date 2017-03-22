@@ -21,6 +21,8 @@ public class ExpenseDetailsActivity extends AppCompatActivity {
     private SharedPreferences Preferences;
     private SharedPreferences.Editor PreferencesEditor;
 
+    private final static String TAG = "ExpenseDetails";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

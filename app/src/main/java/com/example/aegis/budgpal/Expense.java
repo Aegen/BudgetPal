@@ -29,6 +29,8 @@ public class Expense {
     private DatabaseHandler handler;
     private SQLiteDatabase db;
 
+    private final static String TAG = "Expense";
+
     public Expense(Context context){
         this.handler = new DatabaseHandler(context, "database", null, 1);
     }
