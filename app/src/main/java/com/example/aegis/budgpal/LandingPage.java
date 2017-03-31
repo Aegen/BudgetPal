@@ -187,13 +187,18 @@ public class LandingPage extends AppCompatActivity {
 
         ArrayList<String> eventListItems = new ArrayList<>();
 
+        ArrayList<Event> upcomingList = new ArrayList<>();
+
         for (int i = allEvents.size() - 1; i >= 0; i--) {
             if (StatUtils.DaysSince(allEvents.get(i).getStartDate()) <= 0) {
                 eventListItems.add(allEvents.get(i).getDescription() + " Starts: " + allEvents.get(i).getStartDate());
+                upcomingList.add(allEvents.get(i));
             }
         }
 
-        upcomingEvents.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, eventListItems));
+//        upcomingEvents.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, eventListItems));
+
+        upcomingEvents.setAdapter(new EventListAdapter(this, R.layout.event_list_item, upcomingList));
     }
 
     /**

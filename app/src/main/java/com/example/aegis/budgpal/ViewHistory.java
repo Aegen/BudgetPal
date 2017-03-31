@@ -37,7 +37,7 @@ public class ViewHistory extends AppCompatActivity {
         Log.d(TAG, "Entered");
 
         Preferences = getSharedPreferences(getString(R.string.preferences_name), MODE_PRIVATE);
-        PreferencesEditor = getSharedPreferences(getString(R.string.preferences_name),MODE_PRIVATE).edit();
+        PreferencesEditor = getSharedPreferences(getString(R.string.preferences_name), MODE_PRIVATE).edit();
 
         StatUtils.InitializeNavigationDrawer(this);
 
