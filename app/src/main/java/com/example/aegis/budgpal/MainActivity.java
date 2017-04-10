@@ -19,6 +19,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.IgnoreExtraProperties;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -34,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
 
         Log.d(TAG, "Entered");
 
-        FirebasePlayground();
+        //FirebasePlayground();
 
         Preferences = getSharedPreferences(getString(R.string.preferences_name), MODE_PRIVATE);
         PreferencesEditor = getSharedPreferences(getString(R.string.preferences_name),MODE_PRIVATE).edit();
@@ -59,17 +61,14 @@ public class MainActivity extends AppCompatActivity {
         DatabaseReference myRef = database.getReference("top");
 
 
-
         ValueEventListener postListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // Get Post object and use the values to update the UI
-                StringBuilder finString = new StringBuilder();
-                for (DataSnapshot item : dataSnapshot.getChildren()) {
-                    Integer val = item.getValue(Integer.class);
-                    finString.append(val.toString());
-                }
-                Toast.makeText(getApplicationContext(), finString.toString(), Toast.LENGTH_SHORT).show();
+                String hashed = dataSnapshot.getValue(String.class);
+                Boolean tested = hashed.equals(StatUtils.GetHashedString("martin"));
+
+                Toast.makeText(getApplicationContext(), tested.toString() , Toast.LENGTH_LONG).show();
             }
 
             @Override
@@ -80,8 +79,13 @@ public class MainActivity extends AppCompatActivity {
             }
         };
 
-        myRef.child("eric").child("HashedPassword").setValue("eric");
-        myRef.child("eric").child("events").push().setValue(new EventListing("yes", "2017-01-01"));
+        myRef.child("martin").child("HashedPassword").addValueEventListener(postListener);
+        //myRef.child("eric").child("HashedPassword").setValue("eric");
+        //myRef.child("eric").child("events").push().setValue(new EventListing("yes", "2017-01-01"));
+
+        //myRef.child("eric").child("events").addValueEventListener(postListener);
+
+        //myRef.child("martin").child("HashedPassword").setValue(StatUtils.GetHashedString("martin"));
     }
 
     /**
