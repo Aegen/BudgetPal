@@ -31,6 +31,7 @@ public class StatisticsActivity extends AppCompatActivity {
         long thisBudgetID;
 
         //loop through a users budget
+        //
         for(Budget aBudget: myBudgets){
 
         }
