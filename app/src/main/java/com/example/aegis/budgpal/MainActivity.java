@@ -58,8 +58,9 @@ public class MainActivity extends AppCompatActivity {
     private void FirebasePlayground() {
         // Write a message to the database
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference("top");
+        DatabaseReference myRef = database.getReference("db");
 
+        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
 
         ValueEventListener postListener = new ValueEventListener() {
             @Override
@@ -79,7 +80,9 @@ public class MainActivity extends AppCompatActivity {
             }
         };
 
-        myRef.child("martin").child("HashedPassword").addValueEventListener(postListener);
+
+        //myRef.child("Users").push()
+        //myRef.child("martin").child("HashedPassword").addValueEventListener(postListener);
         //myRef.child("eric").child("HashedPassword").setValue("eric");
         //myRef.child("eric").child("events").push().setValue(new EventListing("yes", "2017-01-01"));
 

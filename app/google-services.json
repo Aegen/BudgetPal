@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "526207584065",
+    "firebase_url": "https://budgetpaler.firebaseio.com",
+    "project_id": "budgetpaler",
+    "storage_bucket": "budgetpaler.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:526207584065:android:e1ee9c123a004107",
+        "android_client_info": {
+          "package_name": "com.example.aegis.budgpal"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "526207584065-fa03rlua2herk6qosk3me6qu2veorlht.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.aegis.budgpal",
+            "certificate_hash": "c9ec0e9b9e258279459659ff3b023cfc85e75fb5"
+          }
+        },
+        {
+          "client_id": "526207584065-eru9fkqsq0pn5jicgo6enmgsvq2c92t3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDnDcDmj81ZZq4sGRH_MSvQNXTmZu0aRUg"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "526207584065-eru9fkqsq0pn5jicgo6enmgsvq2c92t3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
