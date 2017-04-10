@@ -2,29 +2,15 @@ package com.example.aegis.budgpal;
 
 import android.content.SharedPreferences;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteCursorDriver;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
-import android.database.sqlite.SQLiteQuery;
 import android.content.Intent;
-import android.icu.util.Calendar;
-import android.preference.PreferenceManager;
-import android.support.annotation.Nullable;
-import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.support.v7.widget.Toolbar;
-import android.view.Gravity;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
-import android.view.MenuItem;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -32,14 +18,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.IgnoreExtraProperties;
 import com.google.firebase.database.ValueEventListener;
-
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
-import java.sql.Date;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.HashMap;
-import java.util.Set;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -75,19 +53,19 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void FirebasePlayground(){
+    private void FirebasePlayground() {
         // Write a message to the database
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference("message");
+        DatabaseReference myRef = database.getReference("top");
 
-        //myRef.child("bootest").setValue(true);
+
 
         ValueEventListener postListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // Get Post object and use the values to update the UI
                 StringBuilder finString = new StringBuilder();
-                for(DataSnapshot item : dataSnapshot.getChildren()) {
+                for (DataSnapshot item : dataSnapshot.getChildren()) {
                     Integer val = item.getValue(Integer.class);
                     finString.append(val.toString());
                 }
@@ -101,21 +79,9 @@ public class MainActivity extends AppCompatActivity {
                 // ...
             }
         };
-        //myRef.addValueEventListener(postListener);
 
-        Tester temp = new Tester("24", "Jon");
-        //myRef.child("Test").setValue(temp);
-        HashMap<String, Tester> power = new HashMap<>();
-
-        power.put("first", new Tester("34", "Arnold"));
-        power.put("second", new Tester("19", "Wyatt"));
-        power.put("third", temp);
-
-        myRef.setValue(power);
-
-        //DatabaseReference theRef = database.getReference("house");
-
-        //theRef.removeValue();
+        myRef.child("eric").child("HashedPassword").setValue("eric");
+        myRef.child("eric").child("events").push().setValue(new EventListing("yes", "2017-01-01"));
     }
 
     /**
@@ -281,16 +247,16 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @IgnoreExtraProperties
-    public static class Tester{
+    public static class EventListing{
 
-        public String age;
-        public String name;
+        public String description;
+        public String date;
 
-        public Tester(){}
+        public EventListing(){}
 
-        public Tester(String age, String name){
-            this.age = age;
-            this.name = name;
+        public EventListing(String description, String date){
+            this.description = description;
+            this.date = date;
         }
     }
 }
