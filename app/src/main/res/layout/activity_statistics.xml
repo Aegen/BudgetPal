@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.aegis.budgpal.StatisticsActivity">
+
+    <TextView
+        android:id="@+id/statsTextViewHead"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Statistics"
+        android:textSize="48sp"
+        tools:layout_editor_absoluteX="92dp"
+        tools:layout_editor_absoluteY="26dp" />
+
+    <TextView
+        android:id="@+id/statsTextAvgBudget"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Average Percent of Budget Used:"
+        tools:layout_editor_absoluteX="26dp"
+        tools:layout_editor_absoluteY="111dp" />
+
+    <TextView
+        android:id="@+id/statsTextFirstResult"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:layout_editor_absoluteX="234dp"
+        tools:layout_editor_absoluteY="111dp" />
+
+    <TextView
+        android:id="@+id/statsTextCategoryPercent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Average Percent of Expenditures Allocated to:"
+        tools:layout_editor_absoluteX="26dp"
+        tools:layout_editor_absoluteY="147dp" />
+
+    <ListView
+        android:layout_width="244dp"
+        android:layout_height="169dp"
+        tools:layout_editor_absoluteX="70dp"
+        tools:layout_editor_absoluteY="176dp" />
+
+</android.support.constraint.ConstraintLayout>

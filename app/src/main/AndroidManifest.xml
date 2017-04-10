@@ -28,7 +28,8 @@
         <activity android:name=".LandingPage" />
         <activity android:name=".CreateUser" />
         <activity android:name=".EventDetailsActivity" />
-        <activity android:name=".ExpenseDetailsActivity"></activity>
+        <activity android:name=".ExpenseDetailsActivity" />
+        <activity android:name=".StatisticsActivity"></activity>
     </application>
 
 </manifest>
