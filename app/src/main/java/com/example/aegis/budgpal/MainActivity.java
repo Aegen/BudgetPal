@@ -26,18 +26,25 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.view.MenuItem;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.IgnoreExtraProperties;
+import com.google.firebase.database.ValueEventListener;
+
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.sql.Date;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.HashMap;
 import java.util.Set;
 
 
 public class MainActivity extends AppCompatActivity {
 
     private final static String TAG = "MainActivity";
-
 
     private SharedPreferences Preferences;
     private SharedPreferences.Editor PreferencesEditor;
@@ -48,6 +55,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         Log.d(TAG, "Entered");
+
+        FirebasePlayground();
 
         Preferences = getSharedPreferences(getString(R.string.preferences_name), MODE_PRIVATE);
         PreferencesEditor = getSharedPreferences(getString(R.string.preferences_name),MODE_PRIVATE).edit();
@@ -64,6 +73,49 @@ public class MainActivity extends AppCompatActivity {
         }else{
             super.onBackPressed();
         }
+    }
+
+    private void FirebasePlayground(){
+        // Write a message to the database
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference("message");
+
+        //myRef.child("bootest").setValue(true);
+
+        ValueEventListener postListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // Get Post object and use the values to update the UI
+                StringBuilder finString = new StringBuilder();
+                for(DataSnapshot item : dataSnapshot.getChildren()) {
+                    Integer val = item.getValue(Integer.class);
+                    finString.append(val.toString());
+                }
+                Toast.makeText(getApplicationContext(), finString.toString(), Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Getting Post failed, log a message
+                Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
+                // ...
+            }
+        };
+        //myRef.addValueEventListener(postListener);
+
+        Tester temp = new Tester("24", "Jon");
+        //myRef.child("Test").setValue(temp);
+        HashMap<String, Tester> power = new HashMap<>();
+
+        power.put("first", new Tester("34", "Arnold"));
+        power.put("second", new Tester("19", "Wyatt"));
+        power.put("third", temp);
+
+        myRef.setValue(power);
+
+        //DatabaseReference theRef = database.getReference("house");
+
+        //theRef.removeValue();
     }
 
     /**
@@ -226,5 +278,19 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return ret;
+    }
+
+    @IgnoreExtraProperties
+    public static class Tester{
+
+        public String age;
+        public String name;
+
+        public Tester(){}
+
+        public Tester(String age, String name){
+            this.age = age;
+            this.name = name;
+        }
     }
 }
