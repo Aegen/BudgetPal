@@ -7,41 +7,46 @@
     tools:context="com.example.aegis.budgpal.StatisticsActivity">
 
     <TextView
+        android:text="Statistics"
         android:id="@+id/statsTextViewHead"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Statistics"
-        android:textSize="48sp"
-        tools:layout_editor_absoluteX="92dp"
-        tools:layout_editor_absoluteY="26dp" />
+        tools:layout_editor_absoluteX="163dp"
+        tools:layout_editor_absoluteY="87dp"
+        app:layout_constraintLeft_toLeftOf="@+id/activity_main"
+        android:layout_marginStart="16dp"
+        tools:layout_constraintLeft_creator="0"
+        app:layout_constraintTop_toTopOf="@+id/activity_main"
+        android:layout_marginTop="16dp"
+        tools:layout_constraintTop_creator="0"
+        app:layout_constraintRight_toRightOf="@+id/activity_main"
+        android:layout_marginEnd="16dp"
+        tools:layout_constraintRight_creator="0" />
 
     <TextView
         android:id="@+id/statsTextAvgBudget"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Average Percent of Budget Used:"
-        tools:layout_editor_absoluteX="26dp"
-        tools:layout_editor_absoluteY="111dp" />
+        android:layout_below="@+id/statsTextViewHead" />
 
     <TextView
         android:id="@+id/statsTextFirstResult"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        tools:layout_editor_absoluteX="234dp"
-        tools:layout_editor_absoluteY="111dp" />
+        android:layout_below="@+id/statsTextAvgBudget" />
 
     <TextView
         android:id="@+id/statsTextCategoryPercent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Average Percent of Expenditures Allocated to:"
-        tools:layout_editor_absoluteX="26dp"
-        tools:layout_editor_absoluteY="147dp" />
+        android:layout_below="@+id/statsTextFirstResult" />
 
     <ListView
+        android:id="@+id/statsExpenseTotalsListView"
         android:layout_width="244dp"
         android:layout_height="169dp"
-        tools:layout_editor_absoluteX="70dp"
-        tools:layout_editor_absoluteY="176dp" />
+        android:layout_below="@+id/statsTextCategoryPercent" />
 
 </android.support.constraint.ConstraintLayout>

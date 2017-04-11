@@ -48,7 +48,7 @@ public class SwitchManager {
                 tempIntent.putExtra("CameFromLogout", true);
                 break;
             case "Settings":
-                tempIntent = new Intent(context, LandingPage.class);
+                tempIntent = new Intent(context, StatisticsActivity.class);
                 break;
             default:
                 Log.e(TAG, activity + " failed to match with an activity.");
