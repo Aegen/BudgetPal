@@ -4,6 +4,7 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -12,6 +13,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -36,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
 
         Log.d(TAG, "Entered");
 
-        //FirebasePlayground();
+        FirebasePlayground();
 
         Preferences = getSharedPreferences(getString(R.string.preferences_name), MODE_PRIVATE);
         PreferencesEditor = getSharedPreferences(getString(R.string.preferences_name),MODE_PRIVATE).edit();
@@ -56,39 +59,61 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void FirebasePlayground() {
-        // Write a message to the database
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
+
+        /*FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference("db");
 
-        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
 
-        ValueEventListener postListener = new ValueEventListener() {
+
+        ValueEventListener horse = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                // Get Post object and use the values to update the UI
-                String hashed = dataSnapshot.getValue(String.class);
-                Boolean tested = hashed.equals(StatUtils.GetHashedString("martin"));
 
-                Toast.makeText(getApplicationContext(), tested.toString() , Toast.LENGTH_LONG).show();
+                EditText UsernameField = (EditText)findViewById(R.id.loginUsernameField);
+                EditText PasswordField = (EditText)findViewById(R.id.loginPasswordField);
+
+                Log.d(TAG, "Fireuser");
+                for(DataSnapshot item : dataSnapshot.getChildren()){
+                    if(item.child("name").getValue(String.class).equals(UsernameField.getText().toString())){
+                        FireUser temp = item.getValue(FireUser.class);
+
+                        if(temp.hashedPassword.equals(StatUtils.GetHashedString(PasswordField.getText().toString()))){
+                            Toast.makeText(getApplicationContext(), "True", Toast.LENGTH_LONG).show();
+
+                            PreferencesEditor.putString("UserKey", item.getKey());
+                            PreferencesEditor.commit();
+
+                            Intent goToLanding = SwitchManager.SwitchActivity(getApplicationContext(), "Homepage");
+                            //startActivity(goToLanding);
+                        }else{
+                            Toast.makeText(getApplicationContext(), "False", Toast.LENGTH_LONG).show();
+                        }
+
+                        //Toast.makeText(getApplicationContext(), temp.name, Toast.LENGTH_LONG).show();
+                    }
+                }
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                // Getting Post failed, log a message
-                Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
-                // ...
+
             }
         };
 
+        myRef.child("Users").addListenerForSingleValueEvent(horse);*/
 
-        //myRef.child("Users").push()
-        //myRef.child("martin").child("HashedPassword").addValueEventListener(postListener);
-        //myRef.child("eric").child("HashedPassword").setValue("eric");
-        //myRef.child("eric").child("events").push().setValue(new EventListing("yes", "2017-01-01"));
+        //FireEvent temp = new FireEvent("-KhOxJw3Rd9WzezsI4s7", StatUtils.GetCurrentDate(), StatUtils.GetCurrentDate(), "horse", StatUtils.GetCurrentDate());
 
-        //myRef.child("eric").child("events").addValueEventListener(postListener);
 
-        //myRef.child("martin").child("HashedPassword").setValue(StatUtils.GetHashedString("martin"));
+        Task<FireUser> hold = FireUser.getUserByName("martin");
+
+        hold.addOnCompleteListener(new OnCompleteListener<FireUser>() {
+            @Override
+            public void onComplete(@NonNull Task<FireUser> task) {
+                Toast.makeText(getApplicationContext(), task.getResult().name,Toast.LENGTH_LONG).show();
+            }
+        });
+        //Toast.makeText(getApplicationContext(),temp.isDeleted().getResult().toString(), Toast.LENGTH_LONG).show();
     }
 
     /**
@@ -124,7 +149,49 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                String username = UsernameField.getText().toString();
+                FirebaseDatabase database = FirebaseDatabase.getInstance();
+                DatabaseReference myRef = database.getReference("db");
+
+
+
+                ValueEventListener horse = new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+
+                        EditText UsernameField = (EditText)findViewById(R.id.loginUsernameField);
+                        EditText PasswordField = (EditText)findViewById(R.id.loginPasswordField);
+
+                        Log.d(TAG, "Fireuser");
+                        for(DataSnapshot item : dataSnapshot.getChildren()){
+                            if(item.child("name").getValue(String.class).equals(UsernameField.getText().toString())){
+                                FireUser temp = item.getValue(FireUser.class);
+
+                                if(temp.hashedPassword.equals(StatUtils.GetHashedString(PasswordField.getText().toString()))){
+                                    Toast.makeText(getApplicationContext(), "True", Toast.LENGTH_LONG).show();
+
+                                    PreferencesEditor.putString("UserKey", item.getKey());
+                                    PreferencesEditor.commit();
+
+                                    Intent goToLanding = SwitchManager.SwitchActivity(getApplicationContext(), "Homepage");
+                                    startActivity(goToLanding);
+                                }else{
+                                    Toast.makeText(getApplicationContext(), "False", Toast.LENGTH_LONG).show();
+                                }
+
+                                //Toast.makeText(getApplicationContext(), temp.name, Toast.LENGTH_LONG).show();
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                };
+
+                myRef.child("Users").addListenerForSingleValueEvent(horse);
+
+                /*String username = UsernameField.getText().toString();
                 String password = PasswordField.getText().toString();
 
                 String hashedPassword = StatUtils.GetHashedString(password);
@@ -154,7 +221,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }else{
                     Toast.makeText(getApplicationContext(), "No user found by that name", Toast.LENGTH_SHORT).show();
-                }
+                }*/
             }
         });
     }
@@ -266,4 +333,6 @@ public class MainActivity extends AppCompatActivity {
             this.date = date;
         }
     }
+
+
 }

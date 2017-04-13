@@ -34,6 +34,8 @@ public class LandingPage extends AppCompatActivity {
         Preferences = getSharedPreferences(getString(R.string.preferences_name), MODE_PRIVATE);
         PreferencesEditor = getSharedPreferences(getString(R.string.preferences_name),MODE_PRIVATE).edit();
 
+        Toast.makeText(getApplicationContext(), Preferences.getString("UserKey", "Fail"), Toast.LENGTH_LONG).show();
+
         StatUtils.InitializeNavigationDrawer(this);
 
         SetBudgetDetails();
