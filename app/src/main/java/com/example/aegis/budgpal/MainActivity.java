@@ -105,12 +105,16 @@ public class MainActivity extends AppCompatActivity {
         //FireEvent temp = new FireEvent("-KhOxJw3Rd9WzezsI4s7", StatUtils.GetCurrentDate(), StatUtils.GetCurrentDate(), "horse", StatUtils.GetCurrentDate());
 
 
-        Task<FireUser> hold = FireUser.getUserByName("martin");
+        Task<FireUser> hold = FireUser.getUserByKey("-KhOxJw3Rd9WzezsI4s");
 
         hold.addOnCompleteListener(new OnCompleteListener<FireUser>() {
             @Override
             public void onComplete(@NonNull Task<FireUser> task) {
-                Toast.makeText(getApplicationContext(), task.getResult().name,Toast.LENGTH_LONG).show();
+                if(!task.getResult().date.equals("1990-01-01")) {
+                    Toast.makeText(getApplicationContext(), task.getResult().name, Toast.LENGTH_LONG).show();
+                }else{
+                    Toast.makeText(getApplicationContext(), "Fail", Toast.LENGTH_LONG).show();
+                }
             }
         });
         //Toast.makeText(getApplicationContext(),temp.isDeleted().getResult().toString(), Toast.LENGTH_LONG).show();

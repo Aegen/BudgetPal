@@ -142,7 +142,7 @@ public class FireUser {
     }
 
     @Exclude
-    public static Task<FireUser> getUserByName(final String username){
+    public static Task<FireUser> getUserByUserName(final String username){
         final TaskCompletionSource<FireUser> output = new TaskCompletionSource<>();
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -152,11 +152,16 @@ public class FireUser {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
+                Boolean wasFound = false;
                 Log.d(TAG, "Fireuser");
                 for(DataSnapshot item : dataSnapshot.getChildren()){
                     if(item.child("name").getValue(String.class).equals(username)){
                         output.setResult(item.getValue(FireUser.class));
+                        wasFound = true;
                     }
+                }
+                if(!wasFound){
+                    output.setResult(new FireUser("blank", "blank", "1990-01-01"));
                 }
             }
 
@@ -171,7 +176,7 @@ public class FireUser {
         return output.getTask();
     }
 
-    @Exclude
+    /*@Exclude
     public static FireUser getUserByUsername(final String username){
         final FireUser output = new FireUser();
 
@@ -205,6 +210,32 @@ public class FireUser {
         myRef.child("Users").addListenerForSingleValueEvent(horse);
 
         return output;
+    }*/
+
+    @Exclude
+    public static Task<FireUser> getUserByKey(final String UserKey){
+        final TaskCompletionSource<FireUser> output = new TaskCompletionSource<>();
+
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference("db");
+
+        myRef.child("Users").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if(dataSnapshot.hasChild(UserKey)){
+                    output.setResult(dataSnapshot.child(UserKey).getValue(FireUser.class));
+                }else{
+                    output.setResult(new FireUser("blank", "blank", "1990-01-01"));
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+        return output.getTask();
     }
 
     @Exclude
