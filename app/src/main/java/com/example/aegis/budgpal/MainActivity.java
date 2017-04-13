@@ -60,61 +60,17 @@ public class MainActivity extends AppCompatActivity {
 
     private void FirebasePlayground() {
 
-        /*FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference("db");
-
-
-
-        ValueEventListener horse = new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-
-                EditText UsernameField = (EditText)findViewById(R.id.loginUsernameField);
-                EditText PasswordField = (EditText)findViewById(R.id.loginPasswordField);
-
-                Log.d(TAG, "Fireuser");
-                for(DataSnapshot item : dataSnapshot.getChildren()){
-                    if(item.child("name").getValue(String.class).equals(UsernameField.getText().toString())){
-                        FireUser temp = item.getValue(FireUser.class);
-
-                        if(temp.hashedPassword.equals(StatUtils.GetHashedString(PasswordField.getText().toString()))){
-                            Toast.makeText(getApplicationContext(), "True", Toast.LENGTH_LONG).show();
-
-                            PreferencesEditor.putString("UserKey", item.getKey());
-                            PreferencesEditor.commit();
-
-                            Intent goToLanding = SwitchManager.SwitchActivity(getApplicationContext(), "Homepage");
-                            //startActivity(goToLanding);
-                        }else{
-                            Toast.makeText(getApplicationContext(), "False", Toast.LENGTH_LONG).show();
-                        }
-
-                        //Toast.makeText(getApplicationContext(), temp.name, Toast.LENGTH_LONG).show();
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        };
-
-        myRef.child("Users").addListenerForSingleValueEvent(horse);*/
 
         //FireEvent temp = new FireEvent("-KhOxJw3Rd9WzezsI4s7", StatUtils.GetCurrentDate(), StatUtils.GetCurrentDate(), "horse", StatUtils.GetCurrentDate());
 
 
-        Task<FireUser> hold = FireUser.getUserByKey("-KhOxJw3Rd9WzezsI4s");
+        Task<FireEvent> hold = FireEvent.getEventByEventKey("-KhZvt5ySuocI5NEhivL");
 
-        hold.addOnCompleteListener(new OnCompleteListener<FireUser>() {
+        hold.addOnCompleteListener(new OnCompleteListener<FireEvent>() {
             @Override
-            public void onComplete(@NonNull Task<FireUser> task) {
-                if(!task.getResult().date.equals("1990-01-01")) {
-                    Toast.makeText(getApplicationContext(), task.getResult().name, Toast.LENGTH_LONG).show();
-                }else{
-                    Toast.makeText(getApplicationContext(), "Fail", Toast.LENGTH_LONG).show();
-                }
+            public void onComplete(@NonNull Task<FireEvent> task) {
+                FireEvent temp = task.getResult();
+                Toast.makeText(getApplicationContext(), temp.eventKey, Toast.LENGTH_LONG).show();
             }
         });
         //Toast.makeText(getApplicationContext(),temp.isDeleted().getResult().toString(), Toast.LENGTH_LONG).show();

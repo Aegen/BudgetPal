@@ -1,9 +1,11 @@
 package com.example.aegis.budgpal;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.TaskCompletionSource;
 import com.google.firebase.database.DataSnapshot;
@@ -26,6 +28,9 @@ public class FireUser {
     public String name;
     public String hashedPassword;
     public String date;
+
+    @Exclude
+    public String userKey;
 
     @Exclude
     private final static String TAG = "User";
@@ -138,7 +143,23 @@ public class FireUser {
 
     @Exclude
     public void setDeleted(boolean deleted) {
+        FireUser holder = this;
 
+        if(deleted == true){
+            getUserKey().addOnCompleteListener(new OnCompleteListener<String>() {
+                @Override
+                public void onComplete(@NonNull Task<String> task) {
+                    String hold = task.getResult();
+
+                    if(!hold.equals("")){
+                        FirebaseDatabase database = FirebaseDatabase.getInstance();
+                        DatabaseReference myRef = database.getReference("db");
+
+                        myRef.child("Users").child(hold).removeValue();
+                    }
+                }
+            });
+        }
     }
 
     @Exclude
@@ -156,7 +177,9 @@ public class FireUser {
                 Log.d(TAG, "Fireuser");
                 for(DataSnapshot item : dataSnapshot.getChildren()){
                     if(item.child("name").getValue(String.class).equals(username)){
-                        output.setResult(item.getValue(FireUser.class));
+                        FireUser temp = item.getValue(FireUser.class);
+                        temp.userKey = item.getKey();
+                        output.setResult(temp);
                         wasFound = true;
                     }
                 }
@@ -176,44 +199,10 @@ public class FireUser {
         return output.getTask();
     }
 
-    /*@Exclude
-    public static FireUser getUserByUsername(final String username){
-        final FireUser output = new FireUser();
 
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference("db");
-
-        ValueEventListener horse = new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-
-                Log.d(TAG, "Fireuser");
-                for(DataSnapshot item : dataSnapshot.getChildren()){
-                    if(item.child("name").getValue(String.class).equals(username)){
-                        FireUser temp = item.getValue(FireUser.class);
-
-                        output.name = temp.name;
-                        output.hashedPassword = temp.hashedPassword;
-                        output.date = temp.date;
-                    }else{
-                        output.date = "2000-01-01";
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        };
-
-        myRef.child("Users").addListenerForSingleValueEvent(horse);
-
-        return output;
-    }*/
 
     @Exclude
-    public static Task<FireUser> getUserByKey(final String UserKey){
+    public static Task<FireUser> getUserByUserKey(final String UserKey){
         final TaskCompletionSource<FireUser> output = new TaskCompletionSource<>();
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -238,48 +227,29 @@ public class FireUser {
         return output.getTask();
     }
 
-    @Exclude
-    public static FireUser getUserByUserKey(final String UserKey){
-        final FireUser output = new FireUser();
 
+    @Exclude
+    public Task<String> getUserKey(){
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference("db");
+
+        //final BoolWrap temp = new BoolWrap();
+
+        final TaskCompletionSource<String> output = new TaskCompletionSource<>();
 
         myRef.child("Users").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if(dataSnapshot.hasChild(UserKey)){
-                    FireUser temp = dataSnapshot.child(UserKey).getValue(FireUser.class);
-
-                    output.name = temp.name;
-                    output.hashedPassword = temp.hashedPassword;
-                    output.date = temp.date;
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-
-        return output;
-    }
-
-    @Exclude
-    public String getUserKey(){
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference("db");
-
-        final BoolWrap temp = new BoolWrap();
-
-        myRef.child("Users").addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
+                Boolean wasFound = false;
                 for(DataSnapshot item : dataSnapshot.getChildren()){
                     if(item.child("name").getValue(String.class).equals(name)){
-                        temp.val = item.getKey();
+                        output.setResult(item.getKey());
+                        wasFound = true;
                     }
+                }
+
+                if(!wasFound){
+                    output.setResult("");
                 }
             }
 
@@ -289,7 +259,7 @@ public class FireUser {
             }
         });
 
-        return temp.val;
+        return output.getTask();
     }
 
     @IgnoreExtraProperties
