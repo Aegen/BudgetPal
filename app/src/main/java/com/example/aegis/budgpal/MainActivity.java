@@ -74,9 +74,14 @@ public class MainActivity extends AppCompatActivity {
             }
         });*/
 
-        FireBudget temp = new FireBudget("-KhOxJw3Rd9WzezsI4s7", 1, 1, StatUtils.GetCurrentDate(), StatUtils.GetCurrentDate(), StatUtils.GetCurrentDate(), (float)12, false);
+        FireBudget.getCurrentBudgetForUser("-KhOxJw3Rd9WzezsI4s7").addOnCompleteListener(new OnCompleteListener<FireBudget>() {
+            @Override
+            public void onComplete(@NonNull Task<FireBudget> task) {
+                FireBudget temp = task.getResult();
 
-        temp.pushToDatabase();
+                Toast.makeText(getApplicationContext(), temp.budgetKey, Toast.LENGTH_LONG).show();
+            }
+        });
         //Toast.makeText(getApplicationContext(),temp.isDeleted().getResult().toString(), Toast.LENGTH_LONG).show();
     }
 

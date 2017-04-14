@@ -96,16 +96,22 @@ public class FireBudget {
         myRef.child("Budgets").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                Boolean wasFound = false;
+
                 for(DataSnapshot item : dataSnapshot.getChildren()){
                     if(item.child("userKey").getValue(String.class).equals(userKey) && item.child("active").getValue(Boolean.class) == true){
                         FireBudget tempBudget = item.getValue(FireBudget.class);
                         tempBudget.budgetKey = item.getKey();
 
                         output.setResult(tempBudget);
+
+                        wasFound = true;
                     }
                 }
 
-                output.setResult(new FireBudget("blank", -1, -1, "blank", "blank", "1990-01-01", (float)-1, false));
+                if(!wasFound) {
+                    output.setResult(new FireBudget("blank", -1, -1, "blank", "blank", "1990-01-01", (float) -1, false));
+                }
             }
 
             @Override
