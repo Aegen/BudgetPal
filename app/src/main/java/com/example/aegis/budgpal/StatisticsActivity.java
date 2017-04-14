@@ -37,7 +37,6 @@ public class StatisticsActivity extends AppCompatActivity {
         myBudgets = Budget.getBudgetsByUser(getApplicationContext(),myUserID);
 
         float thisBudgetAmount = 0;
-        float thisBudgetExpenditures = 0;
         long thisBudgetID;
 
         ArrayList<Float> categoryPercentOfExpendituresList = new ArrayList<Float>();
@@ -51,6 +50,8 @@ public class StatisticsActivity extends AppCompatActivity {
 
         //loop through a users budget
         for(Budget aBudget: myBudgets){
+
+            float thisBudgetExpenditures = 0;
             thisBudgetID = aBudget.getBudgetID();
             thisBudgetAmount = aBudget.getAmount();
             budgetAmountList.add(thisBudgetAmount);
@@ -68,6 +69,7 @@ public class StatisticsActivity extends AppCompatActivity {
             }
             Log.d("STATS catExpTot = ",categoryExpenseTotals.length + "");
 
+            //sizes the arrayList to the correct length
             for (int fillList = 0; fillList < categoryExpenseTotals.length; fillList++){
                 sumOfCategoryPercentsList.add((float) 0);
             }
@@ -84,16 +86,18 @@ public class StatisticsActivity extends AppCompatActivity {
         }
 
         //calculate averages
-
         //calculate average percent used
-        float sumBudgetAmounts = 0;
-        float sumExpenditures = 0;
-        int numberOfAmounts = budgetAmountList.size();
-        for (int i = 0; i < numberOfAmounts; i++) {
-            sumBudgetAmounts += budgetAmountList.get(i);
-            sumExpenditures += expendituresList.get(i);
+        float average;
+        float totalExpenditures = 0;
+        float totalBudgetAmounts = 0;
+
+        for (int k = 0; k < expendituresList.size(); k++){
+            totalExpenditures += expendituresList.get(k);
+            totalBudgetAmounts += budgetAmountList.get(k);
         }
-        float avgPercentUsed = (sumExpenditures/sumBudgetAmounts)*100;
+        Log.d("TOTAL EXPENDITURES ",totalExpenditures + "");
+        Log.d("TOTAL BUDGET AMOUNTS", totalBudgetAmounts + "");
+        average = totalExpenditures/totalBudgetAmounts * 100;
 
         //calculate percent of spending by category
         for(int j = 0; j < expenseCategories.length; j++){
@@ -101,6 +105,9 @@ public class StatisticsActivity extends AppCompatActivity {
         }
 
         //display
+        TextView txtAverage = (TextView) findViewById(R.id.statsTextAvgBudget);
+        txtAverage.setText("Average Percent of Budget Used: " + average + "%");
+
         PopulateList(categoryPercentOfExpendituresList, expenseCategories);
 
     }
