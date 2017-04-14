@@ -64,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
         //FireEvent temp = new FireEvent("-KhOxJw3Rd9WzezsI4s7", StatUtils.GetCurrentDate(), StatUtils.GetCurrentDate(), "horse", StatUtils.GetCurrentDate());
 
 
-        Task<FireEvent> hold = FireEvent.getEventByEventKey("-KhZvt5ySuocI5NEhivL");
+        /*Task<FireEvent> hold = FireEvent.getEventByEventKey("-KhZvt5ySuocI5NEhivL");
 
         hold.addOnCompleteListener(new OnCompleteListener<FireEvent>() {
             @Override
@@ -72,7 +72,11 @@ public class MainActivity extends AppCompatActivity {
                 FireEvent temp = task.getResult();
                 Toast.makeText(getApplicationContext(), temp.eventKey, Toast.LENGTH_LONG).show();
             }
-        });
+        });*/
+
+        FireBudget temp = new FireBudget("-KhOxJw3Rd9WzezsI4s7", 1, 1, StatUtils.GetCurrentDate(), StatUtils.GetCurrentDate(), StatUtils.GetCurrentDate(), (float)12, false);
+
+        temp.pushToDatabase();
         //Toast.makeText(getApplicationContext(),temp.isDeleted().getResult().toString(), Toast.LENGTH_LONG).show();
     }
 
