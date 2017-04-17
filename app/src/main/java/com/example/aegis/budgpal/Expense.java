@@ -269,4 +269,75 @@ public class Expense {
         }
         return result;
     }
+
+    public static ArrayList<Expense> getExpensesByBudget(Context context, long BudgetID){
+        SQLiteDatabase db = StatUtils.GetDatabase(context);
+        Cursor curs = db.rawQuery("SELECT * FROM Expense WHERE BudgetID = '" + BudgetID + "'", null);
+        ArrayList<Expense> result = new ArrayList<Expense>();
+
+        if(curs.getCount() > 0){
+            curs.moveToFirst();
+
+            while(!curs.isAfterLast()) {
+                Expense tempExpense = new Expense(context);
+
+                //Obtain the index of each individual column within the Expense Table
+                int expenseIDColumn = curs.getColumnIndex("ExpenseID");
+                int userIDColumn = curs.getColumnIndex("UserID");
+                int budgetIDColumn = curs.getColumnIndex("BudgetID");
+                int amountColumn = curs.getColumnIndex("Amount");
+                int lastModifiedColumn = curs.getColumnIndex("LastModified");
+                int dateCreatedColumn = curs.getColumnIndex("DateCreated");
+                int categoryColumn = curs.getColumnIndex("Category");
+                int descriptionColumn = curs.getColumnIndex("Description");
+                int exemptColumn = curs.getColumnIndex("Exempt");
+                int deletedColumn = curs.getColumnIndex("Deleted");
+
+                //Obtain the actual values at each of the previous indexes
+                long expenseID =  curs.getLong(expenseIDColumn);
+                long userID = curs.getLong(userIDColumn);
+                long budgetID = curs.getLong(budgetIDColumn);
+                float amount = curs.getFloat(amountColumn);
+                String lastModified = curs.getString(lastModifiedColumn);
+                String dateCreated = curs.getString(dateCreatedColumn);
+                int category = curs.getInt(categoryColumn);
+                String description = curs.getString(descriptionColumn);
+                int exempt = curs.getInt(exemptColumn);
+                int deleted = curs.getInt(deletedColumn);
+                boolean deletedBool = false;
+                boolean exemptBool = false;
+
+                if(exempt != 0) {
+                    exemptBool = true;
+                } else {
+                    exemptBool = false;
+                }
+
+                if(deleted != 0) {
+                    deletedBool = true;
+                } else {
+                    deletedBool = false;
+                }
+                //
+                //Set each field of the new Expense
+                tempExpense.setExpenseID(expenseID);
+                tempExpense.setUserID(userID);
+                tempExpense.setBudgetID(budgetID);
+                tempExpense.setAmount(amount);
+                tempExpense.setLastModified(lastModified);
+                tempExpense.setDateCreated(dateCreated);
+                tempExpense.setCategory(category);
+                tempExpense.setDescription(description);
+                tempExpense.setExempt(exemptBool);
+                tempExpense.setDeleted(deletedBool);
+
+                //Expense temp = new Expense(userID, budgetID, amount, dateCreated, category, description, exemptBool, context);
+                result.add(tempExpense);
+                curs.moveToNext();
+            }
+        }
+        return result;
+    }
+
+
 }
