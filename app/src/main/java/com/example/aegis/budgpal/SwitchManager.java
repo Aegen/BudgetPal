@@ -47,7 +47,7 @@ public class SwitchManager {
                 tempIntent = new Intent(context, MainActivity.class);
                 tempIntent.putExtra("CameFromLogout", true);
                 break;
-            case "Settings":
+            case "Statistics":
                 tempIntent = new Intent(context, StatisticsActivity.class);
                 break;
             default:

@@ -12,6 +12,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import java.lang.reflect.Array;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 
 public class StatisticsActivity extends AppCompatActivity {
@@ -23,6 +25,8 @@ public class StatisticsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_statistics);
+
+        StatUtils.InitializeNavigationDrawer(this);
 
         //get list of current categories for expenses
         String[] expenseCategories = getResources().getStringArray(R.array.expenseCategories);
@@ -47,9 +51,21 @@ public class StatisticsActivity extends AppCompatActivity {
 
         ArrayList<Expense> thisBudgetExpenses = new ArrayList<Expense>();
 
+        ArrayList<Float> rollingCategoryPercent = new ArrayList<Float>();
+        float numberOfBudgets = 0;
+        for (int h = 0; h < expenseCategories.length; h++){
+            rollingCategoryPercent.add((float) 0);
+        }
 
         //loop through a users budget
         for(Budget aBudget: myBudgets){
+            numberOfBudgets++;
+            //stores the sum of expenses under each Category divided by the total expenditures (for one budget)
+            ArrayList<Float> thisBudgetCategoryPercent = new ArrayList<Float>();
+            for (int h = 0; h < expenseCategories.length; h++){
+                thisBudgetCategoryPercent.add((float) 0);
+            }
+
 
             float thisBudgetExpenditures = 0;
             thisBudgetID = aBudget.getBudgetID();
@@ -61,22 +77,29 @@ public class StatisticsActivity extends AppCompatActivity {
             //get expenses for this budget
             thisBudgetExpenses = Expense.getExpensesByBudget(getApplicationContext(),thisBudgetID);
 
+            //loop through expenses
             for (Expense anExpense: thisBudgetExpenses){
                 thisBudgetExpenditures += anExpense.getAmount();
 
                 //add expense to total for appropriate category
                 categoryExpenseTotals[anExpense.getCategory() - 1] += anExpense.getAmount();
             }
-            Log.d("STATS catExpTot = ",categoryExpenseTotals.length + "");
 
-            //sizes the arrayList to the correct length
-            for (int fillList = 0; fillList < categoryExpenseTotals.length; fillList++){
-                sumOfCategoryPercentsList.add((float) 0);
-            }
+            //s
+            for(int f = 0; f < expenseCategories.length; f++){
+                if (thisBudgetExpenditures == 0){
+                    thisBudgetCategoryPercent.set(f,(float) 0);
+                }
+                else {
+                    thisBudgetCategoryPercent.set(f, (categoryExpenseTotals[f] / thisBudgetExpenditures));
+                }
+                }
 
-            Log.d("STATS sumCatPerList = ",sumOfCategoryPercentsList.size() + "");
-            for(int f = 0; f < categoryExpenseTotals.length; f++){
-                sumOfCategoryPercentsList.set(f,(sumOfCategoryPercentsList.get(f) + categoryExpenseTotals[f]));
+            for(int g = 0; g < expenseCategories.length; g++){
+                rollingCategoryPercent.set(g, ( (((numberOfBudgets-1)/numberOfBudgets)*rollingCategoryPercent.get(g)) + (1/numberOfBudgets)*thisBudgetCategoryPercent.get(g) ) );
+                Log.d("Number of Budgets", numberOfBudgets + "");
+                Log.d("this budget percent", thisBudgetCategoryPercent.get(g) + "");
+                Log.d("Rolling percent", rollingCategoryPercent.get(g) + "");
             }
 
             expendituresList.add(thisBudgetExpenditures);
@@ -95,20 +118,13 @@ public class StatisticsActivity extends AppCompatActivity {
             totalExpenditures += expendituresList.get(k);
             totalBudgetAmounts += budgetAmountList.get(k);
         }
-        Log.d("TOTAL EXPENDITURES ",totalExpenditures + "");
-        Log.d("TOTAL BUDGET AMOUNTS", totalBudgetAmounts + "");
         average = totalExpenditures/totalBudgetAmounts * 100;
-
-        //calculate percent of spending by category
-        for(int j = 0; j < expenseCategories.length; j++){
-            categoryPercentOfExpendituresList.add((sumOfCategoryPercentsList.get(j)/expenseCategories.length));
-        }
 
         //display
         TextView txtAverage = (TextView) findViewById(R.id.statsTextAvgBudget);
         txtAverage.setText("Average Percent of Budget Used: " + average + "%");
 
-        PopulateList(categoryPercentOfExpendituresList, expenseCategories);
+        PopulateList(rollingCategoryPercent, expenseCategories);
 
     }
 
@@ -126,7 +142,11 @@ public class StatisticsActivity extends AppCompatActivity {
         listAdapter.clear();
 
         for(int i = 0; i < percentsList.size(); i++){
-            listAdapter.add(expCategories[i] + ": " + percentsList.get(i) + "%");
+            DecimalFormat df = new DecimalFormat();
+            df.setMaximumFractionDigits(4);
+            listAdapter.add(expCategories[i] + ": " + df.format(percentsList.get(i)*100) + "%");
+            float temp = percentsList.get(i);
+            Log.d("TEMP", temp + "");
         }
     }
 
