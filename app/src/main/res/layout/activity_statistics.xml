@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    android:id="@+id/navDrawer">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.aegis.budgpal.StatisticsActivity">
+
+    <TextView
+        android:id="@+id/statsTextViewHead"
+        android:layout_width="261dp"
+        android:layout_height="49dp"
+        android:layout_marginLeft="37dp"
+        android:layout_marginTop="8dp"
+        android:text="Statistics"
+        android:textAlignment="center"
+        android:textSize="36sp"
+        app:layout_constraintBottom_toTopOf="@+id/statsTextAvgBudget"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.405"
+        tools:layout_constraintLeft_creator="0"
+        tools:layout_constraintRight_creator="0"
+        tools:layout_constraintTop_creator="0"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:id="@+id/statsTextAvgBudget"
+        android:layout_width="287dp"
+        android:layout_height="20dp"
+        android:text="Average Percent of Budget Used:"
+        app:layout_constraintBottom_toTopOf="@+id/statsTextCategoryPercent"
+        tools:layout_editor_absoluteX="37dp"
+        android:layout_marginTop="46dp"
+        android:layout_below="@+id/statsTextViewHead"
+        android:layout_alignStart="@+id/statsTextCategoryPercent" />
+
+    <TextView
+        android:id="@+id/statsTextCategoryPercent"
+        android:layout_width="300dp"
+        android:layout_height="45dp"
+        android:text="Average Percent of Expenditures Allocated to:"
+        tools:layout_editor_absoluteX="37dp"
+        app:layout_constraintBottom_toTopOf="@+id/statsExpenseTotalsListView"
+        android:layout_below="@+id/statsTextAvgBudget"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="37dp" />
+
+    <ListView
+        android:id="@+id/statsExpenseTotalsListView"
+        android:layout_width="244dp"
+        android:layout_height="260dp"
+        tools:layout_editor_absoluteX="72dp"
+        tools:layout_editor_absoluteY="219dp"
+        android:layout_below="@+id/statsTextCategoryPercent"
+        android:layout_alignStart="@+id/statsTextViewHead" />
+
+</RelativeLayout>
+    <ListView
+        android:layout_width="200dp"
+        android:layout_height="match_parent"
+        android:id="@+id/navDrawerList"
+        android:layout_gravity="start|left"
+        android:background="#ffeeeeee"></ListView>
+</android.support.v4.widget.DrawerLayout>
