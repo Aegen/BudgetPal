@@ -4,13 +4,20 @@ package com.example.aegis.budgpal;
  * Created by Harrison on 2/27/2017.
  */
 
-
+//SQLite
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
+
+//MySQL
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+
 import android.widget.Button;
 import android.widget.Toast;
 
