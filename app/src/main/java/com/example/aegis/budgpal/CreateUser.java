@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -11,6 +12,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
 
 public class CreateUser extends AppCompatActivity {
 
@@ -46,15 +51,43 @@ public class CreateUser extends AppCompatActivity {
         CreateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String username = UsernameField.getText().toString();
-                String password = PasswordField.getText().toString();
+
+
+                final String username = UsernameField.getText().toString();
+                final String password = PasswordField.getText().toString();
                 String confirmpw = ConfirmPasswordField.getText().toString();
                 if(username.isEmpty() || password.isEmpty() || confirmpw.isEmpty() || !password.equals(confirmpw)){
                     startActivity(getIntent());
                     finish();
                     return;
                 }
-                Cursor curs = db.rawQuery("SELECT * FROM User WHERE Username = '" + username + "'", null);
+
+                /*FireUser.getUserByUserName(username).addOnCompleteListener(new OnCompleteListener<FireUser>() {
+                    @Override
+                    public void onComplete(@NonNull Task<FireUser> task) {
+                        FireUser user = task.getResult();
+
+                        if(user.date.equals("1990-01-01")){
+                            final FireUser newy = new FireUser(username, StatUtils.GetHashedString(password), StatUtils.GetCurrentDate());
+                            newy.pushToDatabase().addOnCompleteListener(new OnCompleteListener<Boolean>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Boolean> task) {
+                                    Intent goToLanding = new Intent(CreateUser.this, LandingPage.class);
+
+                                    PreferencesEditor.putString("UserKey", newy.getUserKey().getResult());
+                                    PreferencesEditor.commit();
+
+                                    goToLanding.putExtra("CameFromEntry", true);
+                                    startActivity(goToLanding);
+                                    finish();
+                                }
+                            });
+                        }
+                    }
+                });*/
+
+
+                /*Cursor curs = db.rawQuery("SELECT * FROM User WHERE Username = '" + username + "'", null);
                 if(curs.getCount() != 0){
                     Toast.makeText(getApplicationContext(), "Username already exists", Toast.LENGTH_SHORT).show();
                     startActivity(getIntent());
@@ -75,7 +108,40 @@ public class CreateUser extends AppCompatActivity {
 
                 goToLanding.putExtra("CameFromEntry", true);
                 startActivity(goToLanding);
-                finish();
+                finish();*/
+
+                Thread t = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            FireUser tempU = Tasks.await(FireUser.getUserByUserName(username));
+                            if (!tempU.date.equals("1990-01-01")) {
+                                //Toast.makeText(getApplicationContext(), "Username already exists", Toast.LENGTH_SHORT).show();
+                                startActivity(getIntent());
+                                finish();
+                                return;
+                            }
+
+
+                            FireUser newU = new FireUser(username, StatUtils.GetHashedString(password), StatUtils.GetCurrentDate());
+                            newU.pushToDatabase();
+
+                            Intent goToLanding = new Intent(CreateUser.this, LandingPage.class);
+
+                            PreferencesEditor.putString("UserKey", Tasks.await(newU.getUserKey()));
+                            PreferencesEditor.commit();
+
+                            goToLanding.putExtra("CameFromEntry", true);
+                            startActivity(goToLanding);
+                            finish();
+                        }catch (Exception e){
+                            Log.d(TAG, "Failed");
+                            Log.d(TAG, e.getMessage());
+                        }
+                    }
+                });
+
+                t.start();
             }
         });
     }

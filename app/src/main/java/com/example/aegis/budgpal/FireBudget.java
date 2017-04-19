@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.TaskCompletionSource;
+import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -13,6 +14,11 @@ import com.google.firebase.database.IgnoreExtraProperties;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.UUID;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.FutureTask;
 
 /**
  * Created by Aegis on 4/13/17.
@@ -48,9 +54,11 @@ public class FireBudget {
     }
 
     @Exclude
-    public void pushToDatabase(){
+    public Task<Boolean> pushToDatabase(){
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         final DatabaseReference myRef = database.getReference("db");
+
+        final TaskCompletionSource<Boolean> success = new TaskCompletionSource<>();
 
         final FireBudget tempBudget = this;
 
@@ -75,6 +83,8 @@ public class FireBudget {
                     tempBudget.active = true;
                     myRef.child("Budgets").push().setValue(tempBudget);
                 }
+
+                success.setResult(true);
             }
 
             @Override
@@ -82,7 +92,10 @@ public class FireBudget {
 
             }
         });
+
+        return success.getTask();
     }
+
 
     @Exclude
     public static Task<FireBudget> getCurrentBudgetForUser(final String userKey){
@@ -119,6 +132,8 @@ public class FireBudget {
 
             }
         });
+
+
 
         return output.getTask();
     }

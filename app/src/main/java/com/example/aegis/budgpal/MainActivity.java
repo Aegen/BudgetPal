@@ -4,6 +4,7 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.content.Intent;
+import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -15,6 +16,9 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.TaskCompletionSource;
+import com.google.android.gms.tasks.TaskExecutors;
+import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -23,6 +27,10 @@ import com.google.firebase.database.IgnoreExtraProperties;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadPoolExecutor;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -39,7 +47,9 @@ public class MainActivity extends AppCompatActivity {
 
         Log.d(TAG, "Entered");
 
-        FirebasePlayground();
+        try {
+            FirebasePlayground();
+        }catch (Exception e){}
 
         Preferences = getSharedPreferences(getString(R.string.preferences_name), MODE_PRIVATE);
         PreferencesEditor = getSharedPreferences(getString(R.string.preferences_name),MODE_PRIVATE).edit();
@@ -58,7 +68,49 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void FirebasePlayground() {
+    private void FirebasePlayground() throws Exception {
+
+
+
+        ExecutorService hobo = Executors.newSingleThreadExecutor();
+
+        Runnable test = new Runnable() {
+            @Override
+            public void run() {
+                Looper.prepare();
+                try {
+
+                    FireBudget temp = Tasks.await(FireBudget.getCurrentBudgetForUser("-KhOxJw3Rd9WzezsI4s7"));
+                    Toast.makeText(getApplicationContext(),temp.budgetKey,Toast.LENGTH_LONG).show();
+                }catch (Exception e){
+                    Toast.makeText(getApplicationContext(),"Fail",Toast.LENGTH_LONG).show();
+                }
+            }
+        };
+
+        Thread t = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                //Toast.makeText(getApplicationContext(), "World", Toast.LENGTH_LONG).show();
+                try {
+
+                    FireBudget temp = Tasks.await(FireBudget.getCurrentBudgetForUser("-KhOxJw3Rd9WzezsI4s7"));
+                    Log.d(TAG, temp.budgetKey);
+
+                    FireUser tempU = Tasks.await(FireUser.getUserByUserName("martin"));
+                    Log.d(TAG, tempU.getUsername());
+                }catch (Exception e){
+                    Log.d(TAG, "Fail");
+                }
+
+            }
+        });
+
+        t.start();
+
+        //t.join();
+        Log.d(TAG, "After");
+
 
 
         //FireEvent temp = new FireEvent("-KhOxJw3Rd9WzezsI4s7", StatUtils.GetCurrentDate(), StatUtils.GetCurrentDate(), "horse", StatUtils.GetCurrentDate());
@@ -74,14 +126,41 @@ public class MainActivity extends AppCompatActivity {
             }
         });*/
 
-        FireBudget.getCurrentBudgetForUser("-KhOxJw3Rd9WzezsI4s7").addOnCompleteListener(new OnCompleteListener<FireBudget>() {
+        /*FireBudget.getCurrentBudgetForUser("-KhOxJw3Rd9WzezsI4s7").addOnCompleteListener(new OnCompleteListener<FireBudget>() {
             @Override
             public void onComplete(@NonNull Task<FireBudget> task) {
                 FireBudget temp = task.getResult();
 
                 Toast.makeText(getApplicationContext(), temp.budgetKey, Toast.LENGTH_LONG).show();
             }
-        });
+        });*/
+
+
+
+        /*try {
+
+            FireBudget house = Tasks.await(temp);
+            Toast.makeText(getApplicationContext(), house.budgetKey + " house", Toast.LENGTH_LONG).show();
+
+        }catch (Exception e){
+            Log.d(TAG, e.getMessage());
+            Toast.makeText(getApplicationContext(), "fail", Toast.LENGTH_LONG).show();
+        }*/
+
+        /*synchronized (temp) {
+            try {
+                temp.wait();
+            } catch (Exception e) {
+            }
+            FireBudget house = temp.getResult();
+            Toast.makeText(getApplicationContext(), house.budgetKey + " house", Toast.LENGTH_LONG).show();
+        }*/
+
+
+
+
+
+
         //Toast.makeText(getApplicationContext(),temp.isDeleted().getResult().toString(), Toast.LENGTH_LONG).show();
     }
 
@@ -118,9 +197,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                FirebaseDatabase database = FirebaseDatabase.getInstance();
+                /*FirebaseDatabase database = FirebaseDatabase.getInstance();
                 DatabaseReference myRef = database.getReference("db");
-
 
 
                 ValueEventListener horse = new ValueEventListener() {
@@ -141,8 +219,15 @@ public class MainActivity extends AppCompatActivity {
                                     PreferencesEditor.putString("UserKey", item.getKey());
                                     PreferencesEditor.commit();
 
-                                    Intent goToLanding = SwitchManager.SwitchActivity(getApplicationContext(), "Homepage");
-                                    startActivity(goToLanding);
+                                    CycleBudgetIfNecessary().addOnCompleteListener(new OnCompleteListener<Boolean>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Boolean> task) {
+                                            Intent goToLanding = SwitchManager.SwitchActivity(getApplicationContext(), "Homepage");
+                                            startActivity(goToLanding);
+                                        }
+                                    });
+
+
                                 }else{
                                     Toast.makeText(getApplicationContext(), "False", Toast.LENGTH_LONG).show();
                                 }
@@ -158,7 +243,69 @@ public class MainActivity extends AppCompatActivity {
                     }
                 };
 
-                myRef.child("Users").addListenerForSingleValueEvent(horse);
+                myRef.child("Users").addListenerForSingleValueEvent(horse);*/
+
+
+                Thread t = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            Log.d("Entered", "Yes");
+                            //Code goes here
+
+                            String username = UsernameField.getText().toString();
+                            String password = PasswordField.getText().toString();
+
+                            String hashedPassword = StatUtils.GetHashedString(password);
+
+                            //Cursor cursee = db.rawQuery("SELECT * FROM User WHERE Username = '" + username + "'", null);
+
+                            FireUser tempU = Tasks.await(FireUser.getUserByUserName(username));
+
+                            if(!tempU.date.equals("1990-01-01")){
+
+                                PreferencesEditor.putString("UserKey", tempU.userKey);
+                                PreferencesEditor.commit();
+
+                                String comp = tempU.hashedPassword;
+
+                                if(comp.equals(hashedPassword)){
+
+                                    Tasks.await(CycleBudgetIfNecessary());
+
+                                    Intent goToLanding = SwitchManager.SwitchActivity(getApplicationContext(), "Homepage");//new Intent(MainActivity.this, LandingPage.class).putExtra("UserID", cursee.getLong(cursee.getColumnIndex("UserID")));
+
+                                    goToLanding.putExtra("CameFromEntry", true);
+                                    startActivity(goToLanding);
+                                    finish();
+                                }else{
+                                    runOnUiThread(new Runnable() {
+                                        public void run()
+                                        {
+                                            Toast.makeText(MainActivity.this, "Failure", Toast.LENGTH_LONG).show();
+                                        }
+                                    });
+                                    Log.d(TAG, "Fail1");
+                                }
+                            }else{
+                                runOnUiThread(new Runnable() {
+                                    public void run()
+                                    {
+                                        Toast.makeText(MainActivity.this, "No user found by that name", Toast.LENGTH_LONG).show();
+                                    }
+                                });
+
+                                Log.d(TAG, "Fail2");
+                            }
+
+                        }catch (Exception e){
+                            Log.d(TAG, "Failed");
+                            Log.d(TAG, e.getMessage());
+                        }
+                    }
+                });
+
+                t.start();
 
                 /*String username = UsernameField.getText().toString();
                 String password = PasswordField.getText().toString();
@@ -198,35 +345,51 @@ public class MainActivity extends AppCompatActivity {
     /**
      * Checks if the budget needs to be cycled, then creates a new one if it does.
      */
-    public void CycleBudgetIfNecessary(){
+    public Task<Boolean> CycleBudgetIfNecessary(){
         Long UserID = Preferences.getLong("UserID", -1);
-        Budget tempB = Budget.getCurrentBudgetForUser(getApplicationContext(), UserID);
+        final String userKey = Preferences.getString("UserKey", "");
+        //Budget tempB = Budget.getCurrentBudgetForUser(getApplicationContext(), UserID);
 
-        if(tempB.getTimePeriod() != -1){
-            switch (tempB.getTimePeriod()){
-                case 1:
-                    if(StatUtils.DaysSince(tempB.getStartDate()) > 0){
-                        StatUtils.ChangeBudget(getApplicationContext(), UserID);
-                    }
-                    break;
-                case 2:
-                    if(StatUtils.DaysSince(tempB.getStartDate()) > 6){
-                        StatUtils.ChangeBudget(getApplicationContext(), UserID);
-                    }
-                    break;
-                case 3:
-                    if(StatUtils.DaysSince(tempB.getStartDate()) > 13){
-                        StatUtils.ChangeBudget(getApplicationContext(), UserID);
-                    }
-                case 4:
+        final TaskCompletionSource<Boolean> done = new TaskCompletionSource<>();
 
-                    if(StatUtils.DaysSince(tempB.getStartDate()) > GetMonthLength()){
-                        StatUtils.ChangeBudget(getApplicationContext(), UserID);
-                    }
-                    break;
+        FireBudget.getCurrentBudgetForUser(userKey).addOnCompleteListener(new OnCompleteListener<FireBudget>() {
+            @Override
+            public void onComplete(@NonNull Task<FireBudget> task) {
+                FireBudget tempB = task.getResult();
 
+                if(tempB.getTimePeriod() != -1){
+                    switch (tempB.getTimePeriod()){
+                        case 1:
+                            if(StatUtils.DaysSince(tempB.getStartDate()) > 0){
+                                StatUtils.ChangeBudget(userKey);
+                            }
+                            break;
+                        case 2:
+                            if(StatUtils.DaysSince(tempB.getStartDate()) > 6){
+                                StatUtils.ChangeBudget(userKey);
+                            }
+                            break;
+                        case 3:
+                            if(StatUtils.DaysSince(tempB.getStartDate()) > 13){
+                                StatUtils.ChangeBudget(userKey);
+                            }
+                        case 4:
+
+                            if(StatUtils.DaysSince(tempB.getStartDate()) > GetMonthLength()){
+                                StatUtils.ChangeBudget(userKey);
+                            }
+                            break;
+
+                    }
+                }
+
+                done.setResult(true);
             }
-        }
+        });
+
+        return done.getTask();
+
+
     }
 
     /**

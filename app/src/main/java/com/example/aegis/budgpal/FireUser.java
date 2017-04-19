@@ -35,9 +35,11 @@ public class FireUser {
     @Exclude
     private final static String TAG = "User";
 
-    public void pushToDatabase() {
+    public Task<Boolean> pushToDatabase() {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         final DatabaseReference myRef = database.getReference("db");
+
+        final TaskCompletionSource<Boolean> output = new TaskCompletionSource<>();
 
         final FireUser tempUser = this;
 
@@ -49,11 +51,13 @@ public class FireUser {
                     if(item.child("name").getValue(String.class).equals(tempUser.name)){
                         myRef.child("Users").child(item.getKey()).setValue(tempUser);
                         wasFound = true;
+                        output.setResult(true);
                     }
                 }
 
                 if(!wasFound){
                     myRef.child("Users").push().setValue(tempUser);
+                    output.setResult(true);
                 }
             }
 
@@ -63,7 +67,7 @@ public class FireUser {
             }
         });
 
-
+        return output.getTask();
     }
 
     public FireUser(){}

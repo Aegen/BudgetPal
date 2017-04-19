@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
@@ -13,6 +14,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.android.gms.tasks.Tasks;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -180,8 +183,50 @@ public class LandingPage extends AppCompatActivity {
      * Retrieves the list of events for the user and adds all future events to the listview.
      */
     private void SetUpcomingEventsList(){
+        Thread t = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
 
-        Long UserID = Preferences.getLong("UserID", -1);
+                    //Code goes here
+
+                    String UserKey = Preferences.getString("UserKey", "");
+
+                    final ListView upcomingEvents = (ListView) findViewById(R.id.upcomingEventsListView);
+
+                    ArrayList<FireEvent> allEvents = Tasks.await(FireEvent.getEventsByUserkey(UserKey));
+
+                    ArrayList<String> eventListItems = new ArrayList<>();
+
+                    final ArrayList<FireEvent> upcomingList = new ArrayList<>();
+
+                    for (int i = allEvents.size() - 1; i >= 0; i--) {
+                        if (StatUtils.DaysSince(allEvents.get(i).getStartDate()) <= 0) {
+                            eventListItems.add(allEvents.get(i).getDescription() + " Starts: " + allEvents.get(i).getStartDate());
+                            upcomingList.add(allEvents.get(i));
+                        }
+                    }
+
+//        upcomingEvents.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, eventListItems));
+                    runOnUiThread(new Runnable() {
+                        public void run()
+                        {
+                            upcomingEvents.setAdapter(new EventListAdapter(LandingPage.this, R.layout.event_list_item, upcomingList));
+                        }
+                    });
+
+                    //upcomingEvents.setAdapter(new EventListAdapter(LandingPage.this, R.layout.event_list_item, upcomingList));
+
+                }catch (Exception e){
+                    Log.d(TAG, "Failed");
+                    Log.d(TAG, e.getMessage());
+                }
+            }
+        });
+
+        t.start();
+
+        /*Long UserID = Preferences.getLong("UserID", -1);
 
         ListView upcomingEvents = (ListView) findViewById(R.id.upcomingEventsListView);
 
@@ -200,7 +245,7 @@ public class LandingPage extends AppCompatActivity {
 
 //        upcomingEvents.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, eventListItems));
 
-        upcomingEvents.setAdapter(new EventListAdapter(this, R.layout.event_list_item, upcomingList));
+        upcomingEvents.setAdapter(new EventListAdapter(this, R.layout.event_list_item, upcomingList));*/
     }
 
     /**
@@ -208,7 +253,57 @@ public class LandingPage extends AppCompatActivity {
      */
     private void SetBudgetDetails(){
 
-        Long UserID = Preferences.getLong("UserID", -1);
+        Thread t = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+
+                    //Code goes here
+
+                    String UserKey = Preferences.getString("UserKey", "");
+
+                    final FireBudget budget = Tasks.await(FireBudget.getCurrentBudgetForUser(UserKey));
+
+                    final TextView currentBudgetText = (TextView) findViewById(R.id.landingPageCurrentBudgetText);
+                    final TextView remainingBudgetText = (TextView) findViewById(R.id.landingPageRemainingBudgetText);
+
+                    if(budget != null) {
+                        float amount = budget.getAmount();
+
+                        ArrayList<FireExpense> expenses = Tasks.await(FireExpense.getExpensesByUser(UserKey));
+                        for (int i = 0; i < expenses.size(); i++) {
+                            if (budget.getBudgetKey().equals(expenses.get(i).getBudgetKey()))
+                                amount -= expenses.get(i).getAmount();
+                        }
+
+                        final String period = GetPeriodText(budget.getTimePeriod());
+
+                        final int daysToAdd = GetPeriodDays(budget.getTimePeriod(), budget.getStartDate());
+
+                        final float famount = amount;
+                        if (!Tasks.await(FireBudget.getCurrentBudgetForUser(UserKey)).getLastModified().equals("1990-01-01")) {
+                            runOnUiThread(new Runnable() {
+                                public void run() {
+                                    currentBudgetText.setText(NumberFormat.getCurrencyInstance(new Locale("en", "US"))
+                                            .format(budget.getAmount()) + " per " + period);
+                                    remainingBudgetText.setText(NumberFormat.getCurrencyInstance(new Locale("en", "US"))
+                                            .format(famount) + " until " + StatUtils.AddDaysToDate(budget.getStartDate(), daysToAdd));
+                                }
+                            });
+
+                        }
+                    }
+
+                }catch (Exception e){
+                    Log.d(TAG, "Failed");
+                    Log.d(TAG, e.getMessage());
+                }
+            }
+        });
+
+        t.start();
+
+        /*Long UserID = Preferences.getLong("UserID", -1);
 
         Budget budget = Budget.getCurrentBudgetForUser(getApplicationContext(),  UserID);
 
@@ -235,6 +330,6 @@ public class LandingPage extends AppCompatActivity {
                 remainingBudgetText.setText(NumberFormat.getCurrencyInstance(new Locale("en", "US"))
                         .format(amount) + " until " + StatUtils.AddDaysToDate(budget.getStartDate(), daysToAdd));
             }
-        }
+        }*/
     }
 }

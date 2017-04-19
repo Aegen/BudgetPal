@@ -39,9 +39,11 @@ public class FireEvent {
     public FireEvent(){}
 
     @Exclude
-    public void pushToDatabase(){
+    public Task<Boolean> pushToDatabase(){
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         final DatabaseReference myRef = database.getReference("db");
+
+        final TaskCompletionSource<Boolean> output = new TaskCompletionSource<>();
 
         final FireEvent tempEvent = this;
 
@@ -55,14 +57,17 @@ public class FireEvent {
                         if(item.getKey().equals(tempEvent.eventKey)){
                             myRef.child("Events").child(item.getKey()).setValue(tempEvent);
                             wasFound = true;
+                            output.setResult(true);
                         }
                     }
 
                     if(!wasFound){
                         myRef.child("Events").push().setValue(tempEvent);
+                        output.setResult(true);
                     }
                 }else{
                     myRef.child("Events").push().setValue(tempEvent);
+                    output.setResult(true);
                 }
             }
 
@@ -71,6 +76,8 @@ public class FireEvent {
 
             }
         });
+
+        return  output.getTask();
     }
 
     @Exclude
@@ -88,7 +95,7 @@ public class FireEvent {
                     temp.eventKey = eventKey;
                     output.setResult(temp);
                 }else{
-                    output.setResult(new FireEvent("blank", "blank", "blank", "blank", "1990-01-01"));
+                    output.setResult(new FireEvent("blank", "1990-01-01", "1990-01-01", "blank", "1990-01-01"));
                 }
             }
 

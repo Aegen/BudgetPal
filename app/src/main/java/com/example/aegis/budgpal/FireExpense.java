@@ -50,9 +50,11 @@ public class FireExpense {
     }
 
     @Exclude
-    public void pushToDatabase(){
+    public Task<Boolean> pushToDatabase(){
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         final DatabaseReference myRef = database.getReference("db");
+
+        final TaskCompletionSource<Boolean> output = new TaskCompletionSource<>();
 
         final FireExpense tempExpense = this;
 
@@ -66,14 +68,17 @@ public class FireExpense {
                         if(item.getKey().equals(tempExpense.expenseKey)){
                             myRef.child("Expenses").child(item.getKey()).setValue(tempExpense);
                             wasFound = true;
+                            output.setResult(true);
                         }
                     }
 
                     if(!wasFound){
                         myRef.child("Expenses").push().setValue(tempExpense);
+                        output.setResult(true);
                     }
                 }else{
                     myRef.child("Expenses").push().setValue(tempExpense);
+                    output.setResult(true);
                 }
             }
 
@@ -82,6 +87,8 @@ public class FireExpense {
 
             }
         });
+
+        return output.getTask();
     }
 
     @Exclude

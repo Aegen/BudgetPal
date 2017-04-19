@@ -18,7 +18,7 @@ import java.util.List;
  * Created by Aegis on 3/17/17.
  */
 
-public class EventListAdapter extends ArrayAdapter<Event>{
+public class EventListAdapter extends ArrayAdapter<FireEvent>{
 
     public EventListAdapter(@NonNull Context context, @LayoutRes int resource) {
         super(context, resource);
@@ -28,11 +28,11 @@ public class EventListAdapter extends ArrayAdapter<Event>{
         super(context, resource, textViewResourceId);
     }
 
-    public EventListAdapter(@NonNull Context context, @LayoutRes int resource, @NonNull Event[] objects) {
+    public EventListAdapter(@NonNull Context context, @LayoutRes int resource, @NonNull FireEvent[] objects) {
         super(context, resource, objects);
     }
 
-    public EventListAdapter(@NonNull Context context, @LayoutRes int resource, @IdRes int textViewResourceId, @NonNull Event[] objects) {
+    public EventListAdapter(@NonNull Context context, @LayoutRes int resource, @IdRes int textViewResourceId, @NonNull FireEvent[] objects) {
         super(context, resource, textViewResourceId, objects);
     }
 
@@ -55,7 +55,7 @@ public class EventListAdapter extends ArrayAdapter<Event>{
 
         horse = hay.inflate(R.layout.event_list_item, null);
 
-        Event bail = getItem(code);
+        FireEvent bail = getItem(code);
 
         TextView first = (TextView)horse.findViewById(R.id.firstText);
         TextView second = (TextView)horse.findViewById(R.id.secondText);
