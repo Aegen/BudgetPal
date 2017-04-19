@@ -21,6 +21,8 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.TaskCompletionSource;
+import com.google.android.gms.tasks.Tasks;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
@@ -310,8 +312,10 @@ public class StatUtils {
     }
 
 
-    public static void ChangeBudget(String userKey){
-        /*FireBudget.getCurrentBudgetForUser(userKey).addOnCompleteListener(new OnCompleteListener<FireBudget>() {
+    public static Task<Boolean> ChangeBudget(String userKey){
+
+        final TaskCompletionSource<Boolean> output = new TaskCompletionSource<>();
+        FireBudget.getCurrentBudgetForUser(userKey).addOnCompleteListener(new OnCompleteListener<FireBudget>() {
             @Override
             public void onComplete(@NonNull Task<FireBudget> task) {
                 FireBudget temp = task.getResult();
@@ -322,9 +326,15 @@ public class StatUtils {
 
                 FireBudget replacement = new FireBudget(temp.userKey, temp.timePeriod, temp.resetCode, StatUtils.GetCurrentDate(), StatUtils.GetCurrentDate(), StatUtils.GetCurrentDate(), temp.amount, true);
 
-                replacement.pushToDatabase();
+                try {
+                    Tasks.await(replacement.pushToDatabase());
+                }catch (Exception e){}
+
+                output.setResult(true);
             }
-        });*/
+        });
+
+        return  output.getTask();
     }
 
     public static void ChangeBudget(Context context, Long UserID){

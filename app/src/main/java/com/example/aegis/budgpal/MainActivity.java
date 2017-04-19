@@ -358,29 +358,31 @@ public class MainActivity extends AppCompatActivity {
                 FireBudget tempB = task.getResult();
 
                 if(tempB.getTimePeriod() != -1){
-                    switch (tempB.getTimePeriod()){
-                        case 1:
-                            if(StatUtils.DaysSince(tempB.getStartDate()) > 0){
-                                StatUtils.ChangeBudget(userKey);
-                            }
-                            break;
-                        case 2:
-                            if(StatUtils.DaysSince(tempB.getStartDate()) > 6){
-                                StatUtils.ChangeBudget(userKey);
-                            }
-                            break;
-                        case 3:
-                            if(StatUtils.DaysSince(tempB.getStartDate()) > 13){
-                                StatUtils.ChangeBudget(userKey);
-                            }
-                        case 4:
+                    try {
+                        switch (tempB.getTimePeriod()) {
+                            case 1:
+                                if (StatUtils.DaysSince(tempB.getStartDate()) > 0) {
+                                    Tasks.await(StatUtils.ChangeBudget(userKey));
+                                }
+                                break;
+                            case 2:
+                                if (StatUtils.DaysSince(tempB.getStartDate()) > 6) {
+                                    Tasks.await(StatUtils.ChangeBudget(userKey));
+                                }
+                                break;
+                            case 3:
+                                if (StatUtils.DaysSince(tempB.getStartDate()) > 13) {
+                                    Tasks.await(StatUtils.ChangeBudget(userKey));
+                                }
+                            case 4:
 
-                            if(StatUtils.DaysSince(tempB.getStartDate()) > GetMonthLength()){
-                                StatUtils.ChangeBudget(userKey);
-                            }
-                            break;
+                                if (StatUtils.DaysSince(tempB.getStartDate()) > GetMonthLength()) {
+                                    Tasks.await(StatUtils.ChangeBudget(userKey));
+                                }
+                                break;
 
-                    }
+                        }
+                    }catch (Exception e){}
                 }
 
                 done.setResult(true);
