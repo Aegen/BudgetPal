@@ -322,7 +322,9 @@ public class StatUtils {
 
                 temp.active = false;
 
-                temp.pushToDatabase();
+                try {
+                    Tasks.await(temp.pushToDatabase());
+                }catch (Exception e){}
 
                 FireBudget replacement = new FireBudget(temp.userKey, temp.timePeriod, temp.resetCode, StatUtils.GetCurrentDate(), StatUtils.GetCurrentDate(), StatUtils.GetCurrentDate(), temp.amount, true);
 
