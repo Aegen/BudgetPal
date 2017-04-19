@@ -112,7 +112,7 @@ public class FireBudget {
                 Boolean wasFound = false;
 
                 for(DataSnapshot item : dataSnapshot.getChildren()){
-                    if(item.child("userKey").getValue(String.class).equals(userKey) && item.child("active").getValue(Boolean.class) == true){
+                    if(item.child("userKey").getValue(String.class).equals(userKey) && item.child("active").getValue(Boolean.class) == true && !wasFound){
                         FireBudget tempBudget = item.getValue(FireBudget.class);
                         tempBudget.budgetKey = item.getKey();
 

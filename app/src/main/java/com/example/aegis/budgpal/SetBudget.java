@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
@@ -19,8 +20,11 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.Tasks;
+
 import java.text.NumberFormat;
 import java.util.Locale;
+import java.util.concurrent.ExecutionException;
 
 public class SetBudget extends AppCompatActivity {
 
@@ -133,11 +137,83 @@ public class SetBudget extends AppCompatActivity {
 
         final Button SaveButton  = (Button)findViewById(R.id.budgetSaveButton);
 
-        final Long UserID = Preferences.getLong("UserID", -1);
+        final String UserKey = Preferences.getString("UserKey", "");
 
         SaveButton.setEnabled(false);
 
-        final EditText AmountField = (EditText)findViewById(R.id.newBudgetText);
+
+                    //Code goes here
+
+                    final EditText AmountField = (EditText)findViewById(R.id.newBudgetText);
+
+
+
+
+
+                    SaveButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Thread t = new Thread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    try {
+
+                                        //Code goes here
+
+                                        final FireBudget tempB = Tasks.await(FireBudget.getCurrentBudgetForUser(UserKey));
+
+                                        if (!AmountField.getText().toString().equals("")) {
+
+                                            if (!tempB.getLastModified().equals("1990-01-01")) {
+                                                tempB.active = false;
+                                                Tasks.await(tempB.pushToDatabase());
+                                            }
+
+                                            int TPC = getResources().getInteger(R.integer.DAY_CODE);
+                                            int RSC = 1;
+                                            if (DailyBox.isChecked()) {
+                                                TPC = getResources().getInteger(R.integer.DAY_CODE);
+                                                RSC = 1;
+                                            } else if (WeeklyBox.isChecked()) {
+                                                TPC = getResources().getInteger(R.integer.WEEK_CODE);
+                                                RSC = StatUtils.GetWeeklyResetCode();
+                                            } else if (BiweeklyBox.isChecked()) {
+                                                TPC = getResources().getInteger(R.integer.BIWEEK_CODE);
+                                                RSC = StatUtils.GetWeeklyResetCode();
+                                            } else if (MonthlyBox.isChecked()) {
+                                                TPC = getResources().getInteger(R.integer.MONTH_CODE);
+                                                RSC = StatUtils.GetMonthResetCode();
+                                            }
+                                            String am = AmountField.getText().toString();
+                                            float amo = Float.valueOf(am);
+                                            FireBudget newB = new FireBudget(UserKey, TPC, RSC, StatUtils.GetCurrentDate(), StatUtils.GetCurrentDate(), StatUtils.GetCurrentDate(), amo, true);
+                                            try {
+                                                Tasks.await(newB.pushToDatabase());
+                                            } catch (ExecutionException e) {
+                                                e.printStackTrace();
+                                            } catch (InterruptedException e) {
+                                                e.printStackTrace();
+                                            }
+
+                                            startActivity(SwitchManager.SwitchActivity(getApplicationContext(), "Homepage"));
+                                            finish();
+                                        }
+                                    }catch (Exception e){
+                                        Log.d(TAG, "Failed");
+                                        Log.d(TAG, e.getMessage());
+                                    }
+                                }
+                            });
+
+                            t.start();
+
+                        }
+                    });
+
+
+
+
+        /*final EditText AmountField = (EditText)findViewById(R.id.newBudgetText);
         final Budget tempB = Budget.getCurrentBudgetForUser(getApplicationContext(), UserID);
 
 
@@ -176,6 +252,7 @@ public class SetBudget extends AppCompatActivity {
                 }
             }
         });
+        */
     }
 
     private void SetupPreviousBudgetText(){
