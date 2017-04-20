@@ -14,6 +14,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.Tasks;
+
 import java.util.ArrayList;
 
 public class ViewEvents extends AppCompatActivity {
@@ -49,7 +51,46 @@ public class ViewEvents extends AppCompatActivity {
      * Add all items to the listview.
      */
     private void PopulateList(){
-        Long UserID = Preferences.getLong("UserID", -1);
+
+        Thread t = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+
+                    //Code goes here
+
+                    final String UserKey = Preferences.getString("UserKey", "");
+
+                    final ListView EventsList = (ListView)findViewById(R.id.viewEventsListView);
+
+                    final ArrayList<FireEvent> eventsList = Tasks.await(FireEvent.getEventsByUserkey(UserKey));
+
+                    runOnUiThread(new Runnable() {
+                        public void run()
+                        {
+                            EventListAdapter listAdapter = new EventListAdapter(ViewEvents.this, R.layout.event_list_item);
+
+                            EventsList.setAdapter(listAdapter);
+
+                            listAdapter.clear();
+
+
+                            for(int i = 0; i < eventsList.size(); i++){
+                                listAdapter.add(eventsList.get(i));
+                            }
+                        }
+                    });
+
+
+                }catch (Exception e){
+                    Log.d(TAG, "Failed");
+                    Log.d(TAG, e.getMessage());
+                }
+            }
+        });
+
+        t.start();
+        /*Long UserID = Preferences.getLong("UserID", -1);
 
         ListView EventsList = (ListView)findViewById(R.id.viewEventsListView);
 
@@ -62,7 +103,7 @@ public class ViewEvents extends AppCompatActivity {
         ArrayList<Event> eventsList = Event.getEventsByUserID(getApplicationContext(), UserID);
         for(int i = 0; i < eventsList.size(); i++){
             listAdapter.add(Long.toString(eventsList.get(i).getEventID()) + "- " + eventsList.get(i).getDescription() + "- Starts: " + eventsList.get(i).getStartDate());
-        }
+        }*/
     }
 
     /**
@@ -75,8 +116,16 @@ public class ViewEvents extends AppCompatActivity {
 
         EventsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String[] items = parent.getItemAtPosition(position).toString().split("-");
+            public void onItemClick(final AdapterView<?> parent, final View view, final int position, final long id) {
+
+                FireEvent ev = (FireEvent)parent.getItemAtPosition(position);
+
+                Intent goToEventDetails = new Intent(ViewEvents.this, EventDetailsActivity.class);
+                goToEventDetails.putExtra("EventKey", ev.getEventKey());
+
+                startActivityForResult(goToEventDetails, 0);
+
+                /*String[] items = parent.getItemAtPosition(position).toString().split("-");
 
                 long EventID = Long.parseLong(items[0]);
 
@@ -85,7 +134,7 @@ public class ViewEvents extends AppCompatActivity {
                 Intent goToEventDetails = new Intent(ViewEvents.this, EventDetailsActivity.class);
                 goToEventDetails.putExtra("EventID", ev.getEventID());
 
-                startActivityForResult(goToEventDetails, 0);
+                startActivityForResult(goToEventDetails, 0);*/
             }
         });
     }

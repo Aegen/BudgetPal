@@ -59,8 +59,8 @@ public class EventListAdapter extends ArrayAdapter<FireEvent>{
 
         TextView first = (TextView)horse.findViewById(R.id.firstText);
         TextView second = (TextView)horse.findViewById(R.id.secondText);
-        first.setText(bail.getDescription());
-        second.setText(bail.getStartDate());
+        first.setText(" " + bail.getDescription());
+        second.setText(" " + bail.getStartDate());
 
         return horse;
     }
