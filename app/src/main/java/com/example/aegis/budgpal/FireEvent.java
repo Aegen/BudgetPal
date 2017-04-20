@@ -219,7 +219,7 @@ public class FireEvent {
                 FirebaseDatabase database = FirebaseDatabase.getInstance();
                 DatabaseReference myRef = database.getReference("db");
 
-                myRef.child("Expenes").child(holder.eventKey).removeValue();
+                myRef.child("Events").child(holder.eventKey).removeValue();
             }
         }
     }
