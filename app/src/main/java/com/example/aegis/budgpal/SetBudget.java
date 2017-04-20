@@ -255,12 +255,55 @@ public class SetBudget extends AppCompatActivity {
         */
     }
 
-    private void SetupPreviousBudgetText(){
+    private void SetupPreviousBudgetText() {
         final TextView oldBudget = (TextView) findViewById(R.id.currentBudgetText);
 
-        final Long UserID = Preferences.getLong("UserID", -1);
+        final String UserKey = Preferences.getString("UserKey", "");
 
-        final Budget tempB = Budget.getCurrentBudgetForUser(getApplicationContext(), UserID);
+        Thread t = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+
+                    //Code goes here
+
+                    final FireBudget tempB = Tasks.await(FireBudget.getCurrentBudgetForUser(UserKey));
+
+                    if (!tempB.getLastModified().equals("1990-01-01")) {
+                        String period;
+
+                        switch (tempB.getTimePeriod()) {
+                            case 1:
+                                period = "day";
+                                break;
+                            case 2:
+                                period = "week";
+                                break;
+                            case 3:
+                                period = "2 weeks";
+                                break;
+                            case 4:
+                                period = "month";
+                                break;
+                            default:
+                                period = "cycle";
+                                break;
+                        }
+
+                        oldBudget.setText(NumberFormat.getCurrencyInstance(new Locale("en", "US"))
+                                .format(tempB.getAmount()) + " per " + period);
+                    }
+
+                } catch (Exception e) {
+                    Log.d(TAG, "Failed");
+                    Log.d(TAG, e.getMessage());
+                }
+            }
+        });
+
+        t.start();
+
+        /*final Budget tempB = Budget.getCurrentBudgetForUser(getApplicationContext(), UserID);
 
         if(tempB.getBudgetID() != -1){
             String period;
@@ -286,5 +329,6 @@ public class SetBudget extends AppCompatActivity {
             oldBudget.setText(NumberFormat.getCurrencyInstance(new Locale("en", "US"))
                     .format(tempB.getAmount()) + " per " + period);
         }
+    }*/
     }
 }
