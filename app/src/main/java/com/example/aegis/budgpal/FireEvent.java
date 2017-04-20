@@ -209,6 +209,19 @@ public class FireEvent {
     @Exclude
     public void setDeleted(boolean deleted) {
 
+
+        FireEvent holder = this;
+
+        if(deleted == true){
+
+
+            if(!holder.eventKey.equals("")){
+                FirebaseDatabase database = FirebaseDatabase.getInstance();
+                DatabaseReference myRef = database.getReference("db");
+
+                myRef.child("Expenes").child(holder.eventKey).removeValue();
+            }
+        }
     }
 }
 

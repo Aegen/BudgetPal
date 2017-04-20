@@ -146,8 +146,10 @@ public class FireUser {
 
 
     @Exclude
-    public void setDeleted(boolean deleted) {
+    public Task<Boolean> setDeleted(boolean deleted) {
         FireUser holder = this;
+
+        final TaskCompletionSource<Boolean> output = new TaskCompletionSource<>();
 
         if(deleted == true){
             getUserKey().addOnCompleteListener(new OnCompleteListener<String>() {
@@ -161,9 +163,13 @@ public class FireUser {
 
                         myRef.child("Users").child(hold).removeValue();
                     }
+
+                    output.setResult(true);
                 }
             });
         }
+
+        return output.getTask();
     }
 
     @Exclude
