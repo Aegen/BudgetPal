@@ -10,6 +10,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.Tasks;
+
 public class EventDetailsActivity extends AppCompatActivity {
 
     private EditText DescriptionField;
@@ -46,13 +48,36 @@ public class EventDetailsActivity extends AppCompatActivity {
         DeleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Event ev = Event.getEventByEventID(getApplicationContext(), getIntent().getLongExtra("EventID", new Long(-1)));
+                Thread t = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+
+                            //Code goes here
+
+                            FireEvent ev = Tasks.await(FireEvent.getEventByEventKey(""));
+                            ev.setDeleted(true);
+
+                            setResult(RESULT_OK);
+//                EventDetailsActivity.super.onBackPressed();
+                            finish();
+
+                        }catch (Exception e){
+                            Log.d(TAG, "Failed");
+                            Log.d(TAG, e.getMessage());
+                        }
+                    }
+                });
+
+                t.start();
+
+                /*Event ev = Event.getEventByEventID(getApplicationContext(), getIntent().getLongExtra("EventID", new Long(-1)));
                 ev.setDeleted(true);
                 ev.pushToDatabase();
 
                 setResult(RESULT_OK);
 //                EventDetailsActivity.super.onBackPressed();
-                finish();
+                finish();*/
             }
         });
 
