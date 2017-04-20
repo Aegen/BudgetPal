@@ -10,7 +10,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+
 import com.google.android.gms.tasks.Tasks;
+
+import static android.app.Activity.RESULT_OK;
 
 public class EventDetailsActivity extends AppCompatActivity {
 
