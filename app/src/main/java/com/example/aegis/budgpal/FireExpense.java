@@ -152,6 +152,39 @@ public class FireExpense {
         return output.getTask();
     }
 
+    @Exclude
+    public static Task<ArrayList<FireExpense>> getExpensesByBudget(final String budgetKey){
+        final ArrayList<FireExpense> holder = new ArrayList<>();
+
+        final TaskCompletionSource<ArrayList<FireExpense>> output = new TaskCompletionSource<>();
+
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference("db");
+
+        myRef.child("Expenses").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for(DataSnapshot item : dataSnapshot.getChildren()){
+                    if(item.child("budgetKey").getValue(String.class).equals(budgetKey)){
+                        FireExpense tempExpense = item.getValue(FireExpense.class);
+                        tempExpense.expenseKey = item.getKey();
+
+                        holder.add(tempExpense);
+                    }
+                }
+
+                output.setResult(holder);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+        return output.getTask();
+    }
+
 
     @Exclude
     public String getExpenseKey() {
