@@ -58,7 +58,7 @@ public class EventDetailsActivity extends AppCompatActivity {
 
                             //Code goes here
 
-                            FireEvent ev = Tasks.await(FireEvent.getEventByEventKey(""));
+                            FireEvent ev = Tasks.await(FireEvent.getEventByEventKey( getIntent().getStringExtra("EventKey")));
                             ev.setDeleted(true);
 
                             setResult(RESULT_OK);
@@ -89,7 +89,57 @@ public class EventDetailsActivity extends AppCompatActivity {
         UpdateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Event ev = Event.getEventByEventID(getApplicationContext(), getIntent().getLongExtra("EventID", new Long(-1)));
+                Thread t = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+
+                            //Code goes here
+
+                            FireEvent ev = Tasks.await(FireEvent.getEventByEventKey(getIntent().getStringExtra("EventKey")));
+
+                            if(ev.getLastModified().equals("1990-01-01")){
+                                runOnUiThread(new Runnable() {
+                                    public void run()
+                                    {
+                                        Toast.makeText(getApplicationContext(), "No event found", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+
+                                return;
+                            }
+                            ev.setDescription(DescriptionField.getText().toString());
+                            if(StatUtils.IsValidDate(DateField.getText().toString())){
+                                ev.setStartDate(DateField.getText().toString());
+                                ev.setEndDate(DateField.getText().toString());
+                            }else{
+                                runOnUiThread(new Runnable() {
+                                    public void run()
+                                    {
+
+                                        Toast.makeText(getApplicationContext(), "Invalid date", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                                return;
+                            }
+                            ev.setLastModified(StatUtils.GetCurrentDate());
+
+                            Tasks.await(ev.pushToDatabase());
+
+                            setResult(RESULT_OK);
+                            EventDetailsActivity.super.onBackPressed();
+                            finish();
+
+                        }catch (Exception e){
+                            Log.d(TAG, "Failed");
+                            Log.d(TAG, e.getMessage());
+                        }
+                    }
+                });
+
+                t.start();
+
+                /* Event ev = Event.getEventByEventID(getApplicationContext(), getIntent().getLongExtra("EventID", new Long(-1)));
 
                 if(ev.getUserID() == -1){
                     Toast.makeText(getApplicationContext(), "No event found", Toast.LENGTH_SHORT).show();
@@ -110,13 +160,45 @@ public class EventDetailsActivity extends AppCompatActivity {
                 setResult(RESULT_OK);
                 EventDetailsActivity.super.onBackPressed();
                 finish();
-
+                */
             }
         });
 
 
+        Thread t = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
 
-        if(getIntent().getLongExtra("EventID", new Long(-1)) != -1){
+                    //Code goes here
+
+                    if(!getIntent().getStringExtra("EventKey").equals(null)){
+                        final FireEvent house = Tasks.await(FireEvent.getEventByEventKey(getIntent().getStringExtra("EventKey")));
+                        final FireUser home = Tasks.await(FireUser.getUserByUserKey( house.getUserKey()));
+                        runOnUiThread(new Runnable() {
+                            public void run()
+                            {
+                                DescriptionField.setText(house.getDescription());
+                                DateField.setText(house.getStartDate());
+                                CreatedByField.setText(home.getUsername());
+                                CreatedOnField.setText(house.getLastModified());
+                                UpdateButton.setEnabled(true);
+                            }
+                        });
+
+
+                    }
+                }catch (Exception e){
+                    Log.d(TAG, "Failed");
+                    Log.d(TAG, e.getMessage());
+                }
+            }
+        });
+
+        t.start();
+
+
+        /*if(getIntent().getLongExtra("EventID", new Long(-1)) != -1){
             Event house = Event.getEventByEventID(getApplicationContext(), getIntent().getLongExtra("EventID", new Long(-1)));
             DescriptionField.setText(house.getDescription());
             DateField.setText(house.getStartDate());
@@ -125,6 +207,6 @@ public class EventDetailsActivity extends AppCompatActivity {
 
             UpdateButton.setEnabled(true);
 
-        }
+        }*/
     }
 }
