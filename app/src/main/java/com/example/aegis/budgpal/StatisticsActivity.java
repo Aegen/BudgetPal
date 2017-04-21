@@ -121,7 +121,7 @@ public class StatisticsActivity extends AppCompatActivity {
 
                     //calculate averages
                     //calculate average percent used
-                    float average;
+
                     float totalExpenditures = 0;
                     float totalBudgetAmounts = 0;
 
@@ -129,11 +129,15 @@ public class StatisticsActivity extends AppCompatActivity {
                         totalExpenditures += expendituresList.get(k);
                         totalBudgetAmounts += budgetAmountList.get(k);
                     }
-                    average = totalExpenditures/totalBudgetAmounts * 100;
+                    final float average = totalExpenditures/totalBudgetAmounts * 100;
 
                     //display
-                    TextView txtAverage = (TextView) findViewById(R.id.statsTextAvgBudget);
-                    txtAverage.setText("Average Percent of Budget Used: " + average + "%");
+                    runOnUiThread(new Runnable() {
+                        public void run() {
+                            TextView txtAverage = (TextView) findViewById(R.id.statsTextAvgBudget);
+                            txtAverage.setText("Average Percent of Budget Used: " + average + "%");
+                        }
+                    });
 
                     PopulateList(rollingCategoryPercent, expenseCategories);
 
