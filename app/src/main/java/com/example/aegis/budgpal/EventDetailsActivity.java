@@ -127,7 +127,7 @@ public class EventDetailsActivity extends AppCompatActivity {
                             Tasks.await(ev.pushToDatabase());
 
                             setResult(RESULT_OK);
-                            EventDetailsActivity.super.onBackPressed();
+                            //EventDetailsActivity.super.onBackPressed();
                             finish();
 
                         }catch (Exception e){
