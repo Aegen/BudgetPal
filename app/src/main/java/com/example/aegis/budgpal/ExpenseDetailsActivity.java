@@ -42,10 +42,10 @@ public class ExpenseDetailsActivity extends AppCompatActivity {
         DeleteButton = (Button)findViewById(R.id.expenseDetailsDeleteButton);
         UpdateButton.setEnabled(false);
 
-        AmountField.setText(getIntent().getStringExtra("Amount"));
+        /*AmountField.setText(getIntent().getStringExtra("Amount"));
         DescriptionField.setText(getIntent().getStringExtra("Description"));
         CreatedByField.setText(Long.toString(getIntent().getLongExtra("User", -1)));
-        CreatedOnField.setText(getIntent().getStringExtra("LastModified"));
+        CreatedOnField.setText(getIntent().getStringExtra("LastModified"));*/
 
         DeleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -145,13 +145,21 @@ public class ExpenseDetailsActivity extends AppCompatActivity {
                     try {
 
                         //Code goes here
-                        FireExpense house = Tasks.await(FireExpense.getExpenseByExpenseKey(getIntent().getStringExtra("ExpenseKey")));
-                        AmountField.setText(house.getAmount() + "");
-                        DescriptionField.setText(house.getDescription());
-                        CreatedByField.setText(Tasks.await(FireUser.getUserByUserKey(house.getUserKey())).getUsername());
-                        CreatedOnField.setText(house.getLastModified());
+                        final FireExpense house = Tasks.await(FireExpense.getExpenseByExpenseKey(getIntent().getStringExtra("ExpenseKey")));
+                        final FireUser tempo = Tasks.await(FireUser.getUserByUserKey(house.getUserKey()));
 
-                        UpdateButton.setEnabled(true);
+                        runOnUiThread(new Runnable() {
+                            public void run()
+                            {
+                                AmountField.setText(house.getAmount() + "");
+                                DescriptionField.setText(house.getDescription());
+                                CreatedByField.setText(tempo.getUsername());
+                                CreatedOnField.setText(house.getLastModified());
+
+                                UpdateButton.setEnabled(true);
+                            }
+                        });
+
 
                     }catch (Exception e){
                         Log.d(TAG, "Failed");
