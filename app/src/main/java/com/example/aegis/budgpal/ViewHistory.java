@@ -234,7 +234,7 @@ public class ViewHistory extends AppCompatActivity {
 
                     for(int i = 0; i < budgets.size(); i++){
                         someBudget = budgets.get(i);
-                        someBudgetInfo = someBudget.getBudgetKey() + ": " + NumberFormat.getCurrencyInstance(new Locale("en", "US")).format(someBudget.getAmount())+ " Start Date: " + someBudget.getStartDate();
+                        someBudgetInfo =  NumberFormat.getCurrencyInstance(new Locale("en", "US")).format(someBudget.getAmount())+ " Start Date: " + someBudget.getStartDate() + " :" + someBudget.getBudgetKey();
                         budgetInfo.add(someBudgetInfo);
                     }
 
@@ -245,7 +245,7 @@ public class ViewHistory extends AppCompatActivity {
                             expenseSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                                 @Override
                                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                                    String myBudgetID = parent.getItemAtPosition(position).toString().split(":")[0];
+                                    String myBudgetID = parent.getItemAtPosition(position).toString().split(":")[2];
 
                                     PopulateList(myBudgetID);
                                 }
@@ -310,7 +310,7 @@ public class ViewHistory extends AppCompatActivity {
 
         final Spinner expenseSpinner = (Spinner) findViewById(R.id.viewExpensesPeriodSpinner);
 
-        output = expenseSpinner.getSelectedItem().toString().split(":")[0];
+        output = expenseSpinner.getSelectedItem().toString().split(":")[2];
 
         return output;
     }
