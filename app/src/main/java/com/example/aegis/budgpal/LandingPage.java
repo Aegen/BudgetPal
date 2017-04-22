@@ -11,6 +11,8 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -37,13 +39,19 @@ public class LandingPage extends AppCompatActivity {
         Preferences = getSharedPreferences(getString(R.string.preferences_name), MODE_PRIVATE);
         PreferencesEditor = getSharedPreferences(getString(R.string.preferences_name),MODE_PRIVATE).edit();
 
-        Toast.makeText(getApplicationContext(), Preferences.getString("UserKey", "Fail"), Toast.LENGTH_LONG).show();
+        //Toast.makeText(getApplicationContext(), Preferences.getString("UserKey", "Fail"), Toast.LENGTH_LONG).show();
 
         StatUtils.InitializeNavigationDrawer(this);
 
         SetBudgetDetails();
 
         SetUpcomingEventsList();
+
+        SetLandingAddButtonListener();
+
+        SetLandingStatButtonListener();
+
+        Setbar();
     }
 
 
@@ -220,6 +228,7 @@ public class LandingPage extends AppCompatActivity {
                 }catch (Exception e){
                     Log.d(TAG, "Failed");
                     Log.d(TAG, e.getMessage());
+                    Log.d("Upcoming", "Events");
                 }
             }
         });
@@ -297,6 +306,7 @@ public class LandingPage extends AppCompatActivity {
                 }catch (Exception e){
                     Log.d(TAG, "Failed");
                     Log.d(TAG, e.getMessage());
+                    Log.d("Budget", "Details");
                 }
             }
         });
@@ -331,5 +341,93 @@ public class LandingPage extends AppCompatActivity {
                         .format(amount) + " until " + StatUtils.AddDaysToDate(budget.getStartDate(), daysToAdd));
             }
         }*/
+    }
+
+    private void SetLandingStatButtonListener() {
+        final Button LandingStat = (Button)findViewById(R.id.LandingStats);
+
+        LandingStat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(LandingPage.this, StatisticsActivity.class));
+            }
+        });
+    }
+
+    private void SetLandingAddButtonListener() {
+        final Button LandingAddButton = (Button)findViewById(R.id.LandingAddExpense);
+
+        LandingAddButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(LandingPage.this, AddExpenses.class));
+            }
+        });
+    }
+
+    private void Setbar(){
+        Thread t = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+
+                    //Code goes here
+                    final FrameLayout SpentBar = (FrameLayout)findViewById(R.id.SpentBar);
+                    //final FrameLayout Remain = (FrameLayout)findViewById(R.id.RemainingBar);
+
+                    String UserKey = Preferences.getString("UserKey", "");
+                    FireBudget budget = Tasks.await(FireBudget.getCurrentBudgetForUser(UserKey));
+                    final float totalBudget = budget.getAmount();
+
+                    float spent = 0;
+                    if(budget != null) {
+                        float amount = budget.getAmount();
+
+                        ArrayList<FireExpense> expenses = Tasks.await(FireExpense.getExpensesByUser(UserKey));
+                        for (int i = 0; i < expenses.size(); i++) {
+                            if (budget.getBudgetKey().equals( expenses.get(i).getBudgetKey()))
+                                amount -= expenses.get(i).getAmount();
+                        }
+                        spent = amount;
+                    }
+
+
+                    final float daSpent = spent;
+
+                    runOnUiThread(new Runnable() {
+                        public void run() {
+                    final int height = Math.round(getResources().getDimension(R.dimen.bar_height));
+                    float spentWidth = 0;
+
+                    if(daSpent < 0) {
+                        spentWidth = 350;
+                        SpentBar.setBackgroundColor(getResources().getColor(R.color.red));
+                    } else if(daSpent > 0) {
+                        spentWidth = (350 * (daSpent/totalBudget));
+                    } else {
+                        spentWidth = 350;
+                        SpentBar.setBackgroundColor(getResources().getColor(R.color.lightgreen));
+
+                    }
+
+                    final float scale = getApplicationContext().getResources().getDisplayMetrics().density;
+                    final int newWidth = (int) (spentWidth * scale + 0.5f);
+
+
+                            FrameLayout.LayoutParams dem = new FrameLayout.LayoutParams(newWidth, height);
+                            SpentBar.setLayoutParams(dem);
+                        }
+                    });
+
+                }catch (Exception e){
+                    Log.d(TAG, "Failed");
+                    Log.d(TAG, e.getMessage());
+                    Log.d("Set", "Bar");
+                }
+            }
+        });
+
+        t.start();
+
     }
 }
