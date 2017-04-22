@@ -30,6 +30,7 @@ public class ViewHistory extends AppCompatActivity {
     private SharedPreferences Preferences;
     private SharedPreferences.Editor PreferencesEditor;
 
+    private ArrayList<FireBudget> globalBudgetList = new ArrayList<FireBudget>();
     private final static String TAG = "ViewExpenses";
 
     @Override
@@ -229,13 +230,14 @@ public class ViewHistory extends AppCompatActivity {
                     final Spinner expenseSpinner = (Spinner) findViewById(R.id.viewExpensesPeriodSpinner);
 
                     ArrayList<FireBudget> budgets = Tasks.await(FireBudget.getBudgetsByUser(UserKey));
+                    globalBudgetList = budgets;
                     final ArrayList<String> budgetInfo = new ArrayList<String>();
                     String someBudgetInfo;
                     FireBudget someBudget;
 
                     for(int i = 0; i < budgets.size(); i++){
                         someBudget = budgets.get(i);
-                        someBudgetInfo =  NumberFormat.getCurrencyInstance(new Locale("en", "US")).format(someBudget.getAmount())+ " Start Date: " + someBudget.getStartDate() + " :" + someBudget.getBudgetKey();
+                        someBudgetInfo =  NumberFormat.getCurrencyInstance(new Locale("en", "US")).format(someBudget.getAmount())+ " Start Date: " + someBudget.getStartDate() + " :" + (i+1);
                         budgetInfo.add(someBudgetInfo);
                     }
 
@@ -246,7 +248,8 @@ public class ViewHistory extends AppCompatActivity {
                             expenseSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                                 @Override
                                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                                    String myBudgetID = parent.getItemAtPosition(position).toString().split(":")[2];
+                                    String myBudgetIndex = parent.getItemAtPosition(position).toString().split(":")[2];
+                                    String myBudgetID = globalBudgetList.get(Integer.parseInt(myBudgetIndex) - 1).getBudgetKey();
 
                                     PopulateList(myBudgetID);
                                 }
@@ -307,11 +310,14 @@ public class ViewHistory extends AppCompatActivity {
      * @return The budgetID of the currently selected budget.
      */
     private String GetActiveBudgetID(){
+        String myBudgetKey;
         String output;
 
         final Spinner expenseSpinner = (Spinner) findViewById(R.id.viewExpensesPeriodSpinner);
 
-        output = expenseSpinner.getSelectedItem().toString().split(":")[2];
+
+        myBudgetKey = expenseSpinner.getSelectedItem().toString().split(":")[2];
+        output = globalBudgetList.get(Integer.parseInt(myBudgetKey)-1).getBudgetKey();
 
         return output;
     }
