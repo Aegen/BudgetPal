@@ -71,6 +71,7 @@ public class ViewHistory extends AppCompatActivity {
                     String UserKey = Preferences.getString("UserKey", "");
                     final ArrayList<FireExpense> expenses = Tasks.await(FireExpense.getExpensesByUser(UserKey));
 
+
                     ListView expenseListView = (ListView) findViewById(R.id.viewHistoryExpensesListView);
                     //final ArrayAdapter<String> adapter = (ArrayAdapter)expenseListView.getAdapter();
                     final ExpenseListAdapter adapter = (ExpenseListAdapter)expenseListView.getAdapter();
@@ -79,7 +80,7 @@ public class ViewHistory extends AppCompatActivity {
                         {
                             adapter.clear();
 
-                            for (int i = 0; i < expenses.size(); i++) {
+                            for (int i = expenses.size() - 1; i > 0; i--) {
                                 if (expenses.get(i).getBudgetKey().equals(myBudgetID)) {
                                     String temp = expenses.get(i).getExpenseKey() + ": " + expenses.get(i).getDescription() + " = ";
                                     String temp2 = NumberFormat.getCurrencyInstance(new Locale("en", "US")).format(expenses.get(i).getAmount());

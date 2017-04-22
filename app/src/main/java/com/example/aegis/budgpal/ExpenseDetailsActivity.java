@@ -110,7 +110,7 @@ public class ExpenseDetailsActivity extends AppCompatActivity {
                             Tasks.await(ex.pushToDatabase());
 
                             setResult(RESULT_OK);
-                            ExpenseDetailsActivity.super.onBackPressed();
+                            //ExpenseDetailsActivity.super.onBackPressed();
                             finish();
 
                         }catch (Exception e){
