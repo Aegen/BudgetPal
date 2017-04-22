@@ -4,6 +4,8 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.content.Intent;
+import android.os.Looper;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -12,6 +14,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.TaskCompletionSource;
+import com.google.android.gms.tasks.TaskExecutors;
+import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -20,6 +27,10 @@ import com.google.firebase.database.IgnoreExtraProperties;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadPoolExecutor;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -36,7 +47,9 @@ public class MainActivity extends AppCompatActivity {
 
         Log.d(TAG, "Entered");
 
-        //FirebasePlayground();
+        try {
+            FirebasePlayground();
+        }catch (Exception e){}
 
         Preferences = getSharedPreferences(getString(R.string.preferences_name), MODE_PRIVATE);
         PreferencesEditor = getSharedPreferences(getString(R.string.preferences_name),MODE_PRIVATE).edit();
@@ -55,40 +68,100 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void FirebasePlayground() {
-        // Write a message to the database
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference("db");
+    private void FirebasePlayground() throws Exception {
 
-        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
 
-        ValueEventListener postListener = new ValueEventListener() {
+
+        ExecutorService hobo = Executors.newSingleThreadExecutor();
+
+        Runnable test = new Runnable() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                // Get Post object and use the values to update the UI
-                String hashed = dataSnapshot.getValue(String.class);
-                Boolean tested = hashed.equals(StatUtils.GetHashedString("martin"));
+            public void run() {
+                Looper.prepare();
+                try {
 
-                Toast.makeText(getApplicationContext(), tested.toString() , Toast.LENGTH_LONG).show();
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                // Getting Post failed, log a message
-                Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
-                // ...
+                    FireBudget temp = Tasks.await(FireBudget.getCurrentBudgetForUser("-KhOxJw3Rd9WzezsI4s7"));
+                    Toast.makeText(getApplicationContext(),temp.budgetKey,Toast.LENGTH_LONG).show();
+                }catch (Exception e){
+                    Toast.makeText(getApplicationContext(),"Fail",Toast.LENGTH_LONG).show();
+                }
             }
         };
 
+        Thread t = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                //Toast.makeText(getApplicationContext(), "World", Toast.LENGTH_LONG).show();
+                try {
 
-        //myRef.child("Users").push()
-        //myRef.child("martin").child("HashedPassword").addValueEventListener(postListener);
-        //myRef.child("eric").child("HashedPassword").setValue("eric");
-        //myRef.child("eric").child("events").push().setValue(new EventListing("yes", "2017-01-01"));
+                    FireBudget temp = Tasks.await(FireBudget.getCurrentBudgetForUser("-KhOxJw3Rd9WzezsI4s7"));
+                    Log.d(TAG, temp.budgetKey);
 
-        //myRef.child("eric").child("events").addValueEventListener(postListener);
+                    FireUser tempU = Tasks.await(FireUser.getUserByUserName("martin"));
+                    Log.d(TAG, tempU.getUsername());
+                }catch (Exception e){
+                    Log.d(TAG, "Fail");
+                }
 
-        //myRef.child("martin").child("HashedPassword").setValue(StatUtils.GetHashedString("martin"));
+            }
+        });
+
+        t.start();
+
+        //t.join();
+        Log.d(TAG, "After");
+
+
+
+        //FireEvent temp = new FireEvent("-KhOxJw3Rd9WzezsI4s7", StatUtils.GetCurrentDate(), StatUtils.GetCurrentDate(), "horse", StatUtils.GetCurrentDate());
+
+
+        /*Task<FireEvent> hold = FireEvent.getEventByEventKey("-KhZvt5ySuocI5NEhivL");
+
+        hold.addOnCompleteListener(new OnCompleteListener<FireEvent>() {
+            @Override
+            public void onComplete(@NonNull Task<FireEvent> task) {
+                FireEvent temp = task.getResult();
+                Toast.makeText(getApplicationContext(), temp.eventKey, Toast.LENGTH_LONG).show();
+            }
+        });*/
+
+        /*FireBudget.getCurrentBudgetForUser("-KhOxJw3Rd9WzezsI4s7").addOnCompleteListener(new OnCompleteListener<FireBudget>() {
+            @Override
+            public void onComplete(@NonNull Task<FireBudget> task) {
+                FireBudget temp = task.getResult();
+
+                Toast.makeText(getApplicationContext(), temp.budgetKey, Toast.LENGTH_LONG).show();
+            }
+        });*/
+
+
+
+        /*try {
+
+            FireBudget house = Tasks.await(temp);
+            Toast.makeText(getApplicationContext(), house.budgetKey + " house", Toast.LENGTH_LONG).show();
+
+        }catch (Exception e){
+            Log.d(TAG, e.getMessage());
+            Toast.makeText(getApplicationContext(), "fail", Toast.LENGTH_LONG).show();
+        }*/
+
+        /*synchronized (temp) {
+            try {
+                temp.wait();
+            } catch (Exception e) {
+            }
+            FireBudget house = temp.getResult();
+            Toast.makeText(getApplicationContext(), house.budgetKey + " house", Toast.LENGTH_LONG).show();
+        }*/
+
+
+
+
+
+
+        //Toast.makeText(getApplicationContext(),temp.isDeleted().getResult().toString(), Toast.LENGTH_LONG).show();
     }
 
     /**
@@ -124,7 +197,117 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                String username = UsernameField.getText().toString();
+                /*FirebaseDatabase database = FirebaseDatabase.getInstance();
+                DatabaseReference myRef = database.getReference("db");
+
+
+                ValueEventListener horse = new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+
+                        EditText UsernameField = (EditText)findViewById(R.id.loginUsernameField);
+                        EditText PasswordField = (EditText)findViewById(R.id.loginPasswordField);
+
+                        Log.d(TAG, "Fireuser");
+                        for(DataSnapshot item : dataSnapshot.getChildren()){
+                            if(item.child("name").getValue(String.class).equals(UsernameField.getText().toString())){
+                                FireUser temp = item.getValue(FireUser.class);
+
+                                if(temp.hashedPassword.equals(StatUtils.GetHashedString(PasswordField.getText().toString()))){
+                                    Toast.makeText(getApplicationContext(), "True", Toast.LENGTH_LONG).show();
+
+                                    PreferencesEditor.putString("UserKey", item.getKey());
+                                    PreferencesEditor.commit();
+
+                                    CycleBudgetIfNecessary().addOnCompleteListener(new OnCompleteListener<Boolean>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Boolean> task) {
+                                            Intent goToLanding = SwitchManager.SwitchActivity(getApplicationContext(), "Homepage");
+                                            startActivity(goToLanding);
+                                        }
+                                    });
+
+
+                                }else{
+                                    Toast.makeText(getApplicationContext(), "False", Toast.LENGTH_LONG).show();
+                                }
+
+                                //Toast.makeText(getApplicationContext(), temp.name, Toast.LENGTH_LONG).show();
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                };
+
+                myRef.child("Users").addListenerForSingleValueEvent(horse);*/
+
+
+                Thread t = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            Log.d("Entered", "Yes");
+                            //Code goes here
+
+                            String username = UsernameField.getText().toString();
+                            String password = PasswordField.getText().toString();
+
+                            String hashedPassword = StatUtils.GetHashedString(password);
+
+                            //Cursor cursee = db.rawQuery("SELECT * FROM User WHERE Username = '" + username + "'", null);
+
+                            FireUser tempU = Tasks.await(FireUser.getUserByUserName(username));
+
+                            if(!tempU.date.equals("1990-01-01")){
+
+                                PreferencesEditor.putString("UserKey", tempU.userKey);
+                                PreferencesEditor.commit();
+
+                                String comp = tempU.hashedPassword;
+
+                                if(comp.equals(hashedPassword)){
+
+                                    Tasks.await(CycleBudgetIfNecessary());
+
+                                    Intent goToLanding = SwitchManager.SwitchActivity(getApplicationContext(), "Homepage");//new Intent(MainActivity.this, LandingPage.class).putExtra("UserID", cursee.getLong(cursee.getColumnIndex("UserID")));
+
+                                    goToLanding.putExtra("CameFromEntry", true);
+                                    startActivity(goToLanding);
+                                    finish();
+                                }else{
+                                    runOnUiThread(new Runnable() {
+                                        public void run()
+                                        {
+                                            Toast.makeText(MainActivity.this, "Failure", Toast.LENGTH_LONG).show();
+                                        }
+                                    });
+                                    Log.d(TAG, "Fail1");
+                                }
+                            }else{
+                                runOnUiThread(new Runnable() {
+                                    public void run()
+                                    {
+                                        Toast.makeText(MainActivity.this, "No user found by that name", Toast.LENGTH_LONG).show();
+                                    }
+                                });
+
+                                Log.d(TAG, "Fail2");
+                            }
+
+                        }catch (Exception e){
+                            Log.d(TAG, "Failed");
+                            Log.d(TAG, e.getMessage());
+                        }
+                    }
+                });
+
+                t.start();
+
+                /*String username = UsernameField.getText().toString();
                 String password = PasswordField.getText().toString();
 
                 String hashedPassword = StatUtils.GetHashedString(password);
@@ -154,7 +337,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }else{
                     Toast.makeText(getApplicationContext(), "No user found by that name", Toast.LENGTH_SHORT).show();
-                }
+                }*/
             }
         });
     }
@@ -162,35 +345,53 @@ public class MainActivity extends AppCompatActivity {
     /**
      * Checks if the budget needs to be cycled, then creates a new one if it does.
      */
-    public void CycleBudgetIfNecessary(){
+    public Task<Boolean> CycleBudgetIfNecessary(){
         Long UserID = Preferences.getLong("UserID", -1);
-        Budget tempB = Budget.getCurrentBudgetForUser(getApplicationContext(), UserID);
+        final String userKey = Preferences.getString("UserKey", "");
+        //Budget tempB = Budget.getCurrentBudgetForUser(getApplicationContext(), UserID);
 
-        if(tempB.getTimePeriod() != -1){
-            switch (tempB.getTimePeriod()){
-                case 1:
-                    if(StatUtils.DaysSince(tempB.getStartDate()) > 0){
-                        StatUtils.ChangeBudget(getApplicationContext(), UserID);
-                    }
-                    break;
-                case 2:
-                    if(StatUtils.DaysSince(tempB.getStartDate()) > 6){
-                        StatUtils.ChangeBudget(getApplicationContext(), UserID);
-                    }
-                    break;
-                case 3:
-                    if(StatUtils.DaysSince(tempB.getStartDate()) > 13){
-                        StatUtils.ChangeBudget(getApplicationContext(), UserID);
-                    }
-                case 4:
+        final TaskCompletionSource<Boolean> done = new TaskCompletionSource<>();
 
-                    if(StatUtils.DaysSince(tempB.getStartDate()) > GetMonthLength()){
-                        StatUtils.ChangeBudget(getApplicationContext(), UserID);
-                    }
-                    break;
+        FireBudget.getCurrentBudgetForUser(userKey).addOnCompleteListener(new OnCompleteListener<FireBudget>() {
+            @Override
+            public void onComplete(@NonNull Task<FireBudget> task) {
+                FireBudget tempB = task.getResult();
 
+                if(tempB.getTimePeriod() != -1){
+                    try {
+                        switch (tempB.getTimePeriod()) {
+                            case 1:
+                                if (StatUtils.DaysSince(tempB.getStartDate()) > 0) {
+                                    Tasks.await(StatUtils.ChangeBudget(userKey));
+                                }
+                                break;
+                            case 2:
+                                if (StatUtils.DaysSince(tempB.getStartDate()) > 6) {
+                                    Tasks.await(StatUtils.ChangeBudget(userKey));
+                                }
+                                break;
+                            case 3:
+                                if (StatUtils.DaysSince(tempB.getStartDate()) > 13) {
+                                    Tasks.await(StatUtils.ChangeBudget(userKey));
+                                }
+                            case 4:
+
+                                if (StatUtils.DaysSince(tempB.getStartDate()) > GetMonthLength()) {
+                                    Tasks.await(StatUtils.ChangeBudget(userKey));
+                                }
+                                break;
+
+                        }
+                    }catch (Exception e){}
+                }
+
+                done.setResult(true);
             }
-        }
+        });
+
+        return done.getTask();
+
+
     }
 
     /**
@@ -266,4 +467,6 @@ public class MainActivity extends AppCompatActivity {
             this.date = date;
         }
     }
+
+
 }

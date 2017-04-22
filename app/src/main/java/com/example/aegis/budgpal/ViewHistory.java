@@ -13,9 +13,12 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ExpandableListAdapter;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Toast;
+
+import com.google.android.gms.tasks.Tasks;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -58,9 +61,51 @@ public class ViewHistory extends AppCompatActivity {
      * Adds items to the listview.
      * @param myBudgetID ID of the budget being used
      */
-    private void PopulateList(Long myBudgetID){
+    private void PopulateList( final String myBudgetID){
+        Thread t = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
 
-        Long UserID = Preferences.getLong("UserID", -1);
+                    //Code goes here
+                    String UserKey = Preferences.getString("UserKey", "");
+                    final ArrayList<FireExpense> expenses = Tasks.await(FireExpense.getExpensesByUser(UserKey));
+
+                    ListView expenseListView = (ListView) findViewById(R.id.viewHistoryExpensesListView);
+                    //final ArrayAdapter<String> adapter = (ArrayAdapter)expenseListView.getAdapter();
+                    final ExpenseListAdapter adapter = (ExpenseListAdapter)expenseListView.getAdapter();
+                    runOnUiThread(new Runnable() {
+                        public void run()
+                        {
+                            adapter.clear();
+
+                            for (int i = 0; i < expenses.size(); i++) {
+                                if (expenses.get(i).getBudgetKey().equals(myBudgetID)) {
+                                    String temp = expenses.get(i).getExpenseKey() + ": " + expenses.get(i).getDescription() + " = ";
+                                    String temp2 = NumberFormat.getCurrencyInstance(new Locale("en", "US")).format(expenses.get(i).getAmount());
+
+                                    //adapter.add(temp + temp2);
+                                    adapter.add(expenses.get(i));
+                                }
+                            }
+                        }
+                    });
+
+
+
+
+                }catch (Exception e){
+                    Log.d(TAG, "Failed");
+                    Log.d(TAG, e.getMessage());
+                    Log.d("Populate", "List");
+                }
+            }
+        });
+
+        t.start();
+
+
+        /*Long UserID = Preferences.getLong("UserID", -1);
 
         ListView expenseListView = (ListView) findViewById(R.id.viewHistoryExpensesListView);
         ArrayAdapter<String> adapter = (ArrayAdapter)expenseListView.getAdapter();
@@ -74,7 +119,7 @@ public class ViewHistory extends AppCompatActivity {
 
                 adapter.add(temp + temp2);
             }
-        }
+        }*/
 
     }
 
@@ -82,7 +127,48 @@ public class ViewHistory extends AppCompatActivity {
      * Adds items to the listview and adds a listener.
      */
     private void SetupListView() {
-        Long UserID = Preferences.getLong("UserID", -1);
+        Thread t = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+
+                    //Code goes here
+
+                    String UserKey = Preferences.getString("UserKey", "");
+
+                    FireBudget temp = Tasks.await(FireBudget.getCurrentBudgetForUser(UserKey));
+                    final String BudgetKey = temp.getBudgetKey();
+                    //myBudgetID = Budget.getCurrentBudgetForUser(getApplicationContext(), UserID).
+
+                    final ListView expensesListView = (ListView) findViewById(R.id.viewHistoryExpensesListView);
+
+                    runOnUiThread(new Runnable() {
+                        public void run() {
+                            //ArrayAdapter<String> adapter = new ArrayAdapter<String>(ViewHistory.this, android.R.layout.simple_list_item_1);
+                            ExpenseListAdapter adapter = new ExpenseListAdapter(ViewHistory.this, R.layout.expense_list_item);
+                            expensesListView.setAdapter(adapter);
+                            PopulateList(BudgetKey);
+                        }
+                    });
+
+
+
+
+
+                    SetupListViewListener();
+
+                }catch (Exception e){
+                    Log.d(TAG, "Failed");
+                    Log.d(TAG, e.getMessage());
+                    Log.d("Setup", "List");
+                }
+            }
+        });
+
+        t.start();
+
+
+        /*Long UserID = Preferences.getLong("UserID", -1);
 
         Long BudgetID = Budget.getCurrentBudgetForUser(getApplicationContext(), UserID).getBudgetID();
         //myBudgetID = Budget.getCurrentBudgetForUser(getApplicationContext(), UserID).getBudgetID();
@@ -94,30 +180,32 @@ public class ViewHistory extends AppCompatActivity {
 
         PopulateList(BudgetID);
 
-        SetupListViewListener();
+        SetupListViewListener();*/
     }
 
     /**
      * Adds the on click listener to the listview
      */
     private void SetupListViewListener(){
-        Long UserID = Preferences.getLong("UserID", -1);
+
+        String UserKey = Preferences.getString("UserKey", "");
 
         final ListView expensesListView = (ListView) findViewById(R.id.viewHistoryExpensesListView);
 
         expensesListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String[] items = parent.getItemAtPosition(position).toString().split(":");
-                Log.d("id", items[0]);
-                long ExpenseID = Long.parseLong(items[0]);
-                Log.d("post", Long.toString(ExpenseID));
+                //String[] items = parent.getItemAtPosition(position).toString().split(":");
+
+                //String ExpenseKey = items[0];
+
+                String ExpenseKey = ((FireExpense)parent.getItemAtPosition(position)).expenseKey;
 
                 //Expense ex = Expense.getExpenseByExpenseID(getApplicationContext(), ExpenseID);
 
                 Intent goToExpenseDetails = new Intent(ViewHistory.this, ExpenseDetailsActivity.class);
 
-                goToExpenseDetails.putExtra("ExpenseID", ExpenseID);
+                goToExpenseDetails.putExtra("ExpenseKey", ExpenseKey);
 
                 startActivityForResult(goToExpenseDetails, 0);
             }
@@ -128,7 +216,60 @@ public class ViewHistory extends AppCompatActivity {
      * Adds the budget items to the spinner
      */
     private void SetupBudgetSpinner(){
-        Long UserID = Preferences.getLong("UserID", -1);
+        Thread t = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+
+                    //Code goes here
+
+                    String UserKey = Preferences.getString("UserKey", "");
+
+                    final Spinner expenseSpinner = (Spinner) findViewById(R.id.viewExpensesPeriodSpinner);
+
+                    ArrayList<FireBudget> budgets = Tasks.await(FireBudget.getBudgetsByUser(UserKey));
+                    final ArrayList<String> budgetInfo = new ArrayList<String>();
+                    String someBudgetInfo;
+                    FireBudget someBudget;
+
+                    for(int i = 0; i < budgets.size(); i++){
+                        someBudget = budgets.get(i);
+                        someBudgetInfo =  NumberFormat.getCurrencyInstance(new Locale("en", "US")).format(someBudget.getAmount())+ " Start Date: " + someBudget.getStartDate() + " :" + someBudget.getBudgetKey();
+                        budgetInfo.add(someBudgetInfo);
+                    }
+
+                    runOnUiThread(new Runnable() {
+                        public void run() {
+                            expenseSpinner.setAdapter(new ArrayAdapter<>(ViewHistory.this, android.R.layout.simple_list_item_1,budgetInfo));
+
+                            expenseSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                                @Override
+                                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                                    String myBudgetID = parent.getItemAtPosition(position).toString().split(":")[2];
+
+                                    PopulateList(myBudgetID);
+                                }
+
+                                @Override
+                                public void onNothingSelected(AdapterView<?> parent) {
+
+                                }
+                            });
+                        }
+                    });
+
+
+                }catch (Exception e){
+                    Log.d(TAG, "Failed");
+                    Log.d(TAG, e.getMessage());
+                    Log.d("Budget", "Yarl");
+                }
+            }
+        });
+
+        t.start();
+
+        /*Long UserID = Preferences.getLong("UserID", -1);
 
         final Spinner expenseSpinner = (Spinner) findViewById(R.id.viewExpensesPeriodSpinner);
 
@@ -157,19 +298,19 @@ public class ViewHistory extends AppCompatActivity {
             public void onNothingSelected(AdapterView<?> parent) {
 
             }
-        });
+        });*/
     }
 
     /**
      * Gets the current budgetID.
      * @return The budgetID of the currently selected budget.
      */
-    private Long GetActiveBudgetID(){
-        Long output = 0L;
+    private String GetActiveBudgetID(){
+        String output;
 
         final Spinner expenseSpinner = (Spinner) findViewById(R.id.viewExpensesPeriodSpinner);
 
-        output = Long.valueOf(expenseSpinner.getSelectedItem().toString().split(":")[0]);
+        output = expenseSpinner.getSelectedItem().toString().split(":")[2];
 
         return output;
     }

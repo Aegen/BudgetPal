@@ -16,6 +16,8 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.Tasks;
+
 import java.util.Date;
 
 public class AddEvent extends AppCompatActivity {
@@ -45,12 +47,49 @@ public class AddEvent extends AppCompatActivity {
         final EditText DateField = (EditText)findViewById(R.id.addEventDateTextEdit);
         final Button AddButton = (Button)findViewById(R.id.addEventButton);
 
-        final Long UserID = Preferences.getLong("UserID", -1);
+        final String UserKey = Preferences.getString("UserKey", "");
 
         AddButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String desc = DescriptionField.getText().toString();
+
+                Thread t = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+
+                            //Code goes here
+
+                            String desc = DescriptionField.getText().toString();
+
+                            String date = DateField.getText().toString();
+
+
+                            if(StatUtils.IsValidDate(date)){
+                                FireEvent tempEv = new FireEvent(UserKey, date, date, desc, StatUtils.GetCurrentDate());
+                                Tasks.await(tempEv.pushToDatabase());
+
+                                startActivity(SwitchManager.SwitchActivity(getApplicationContext(), "Homepage"));
+                                finish();
+                            }else{
+                                runOnUiThread(new Runnable() {
+                                    public void run()
+                                    {
+                                        Toast.makeText(AddEvent.this, "Invalid Date must be of the form yyyy-mm-dd", Toast.LENGTH_LONG).show();
+                                    }
+                                });
+
+                            }
+
+                        }catch (Exception e){
+                            Log.d(TAG, "Failed");
+                            Log.d(TAG, e.getMessage());
+                        }
+                    }
+                });
+
+                t.start();
+                /*String desc = DescriptionField.getText().toString();
 
                 String date = DateField.getText().toString();
 
@@ -63,7 +102,7 @@ public class AddEvent extends AppCompatActivity {
                     finish();
                 }else{
                     Toast.makeText(getApplicationContext(), "Invalid Date must be of the form yyyy-mm-dd", Toast.LENGTH_LONG).show();
-                }
+                }*/
             }
         });
     }

@@ -3,10 +3,13 @@ package com.example.aegis.budgpal;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import com.google.android.gms.tasks.Tasks;
 
 public class ExpenseDetailsActivity extends AppCompatActivity {
 
@@ -39,28 +42,86 @@ public class ExpenseDetailsActivity extends AppCompatActivity {
         DeleteButton = (Button)findViewById(R.id.expenseDetailsDeleteButton);
         UpdateButton.setEnabled(false);
 
-        AmountField.setText(getIntent().getStringExtra("Amount"));
+        /*AmountField.setText(getIntent().getStringExtra("Amount"));
         DescriptionField.setText(getIntent().getStringExtra("Description"));
         CreatedByField.setText(Long.toString(getIntent().getLongExtra("User", -1)));
-        CreatedOnField.setText(getIntent().getStringExtra("LastModified"));
+        CreatedOnField.setText(getIntent().getStringExtra("LastModified"));*/
 
         DeleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Expense ex = Expense.getExpenseByExpenseID(getApplicationContext(), getIntent().getLongExtra("ExpenseID", new Long(-1)));
+                Thread t = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+
+                            Log.d("Deleted", "Entered");
+                            //Code goes here
+                            FireExpense ex = Tasks.await(FireExpense.getExpenseByExpenseKey(getIntent().getStringExtra("ExpenseKey")));
+                            ex.setDeleted(true);
+
+                            Log.d("Deleted", "Exited");
+                            setResult(RESULT_OK);
+//                EventDetailsActivity.super.onBackPressed();
+                            finish();
+
+                        }catch (Exception e){
+                            Log.d(TAG, "Failed");
+                            Log.d(TAG, e.getMessage());
+                        }
+                    }
+                });
+
+                t.start();
+
+                /*Expense ex = Expense.getExpenseByExpenseID(getApplicationContext(), getIntent().getLongExtra("ExpenseID", new Long(-1)));
                 ex.setDeleted(true);
-                ex.pushToDatabase();
 
                 setResult(RESULT_OK);
 //                EventDetailsActivity.super.onBackPressed();
-                finish();
+                finish();*/
             }
         });
 
         UpdateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Expense ex = Expense.getExpenseByExpenseID(getApplicationContext(), getIntent().getLongExtra("ExpenseID", new Long(-1)));
+
+                Thread t = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+
+                            //Code goes here
+                            FireExpense ex = Tasks.await(FireExpense.getExpenseByExpenseKey(getIntent().getStringExtra("ExpenseKey")));
+
+                            if(ex.lastModified.equals("1990-01-01")){
+                                runOnUiThread(new Runnable() {
+                                    public void run()
+                                    {
+                                        Toast.makeText(ExpenseDetailsActivity.this, "No expense found", Toast.LENGTH_LONG).show();
+                                    }
+                                });
+                                return;
+                            }
+                            ex.setAmount(Float.parseFloat(AmountField.getText().toString()));
+                            ex.setDescription(DescriptionField.getText().toString());
+                            ex.setLastModified(StatUtils.GetCurrentDate());
+                            Tasks.await(ex.pushToDatabase());
+
+                            setResult(RESULT_OK);
+                            ExpenseDetailsActivity.super.onBackPressed();
+                            finish();
+
+                        }catch (Exception e){
+                            Log.d(TAG, "Failed");
+                            Log.d(TAG, e.getMessage());
+                        }
+                    }
+                });
+
+                t.start();
+                /*Expense ex = Expense.getExpenseByExpenseID(getApplicationContext(), getIntent().getLongExtra("ExpenseID", new Long(-1)));
 
                 if(ex.getUserID() == -1){
                     Toast.makeText(getApplicationContext(), "No expense found", Toast.LENGTH_SHORT).show();
@@ -73,19 +134,51 @@ public class ExpenseDetailsActivity extends AppCompatActivity {
 
                 setResult(RESULT_OK);
                 ExpenseDetailsActivity.super.onBackPressed();
-                finish();
+                finish();*/
 
             }
         });
 
-        if(getIntent().getLongExtra("ExpenseID", new Long(-1)) != -1){
-            Expense house = Expense.getExpenseByExpenseID(getApplicationContext(), getIntent().getLongExtra("ExpenseID", new Long(-1)));
+        if(!getIntent().getStringExtra("ExpenseKey").equals(null)){
+
+            Thread t = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+
+                        //Code goes here
+                        final FireExpense house = Tasks.await(FireExpense.getExpenseByExpenseKey(getIntent().getStringExtra("ExpenseKey")));
+                        final FireUser tempo = Tasks.await(FireUser.getUserByUserKey(house.getUserKey()));
+
+                        runOnUiThread(new Runnable() {
+                            public void run()
+                            {
+                                AmountField.setText(house.getAmount() + "");
+                                DescriptionField.setText(house.getDescription());
+                                CreatedByField.setText(tempo.getUsername());
+                                CreatedOnField.setText(house.getLastModified());
+
+                                UpdateButton.setEnabled(true);
+                            }
+                        });
+
+
+                    }catch (Exception e){
+                        Log.d(TAG, "Failed");
+                        Log.d(TAG, e.getMessage());
+                    }
+                }
+            });
+
+            t.start();
+
+            /*Expense house = Expense.getExpenseByExpenseID(getApplicationContext(), getIntent().getLongExtra("ExpenseID", new Long(-1)));
             AmountField.setText(house.getAmount() + "");
             DescriptionField.setText(house.getDescription());
             CreatedByField.setText(User.getUserByUserID(getApplicationContext(), house.getUserID()).getUsername());
             CreatedOnField.setText(house.getLastModified());
 
-            UpdateButton.setEnabled(true);
+            UpdateButton.setEnabled(true);*/
 
         }
     }

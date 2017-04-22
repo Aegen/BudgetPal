@@ -9,6 +9,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.icu.util.Calendar;
 import android.icu.util.TimeUnit;
+import android.support.annotation.NonNull;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
 import android.view.Gravity;
@@ -17,6 +18,11 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.TaskCompletionSource;
+import com.google.android.gms.tasks.Tasks;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
@@ -303,6 +309,34 @@ public class StatUtils {
         curs.close();
 
         return output;
+    }
+
+
+    public static Task<Boolean> ChangeBudget(String userKey){
+
+        final TaskCompletionSource<Boolean> output = new TaskCompletionSource<>();
+        FireBudget.getCurrentBudgetForUser(userKey).addOnCompleteListener(new OnCompleteListener<FireBudget>() {
+            @Override
+            public void onComplete(@NonNull Task<FireBudget> task) {
+                FireBudget temp = task.getResult();
+
+                temp.active = false;
+
+                try {
+                    Tasks.await(temp.pushToDatabase());
+                }catch (Exception e){}
+
+                FireBudget replacement = new FireBudget(temp.userKey, temp.timePeriod, temp.resetCode, StatUtils.GetCurrentDate(), StatUtils.GetCurrentDate(), StatUtils.GetCurrentDate(), temp.amount, true);
+
+                try {
+                    Tasks.await(replacement.pushToDatabase());
+                }catch (Exception e){}
+
+                output.setResult(true);
+            }
+        });
+
+        return  output.getTask();
     }
 
     public static void ChangeBudget(Context context, Long UserID){

@@ -27,11 +27,13 @@
     <string name="Table_Budget">Budget</string>
     <string name="Table_Expense">Expense</string>
     <string name="Table_Event">Event</string>
+
     <string name="User_UserID">UserID</string>
     <string name="User_Username">Username</string>
     <string name="User_Password">HashedPassword</string>
     <string name="User_Deleted">Deleted</string>
     <string name="User_LastModified">LastModified</string>
+
     <string name="Budget_BudgetID">BudgetID</string>
     <string name="Budget_UserID">UserID</string>
     <string name="Budget_ResetCode">ResetCode</string>
@@ -42,6 +44,7 @@
     <string name="Budget_LastModified">LastModified</string>
     <string name="Budget_Deleted">Deleted</string>
     <string name="Budget_Active">Active</string>
+
     <string name="Expense_ExpenseID">ExpenseID</string>
     <string name="Expense_UserID">UserID</string>
     <string name="Expense_BudgetID">BudgetID</string>
@@ -52,6 +55,7 @@
     <string name="Expense_DateCreated">DateCreated</string>
     <string name="Expense_Category">Category</string>
     <string name="Expense_Exempt">Exempt</string>
+
     <string name="Event_EventID">EventID</string>
     <string name="Event_UserID">UserID</string>
     <string name="Event_LastModified">LastModified</string>
@@ -59,5 +63,14 @@
     <string name="Event_EndDate">EndDate</string>
     <string name="Event_Description">Description</string>
     <string name="Event_Deleted">Deleted</string>
+
+    <string name="Users_Branch">Users</string>
+    <string name="Events_Branch">Events</string>
+    <string name="Expenses_Branch">Expenses</string>
+    <string name="Budgets_Branch">Budgets</string>
+
+    <string name="Users_Username">name</string>
+    <string name="Users_Date">date</string>
+    <string name="Users_Password">hashedPassword</string>
 
 </resources>
