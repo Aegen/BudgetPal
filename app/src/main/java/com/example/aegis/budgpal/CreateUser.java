@@ -124,9 +124,10 @@ public class CreateUser extends AppCompatActivity {
 
 
                             FireUser newU = new FireUser(username, StatUtils.GetHashedString(password), StatUtils.GetCurrentDate());
-                            newU.pushToDatabase();
+                            Tasks.await(newU.pushToDatabase());
 
                             Intent goToLanding = new Intent(CreateUser.this, LandingPage.class);
+
 
                             PreferencesEditor.putString("UserKey", Tasks.await(newU.getUserKey()));
                             PreferencesEditor.commit();
