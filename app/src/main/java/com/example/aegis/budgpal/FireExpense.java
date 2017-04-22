@@ -292,7 +292,7 @@ public class FireExpense {
                 FirebaseDatabase database = FirebaseDatabase.getInstance();
                 DatabaseReference myRef = database.getReference("db");
 
-                myRef.child("Expenes").child(holder.expenseKey).removeValue();
+                myRef.child("Expenses").child(holder.expenseKey).removeValue();
             }
         }
 

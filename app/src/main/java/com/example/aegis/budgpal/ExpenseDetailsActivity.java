@@ -55,10 +55,12 @@ public class ExpenseDetailsActivity extends AppCompatActivity {
                     public void run() {
                         try {
 
+                            Log.d("Deleted", "Entered");
                             //Code goes here
                             FireExpense ex = Tasks.await(FireExpense.getExpenseByExpenseKey(getIntent().getStringExtra("ExpenseKey")));
                             ex.setDeleted(true);
 
+                            Log.d("Deleted", "Exited");
                             setResult(RESULT_OK);
 //                EventDetailsActivity.super.onBackPressed();
                             finish();

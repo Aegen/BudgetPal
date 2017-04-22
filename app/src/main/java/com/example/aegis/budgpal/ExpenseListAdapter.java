@@ -10,7 +10,9 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import java.text.NumberFormat;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by Kyle on 4/19/2017.
@@ -55,7 +57,7 @@ public class ExpenseListAdapter extends ArrayAdapter<FireExpense> {
         TextView name = (TextView)horse.findViewById(R.id.expenseName);
         TextView amount = (TextView)horse.findViewById(R.id.expenseAmount);
         name.setText(bail.getDescription());
-        amount.setText(bail.getAmount() + "");
+        amount.setText(NumberFormat.getCurrencyInstance(new Locale("en", "US")).format(bail.getAmount()));
 
         return horse;
     }

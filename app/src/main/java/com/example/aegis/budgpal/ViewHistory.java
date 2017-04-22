@@ -13,6 +13,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ExpandableListAdapter;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -71,7 +72,8 @@ public class ViewHistory extends AppCompatActivity {
                     final ArrayList<FireExpense> expenses = Tasks.await(FireExpense.getExpensesByUser(UserKey));
 
                     ListView expenseListView = (ListView) findViewById(R.id.viewHistoryExpensesListView);
-                    final ArrayAdapter<String> adapter = (ArrayAdapter)expenseListView.getAdapter();
+                    //final ArrayAdapter<String> adapter = (ArrayAdapter)expenseListView.getAdapter();
+                    final ExpenseListAdapter adapter = (ExpenseListAdapter)expenseListView.getAdapter();
                     runOnUiThread(new Runnable() {
                         public void run()
                         {
@@ -82,7 +84,8 @@ public class ViewHistory extends AppCompatActivity {
                                     String temp = expenses.get(i).getExpenseKey() + ": " + expenses.get(i).getDescription() + " = ";
                                     String temp2 = NumberFormat.getCurrencyInstance(new Locale("en", "US")).format(expenses.get(i).getAmount());
 
-                                    adapter.add(temp + temp2);
+                                    //adapter.add(temp + temp2);
+                                    adapter.add(expenses.get(i));
                                 }
                             }
                         }
@@ -141,7 +144,8 @@ public class ViewHistory extends AppCompatActivity {
 
                     runOnUiThread(new Runnable() {
                         public void run() {
-                            ArrayAdapter<String> adapter = new ArrayAdapter<String>(ViewHistory.this, android.R.layout.simple_list_item_1);
+                            //ArrayAdapter<String> adapter = new ArrayAdapter<String>(ViewHistory.this, android.R.layout.simple_list_item_1);
+                            ExpenseListAdapter adapter = new ExpenseListAdapter(ViewHistory.this, R.layout.expense_list_item);
                             expensesListView.setAdapter(adapter);
                             PopulateList(BudgetKey);
                         }
@@ -191,10 +195,11 @@ public class ViewHistory extends AppCompatActivity {
         expensesListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String[] items = parent.getItemAtPosition(position).toString().split(":");
-                //Log.d("id", items[0]);
-                String ExpenseKey = items[0];
-                //Log.d("post", Long.toString(ExpenseID));
+                //String[] items = parent.getItemAtPosition(position).toString().split(":");
+
+                //String ExpenseKey = items[0];
+
+                String ExpenseKey = ((FireExpense)parent.getItemAtPosition(position)).expenseKey;
 
                 //Expense ex = Expense.getExpenseByExpenseID(getApplicationContext(), ExpenseID);
 
