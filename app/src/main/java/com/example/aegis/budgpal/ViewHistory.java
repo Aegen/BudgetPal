@@ -80,7 +80,7 @@ public class ViewHistory extends AppCompatActivity {
                         {
                             adapter.clear();
 
-                            for (int i = expenses.size() - 1; i > 0; i--) {
+                            for (int i = expenses.size() - 1; i >= 0; i--) {
                                 if (expenses.get(i).getBudgetKey().equals(myBudgetID)) {
                                     String temp = expenses.get(i).getExpenseKey() + ": " + expenses.get(i).getDescription() + " = ";
                                     String temp2 = NumberFormat.getCurrencyInstance(new Locale("en", "US")).format(expenses.get(i).getAmount());

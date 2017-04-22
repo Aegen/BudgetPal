@@ -32,6 +32,21 @@ public class LandingPage extends AppCompatActivity {
     private final static String TAG = "LandingPage";
 
     @Override
+    protected void onActivityResult(int code, int res, Intent intent){
+        super.onActivityResult(code, res, intent);
+
+        SetBudgetDetails();
+
+        SetUpcomingEventsList();
+
+        SetLandingAddButtonListener();
+
+        SetLandingStatButtonListener();
+
+        Setbar();
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_landing_page);

@@ -69,7 +69,7 @@ public class AddEvent extends AppCompatActivity {
                                 FireEvent tempEv = new FireEvent(UserKey, date, date, desc, StatUtils.GetCurrentDate());
                                 Tasks.await(tempEv.pushToDatabase());
 
-                                startActivity(SwitchManager.SwitchActivity(getApplicationContext(), "Homepage"));
+                                startActivity(SwitchManager.SwitchActivity(AddEvent.this, "Homepage"));
                                 finish();
                             }else{
                                 runOnUiThread(new Runnable() {

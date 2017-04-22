@@ -97,10 +97,10 @@ public class AddExpenses extends AppCompatActivity {
                                         if(!AmountField.getText().toString().isEmpty()) {
                                             Float am = Float.valueOf(AmountField.getText().toString());
                                             FireExpense tempExp = new FireExpense(UserKey, myBudget.getBudgetKey(), am, StatUtils.GetCurrentDate(), StatUtils.GetCurrentDate(), StatUtils.GetCategoryCode(CategorySpinner.getSelectedItem().toString()), DescriptionField.getText().toString(), false);
-                                            tempExp.pushToDatabase();
+                                            Tasks.await(tempExp.pushToDatabase());
 
 
-                                            startActivity(SwitchManager.SwitchActivity(getApplicationContext(), "Homepage"));
+                                            startActivity(SwitchManager.SwitchActivity(AddExpenses.this, "Homepage"));
                                             finish();
                                         }else{
                                             runOnUiThread(new Runnable() {
