@@ -134,8 +134,8 @@ public class ViewHistory extends AppCompatActivity {
                     String UserKey = Preferences.getString("UserKey", "");
 
                     FireBudget temp = Tasks.await(FireBudget.getCurrentBudgetForUser(UserKey));
-                    final String BudgetKey = Tasks.await(FireBudget.getCurrentBudgetForUser(UserKey)).budgetKey;
-                    //myBudgetID = Budget.getCurrentBudgetForUser(getApplicationContext(), UserID).getBudgetID();
+                    final String BudgetKey = temp.getBudgetKey();
+                    //myBudgetID = Budget.getCurrentBudgetForUser(getApplicationContext(), UserID).
 
                     final ListView expensesListView = (ListView) findViewById(R.id.viewHistoryExpensesListView);
 
@@ -156,6 +156,7 @@ public class ViewHistory extends AppCompatActivity {
                 }catch (Exception e){
                     Log.d(TAG, "Failed");
                     Log.d(TAG, e.getMessage());
+                    Log.d("Setup", "List");
                 }
             }
         });
@@ -222,7 +223,7 @@ public class ViewHistory extends AppCompatActivity {
                     final Spinner expenseSpinner = (Spinner) findViewById(R.id.viewExpensesPeriodSpinner);
 
                     ArrayList<FireBudget> budgets = Tasks.await(FireBudget.getBudgetsByUser(UserKey));
-                    ArrayList<String> budgetInfo = new ArrayList<String>();
+                    final ArrayList<String> budgetInfo = new ArrayList<String>();
                     String someBudgetInfo;
                     FireBudget someBudget;
 
@@ -232,25 +233,31 @@ public class ViewHistory extends AppCompatActivity {
                         budgetInfo.add(someBudgetInfo);
                     }
 
-                    expenseSpinner.setAdapter(new ArrayAdapter<>(ViewHistory.this, android.R.layout.simple_list_item_1,budgetInfo));
+                    runOnUiThread(new Runnable() {
+                        public void run() {
+                            expenseSpinner.setAdapter(new ArrayAdapter<>(ViewHistory.this, android.R.layout.simple_list_item_1,budgetInfo));
 
-                    expenseSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                        @Override
-                        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                            String myBudgetID = parent.getItemAtPosition(position).toString().split(":")[0];
+                            expenseSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                                @Override
+                                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                                    String myBudgetID = parent.getItemAtPosition(position).toString().split(":")[0];
 
-                            PopulateList(myBudgetID);
-                        }
+                                    PopulateList(myBudgetID);
+                                }
 
-                        @Override
-                        public void onNothingSelected(AdapterView<?> parent) {
+                                @Override
+                                public void onNothingSelected(AdapterView<?> parent) {
 
+                                }
+                            });
                         }
                     });
+
 
                 }catch (Exception e){
                     Log.d(TAG, "Failed");
                     Log.d(TAG, e.getMessage());
+                    Log.d("Budget", "Yarl");
                 }
             }
         });
