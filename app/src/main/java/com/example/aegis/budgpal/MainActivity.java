@@ -72,41 +72,11 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-        ExecutorService hobo = Executors.newSingleThreadExecutor();
-
-        Runnable test = new Runnable() {
-            @Override
-            public void run() {
-                Looper.prepare();
-                try {
-
-                    FireBudget temp = Tasks.await(FireBudget.getCurrentBudgetForUser("-KhOxJw3Rd9WzezsI4s7"));
-                    Toast.makeText(getApplicationContext(),temp.budgetKey,Toast.LENGTH_LONG).show();
-                }catch (Exception e){
-                    Toast.makeText(getApplicationContext(),"Fail",Toast.LENGTH_LONG).show();
-                }
-            }
-        };
-
-        Thread t = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                //Toast.makeText(getApplicationContext(), "World", Toast.LENGTH_LONG).show();
-                try {
-
-                    FireBudget temp = Tasks.await(FireBudget.getCurrentBudgetForUser("-KhOxJw3Rd9WzezsI4s7"));
-                    Log.d(TAG, temp.budgetKey);
-
-                    FireUser tempU = Tasks.await(FireUser.getUserByUserName("martin"));
-                    Log.d(TAG, tempU.getUsername());
-                }catch (Exception e){
-                    Log.d(TAG, "Fail");
-                }
-
-            }
-        });
-
-        t.start();
+        Log.d("Mod", StatUtils.AddDaysToDate(StatUtils.GetCurrentDate(), 31));
+        Log.d("Mod", StatUtils.AddDaysToDate(StatUtils.GetCurrentDate(), 14));
+        Log.d("Mod", StatUtils.AddDaysToDate(StatUtils.GetCurrentDate(), 1));
+        Log.d("Mod", StatUtils.AddDaysToDate(StatUtils.GetCurrentDate(), 8));
+        Log.d("Mod", StatUtils.AddDaysToDate(StatUtils.GetCurrentDate(), 24));
 
         //t.join();
         Log.d(TAG, "After");

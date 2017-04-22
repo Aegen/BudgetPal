@@ -364,9 +364,9 @@ public class StatUtils {
     public static String AddDaysToDate(String date, int days){
         SimpleDateFormat form = new SimpleDateFormat("yyyy-MM-dd");
 
-        long diff = days * (1000 * 60 * 60 * 24);
 
-        Log.d("hoper", Long.toString(diff));
+
+        //Log.d("hoper", Long.toString(diff));
 
         Date time = new Date();
         if(StatUtils.IsValidDate(date)) {
@@ -380,7 +380,17 @@ public class StatUtils {
             return date;
         }
 
-        time.setTime(time.getTime() + diff);
+        for(int i = 0; i <= days / 14; i++ ) {
+
+            long diff = 1;
+            if(i == days / 14) {
+                diff = (days % 14) * (1000 * 60 * 60 * 24);
+            }else{
+                diff = 14 * (1000 * 60 * 60 * 24);
+            }
+
+            time.setTime(time.getTime() + diff);
+        }
 
 
         return form.format(time);
