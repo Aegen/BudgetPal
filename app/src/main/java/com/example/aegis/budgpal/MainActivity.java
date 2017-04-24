@@ -48,6 +48,9 @@ public class MainActivity extends AppCompatActivity {
         if(!getIntent().getBooleanExtra("CameFromLogout", false)) {
             FirebaseDatabase database = FirebaseDatabase.getInstance();
             database.setPersistenceEnabled(true);
+            DatabaseReference myRef = database.getReference("db");
+
+            myRef.keepSynced(true);
         }
 
         Log.d(TAG, "Entered");
