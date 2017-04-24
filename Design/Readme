@@ -1,0 +1,28 @@
+Starting point:
+MainActivity.java
+  Code execution starts here then progresses to the other classes as specified in the code.
+
+The following all correspond to pages within the app:
+AddEvent.java
+AddExpenses.java
+CreateUser.java
+EventDetailActivity.java
+ExpenseDetailsActivity.java
+LandingPage.java
+MainActivity.java
+SetBudget.java
+StatisticsActivity.java
+ViewEvents.java
+ViewHistory.java
+
+There are layouts that go with each of these in the res folder. All other java classes are called
+from those classes.
+
+SwitchManager controls the flow from one page to another so anytime it's called means that
+the page is switching.
+
+Every page begins execution at the onCreate method in the above classes.
+
+A lot of the code is asynchronous so it can be hard to understand at times.
+
+Beyond that it should be fairly straightforward from their.
