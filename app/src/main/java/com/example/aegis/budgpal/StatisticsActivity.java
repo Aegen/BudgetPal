@@ -108,9 +108,9 @@ public class StatisticsActivity extends AppCompatActivity {
 
                         for(int g = 0; g < expenseCategories.length; g++){
                             rollingCategoryPercent.set(g, ( (((numberOfBudgets-1)/numberOfBudgets)*rollingCategoryPercent.get(g)) + (1/numberOfBudgets)*thisBudgetCategoryPercent.get(g) ) );
-                            Log.d("Number of Budgets", numberOfBudgets + "");
-                            Log.d("this budget percent", thisBudgetCategoryPercent.get(g) + "");
-                            Log.d("Rolling percent", rollingCategoryPercent.get(g) + "");
+                            //Log.d("Number of Budgets", numberOfBudgets + "");
+                            //Log.d("this budget percent", thisBudgetCategoryPercent.get(g) + "");
+                            //Log.d("Rolling percent", rollingCategoryPercent.get(g) + "");
                         }
 
                         expendituresList.add(thisBudgetExpenditures);
@@ -129,13 +129,20 @@ public class StatisticsActivity extends AppCompatActivity {
                         totalExpenditures += expendituresList.get(k);
                         totalBudgetAmounts += budgetAmountList.get(k);
                     }
-                    final float average = totalExpenditures/totalBudgetAmounts * 100;
+                    final Float average = totalExpenditures/totalBudgetAmounts * 100;
 
                     //display
                     runOnUiThread(new Runnable() {
                         public void run() {
                             TextView txtAverage = (TextView) findViewById(R.id.statsTextAvgBudget);
-                            txtAverage.setText("Average Percent of Budget Used: " + average + "%");
+
+                            String hello = average.toString();
+                            if(hello.length() > 5) {
+                                txtAverage.setText("Average Percent of Budget Used: " + average.toString().substring(0, 6) + "%");
+                            }else{
+                                txtAverage.setText("Average Percent of Budget Used: " + average + "%");
+                            }
+                            Log.d("Text", txtAverage.getText().toString());
                         }
                     });
 
@@ -272,7 +279,7 @@ public class StatisticsActivity extends AppCompatActivity {
                     df.setMaximumFractionDigits(4);
                     listAdapter.add(expCategories[i] + ": " + df.format(percentsList.get(i)*100) + "%");
                     float temp = percentsList.get(i);
-                    Log.d("TEMP", temp + "");
+                    //Log.d("TEMP", temp + "");
                 }
             }
         });

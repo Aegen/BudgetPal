@@ -190,17 +190,26 @@ public class SetBudget extends AppCompatActivity {
                                             try {
                                                 Tasks.await(newB.pushToDatabase());
                                             } catch (ExecutionException e) {
+                                                Log.d(TAG, "Error1");
                                                 e.printStackTrace();
                                             } catch (InterruptedException e) {
                                                 e.printStackTrace();
                                             }
 
-                                            startActivity(SwitchManager.SwitchActivity(getApplicationContext(), "Homepage"));
+                                            //Terrible code here
+                                            Tasks.await(FireBudget.getCurrentBudgetForUser(UserKey));
+                                            Tasks.await(FireBudget.getCurrentBudgetForUser(UserKey));
+                                            Tasks.await(FireBudget.getCurrentBudgetForUser(UserKey));
+                                            Tasks.await(FireBudget.getCurrentBudgetForUser(UserKey));
+                                            //End terrible code
+
+                                            startActivity(SwitchManager.SwitchActivity(SetBudget.this, "Homepage"));
                                             finish();
                                         }
                                     }catch (Exception e){
                                         Log.d(TAG, "Failed");
                                         Log.d(TAG, e.getMessage());
+                                        Log.d(TAG, "First");
                                     }
                                 }
                             });
@@ -290,13 +299,20 @@ public class SetBudget extends AppCompatActivity {
                                 break;
                         }
 
-                        oldBudget.setText(NumberFormat.getCurrencyInstance(new Locale("en", "US"))
-                                .format(tempB.getAmount()) + " per " + period);
+                        final String periodTwo = period;
+
+                        runOnUiThread(new Runnable() {
+                            public void run() {
+                                oldBudget.setText(NumberFormat.getCurrencyInstance(new Locale("en", "US"))
+                                        .format(tempB.getAmount()) + " per " + periodTwo);
+                            }
+                        });
                     }
 
                 } catch (Exception e) {
                     Log.d(TAG, "Failed");
                     Log.d(TAG, e.getMessage());
+                    Log.d(TAG, "Second");
                 }
             }
         });

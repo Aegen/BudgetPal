@@ -31,20 +31,6 @@ public class LandingPage extends AppCompatActivity {
 
     private final static String TAG = "LandingPage";
 
-    @Override
-    protected void onActivityResult(int code, int res, Intent intent){
-        super.onActivityResult(code, res, intent);
-
-        SetBudgetDetails();
-
-        SetUpcomingEventsList();
-
-        SetLandingAddButtonListener();
-
-        SetLandingStatButtonListener();
-
-        Setbar();
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +41,7 @@ public class LandingPage extends AppCompatActivity {
         PreferencesEditor = getSharedPreferences(getString(R.string.preferences_name),MODE_PRIVATE).edit();
 
         //Toast.makeText(getApplicationContext(), Preferences.getString("UserKey", "Fail"), Toast.LENGTH_LONG).show();
+
 
         StatUtils.InitializeNavigationDrawer(this);
 
@@ -67,6 +54,8 @@ public class LandingPage extends AppCompatActivity {
         SetLandingStatButtonListener();
 
         Setbar();
+
+
     }
 
 
@@ -136,7 +125,14 @@ public class LandingPage extends AppCompatActivity {
         }else if(code == MonthCode && StatUtils.IsValidDate(date)){
             daysToAdd = GetMonthCode(date);
         }else{
-            Toast.makeText(getApplicationContext(), "Error: Invalid Time Period", Toast.LENGTH_SHORT).show();
+            runOnUiThread(new Runnable() {
+                public void run()
+                {
+                    Toast.makeText(getApplicationContext(), "Error: Invalid Time Period", Toast.LENGTH_SHORT).show();
+
+                }
+
+            });
             daysToAdd = 1;
         }
         return daysToAdd;
@@ -286,32 +282,54 @@ public class LandingPage extends AppCompatActivity {
 
                     String UserKey = Preferences.getString("UserKey", "");
 
+                    Log.d("TAG", "First");
+                    Log.d("TAG", "First");
+                    Log.d("TAG", "First");
+                    Log.d("TAG", "First");
+                    Log.d("TAG", "First");
+                    Log.d("TAG", "First");
+                    Log.d("TAG", "First");
+                    Log.d("TAG", "First");
+                    Log.d("TAG", "First");
+                    Log.d("TAG", "First");
+                    Log.d("TAG", "First");
+                    Log.d("TAG", "First");
+
+
+
                     final FireBudget budget = Tasks.await(FireBudget.getCurrentBudgetForUser(UserKey));
 
                     final TextView currentBudgetText = (TextView) findViewById(R.id.landingPageCurrentBudgetText);
                     final TextView remainingBudgetText = (TextView) findViewById(R.id.landingPageRemainingBudgetText);
+                    Log.d("TAG", "Second");
 
                     if(budget != null) {
                         float amount = budget.getAmount();
+                        Log.d("TAG", "Third");
 
                         ArrayList<FireExpense> expenses = Tasks.await(FireExpense.getExpensesByUser(UserKey));
+                        Log.d("TAG", "Fourth");
                         for (int i = 0; i < expenses.size(); i++) {
                             if (budget.getBudgetKey().equals(expenses.get(i).getBudgetKey()))
                                 amount -= expenses.get(i).getAmount();
                         }
 
+                        Log.d("TAG", "Fifth");
                         final String period = GetPeriodText(budget.getTimePeriod());
 
                         final int daysToAdd = GetPeriodDays(budget.getTimePeriod(), budget.getStartDate());
 
+                        Log.d("TAG", "Sixth");
+
                         final float famount = amount;
                         if (!Tasks.await(FireBudget.getCurrentBudgetForUser(UserKey)).getLastModified().equals("1990-01-01")) {
+                            Log.d("TAG", "Seventh");
                             runOnUiThread(new Runnable() {
                                 public void run() {
-                                    currentBudgetText.setText(NumberFormat.getCurrencyInstance(new Locale("en", "US"))
-                                            .format(budget.getAmount()) + " per " + period);
-                                    remainingBudgetText.setText(NumberFormat.getCurrencyInstance(new Locale("en", "US"))
-                                            .format(famount) + " until " + StatUtils.AddDaysToDate(budget.getStartDate(), daysToAdd));
+                                    Log.d("TAG", "Eight");
+                                    currentBudgetText.setText(NumberFormat.getCurrencyInstance(new Locale("en", "US")).format(budget.getAmount()) + " per " + period);
+                                    remainingBudgetText.setText(NumberFormat.getCurrencyInstance(new Locale("en", "US")).format(famount) + " until " + StatUtils.AddDaysToDate(budget.getStartDate(), daysToAdd));
+                                    Log.d("TAG", "Ninth");
                                 }
                             });
 
